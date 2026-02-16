@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statue of Unity | Summitize Life Journeys</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">Summitize Life Journeys</div>
+        <nav class="nav">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="dubai.html" class="nav-link">Dubai</a>
+            <a href="srilanka.html" class="nav-link">Sri Lanka</a>
+            <a href="australia.html" class="nav-link">Australia</a>
+            <a href="statue-of-unity.html" class="nav-link active">Statue of Unity</a>
+            <a href="dapoli.html" class="nav-link">Dapoli</a>
+            <a href="alibaug.html" class="nav-link">Alibaug</a>
+        </nav>
+        <div class="hamburger"><span></span><span></span><span></span></div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <h1 class="page-title">Statue of Unity</h1>
+            <p class="page-subtitle">World's Tallest Statue - A Marvel in Gujarat, India</p>
+        </section>
+
+        <div class="content-section">
+            <div class="container">
+                <div id="statue-gallery"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Summitize Life Journeys.</p>
+            <div class="footer-links">
+                <a href="dubai.html">Dubai</a>
+                <a href="srilanka.html">Sri Lanka</a>
+                <a href="australia.html">Australia</a>
+                <a href="statue-of-unity.html">Statue of Unity</a>
+                <a href="dapoli.html">Dapoli</a>
+                <a href="alibaug.html">Alibaug</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="gallery.js"></script>
+    <script>
+        // Placeholder photos for Statue of Unity (30 photos)
+        const statuePhotos = [
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Statue+of+Unity', title: 'Statue of Unity' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Sardar+Patel', title: 'Sardar Patel Statue' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Narmada+River', title: 'Narmada River View' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Valley+of+Flowers', title: 'Valley of Flowers' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Viewing+Gallery', title: 'Viewing Gallery' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Sardar+Sarovar+Dam', title: 'Sardar Sarovar Dam' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Laser+Show', title: 'Laser Light Show' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Museum', title: 'Museum & Exhibition' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Sunset+View', title: 'Sunset at Statue' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Gardens', title: 'Landscaped Gardens' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Tent+City', title: 'Tent City' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Cactus+Garden', title: 'Cactus Garden' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Butterfly+Garden', title: 'Butterfly Garden' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Nutrition+Park', title: 'Nutrition Park' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Ekta+Mall', title: 'Ekta Mall' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Food+Court', title: 'Food Court' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Boating', title: 'Boating Experience' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Jungle+Safari', title: 'Jungle Safari' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Tribal+Museum', title: 'Tribal Museum' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Unity+Glow+Garden', title: 'Unity Glow Garden' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Selfie+Point', title: 'Selfie Point' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Observation+Deck', title: 'Observation Deck' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Audio+Visual+Gallery', title: 'Audio Visual Gallery' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Memorial', title: 'Memorial Garden' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Night+View', title: 'Night Illumination' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Helipad', title: 'Helipad View' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Research+Center', title: 'Research Center' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Walkway', title: 'Walkway to Statue' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Panoramic+View', title: 'Panoramic View' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Kevadia', title: 'Kevadia Town' }
+        ];
+
+        // Initialize gallery
+        new PhotoGallery(statuePhotos, 'statue-gallery');
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>
