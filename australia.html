@@ -32,23 +32,7 @@
 
         <div class="content-section">
             <div class="container">
-                <article class="content-block">
-                    <h2>Great Barrier Reef</h2>
-                    <p>Snorkeling in the world's largest coral reef system was breathtaking. The vibrant marine life is
-                        something we'll never forget.</p>
-                </article>
-
-                <article class="content-block">
-                    <h2>Sydney Opera House</h2>
-                    <p>We spent time walking around the harbor, admiring the sails of the Opera House. A true
-                        architectural masterpiece.</p>
-                </article>
-
-                <article class="content-block">
-                    <h2>Gold Coast</h2>
-                    <p>Surfing, theme parks, and endless beaches. The energy of the Gold Coast is infectious and fun for
-                        everyone.</p>
-                </article>
+                <div id="australia-gallery"></div>
             </div>
         </div>
     </main>
@@ -65,6 +49,46 @@
             </div>
         </div>
     </footer>
+
+    <script src="gallery.js"></script>
+    <script>
+        // Placeholder photos for Australia (30 photos)
+        const australiaPhotos = [
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Sydney+Opera+House', title: 'Sydney Opera House' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Great+Barrier+Reef', title: 'Great Barrier Reef' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Uluru', title: 'Uluru (Ayers Rock)' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Twelve+Apostles', title: 'Twelve Apostles' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Bondi+Beach', title: 'Bondi Beach' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Blue+Mountains', title: 'Blue Mountains' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Gold+Coast', title: 'Gold Coast' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Daintree+Rainforest', title: 'Daintree Rainforest' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Kangaroo+Island', title: 'Kangaroo Island' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Fraser+Island', title: 'Fraser Island' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Whitsunday+Islands', title: 'Whitsunday Islands' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Melbourne+City', title: 'Melbourne City' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Kakadu+National+Park', title: 'Kakadu National Park' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Port+Douglas', title: 'Port Douglas' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Byron+Bay', title: 'Byron Bay' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Rottnest+Island', title: 'Rottnest Island' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Ningaloo+Reef', title: 'Ningaloo Reef' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Tasmania', title: 'Tasmania Wilderness' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Cairns', title: 'Cairns' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Adelaide', title: 'Adelaide' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Perth', title: 'Perth' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Darwin', title: 'Darwin' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Canberra', title: 'Canberra' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Hobart', title: 'Hobart' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Brisbane', title: 'Brisbane' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Sunshine+Coast', title: 'Sunshine Coast' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Margaret+River', title: 'Margaret River' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Broome', title: 'Broome' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Alice+Springs', title: 'Alice Springs' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Barossa+Valley', title: 'Barossa Valley' }
+        ];
+
+        // Initialize gallery
+        new PhotoGallery(australiaPhotos, 'australia-gallery');
+    </script>
     <script src="script.js"></script>
 </body>
 

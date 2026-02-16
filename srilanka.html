@@ -32,23 +32,7 @@
 
         <div class="content-section">
             <div class="container">
-                <article class="content-block">
-                    <h2>Ella & Typical Train</h2>
-                    <p>The train ride from Kandy to Ella is famous for a reason. Winding through lush tea plantations
-                        and misty mountains, it's one of the most scenic journeys in the world.</p>
-                </article>
-
-                <article class="content-block">
-                    <h2>Sigiriya Rock</h2>
-                    <p>Climbing the Lion Rock was challenging but rewarding. The ancient fortress atop offers panoramic
-                        views of the surrounding jungle.</p>
-                </article>
-
-                <article class="content-block">
-                    <h2>Mirissa Beaches</h2>
-                    <p>Golden sands and coconut palms. Mirissa is the perfect place to unwind, with great opportunities
-                        for whale watching.</p>
-                </article>
+                <div id="srilanka-gallery"></div>
             </div>
         </div>
     </main>
@@ -65,6 +49,46 @@
             </div>
         </div>
     </footer>
+
+    <script src="gallery.js"></script>
+    <script>
+        // Placeholder photos for Sri Lanka (30 photos)
+        const srilankaPhotos = [
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Sigiriya+Rock', title: 'Sigiriya Rock Fortress' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Ella+Train', title: 'Ella Train Journey' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Mirissa+Beach', title: 'Mirissa Beach' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Temple+of+Tooth', title: 'Temple of the Tooth' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Galle+Fort', title: 'Galle Fort' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Tea+Plantations', title: 'Tea Plantations' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Yala+Safari', title: 'Yala National Park' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Dambulla+Caves', title: 'Dambulla Cave Temple' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Unawatuna', title: 'Unawatuna Beach' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Adams+Peak', title: 'Adams Peak' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Polonnaruwa', title: 'Polonnaruwa Ruins' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Arugam+Bay', title: 'Arugam Bay' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Nuwara+Eliya', title: 'Nuwara Eliya' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Udawalawe', title: 'Udawalawe Elephants' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Bentota', title: 'Bentota' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Anuradhapura', title: 'Anuradhapura' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Trincomalee', title: 'Trincomalee' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Horton+Plains', title: 'Horton Plains' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Colombo', title: 'Colombo City' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Hikkaduwa', title: 'Hikkaduwa' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Pinnawala', title: 'Pinnawala Elephant Orphanage' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Jaffna', title: 'Jaffna' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Negombo', title: 'Negombo' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Kandy+Lake', title: 'Kandy Lake' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Tangalle', title: 'Tangalle Beach' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Minneriya', title: 'Minneriya National Park' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Kalpitiya', title: 'Kalpitiya' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Batticaloa', title: 'Batticaloa' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Matara', title: 'Matara' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Nine+Arch+Bridge', title: 'Nine Arch Bridge' }
+        ];
+
+        // Initialize gallery
+        new PhotoGallery(srilankaPhotos, 'srilanka-gallery');
+    </script>
     <script src="script.js"></script>
 </body>
 

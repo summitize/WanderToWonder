@@ -32,24 +32,7 @@
 
         <div class="content-section">
             <div class="container">
-                <article class="content-block">
-                    <h2>The Burj Khalifa</h2>
-                    <p>Standing at 828 meters, the Burj Khalifa is a testament to human ingenuity. The view from the top
-                        at sunset was nothing short of magical, painting the desert city in hues of orange and purple.
-                    </p>
-                </article>
-
-                <article class="content-block">
-                    <h2>Desert Safari</h2>
-                    <p>Away from the glitz, the desert offers a serene escape. Dune bashing in 4x4s followed by a
-                        traditional BBQ dinner under the stars was the highlight of our trip.</p>
-                </article>
-
-                <article class="content-block">
-                    <h2>The Dubai Mall</h2>
-                    <p>More than just shopping, it's an entertainment hub with an aquarium, ice rink, and the
-                        mesmerizing fountain show right outside.</p>
-                </article>
+                <div id="dubai-gallery"></div>
             </div>
         </div>
     </main>
@@ -66,6 +49,46 @@
             </div>
         </div>
     </footer>
+
+    <script src="gallery.js"></script>
+    <script>
+        // Placeholder photos for Dubai (30 photos)
+        const dubaiPhotos = [
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Burj+Khalifa', title: 'Burj Khalifa' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Palm+Jumeirah', title: 'Palm Jumeirah' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Dubai+Mall', title: 'Dubai Mall' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Dubai+Marina', title: 'Dubai Marina' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Gold+Souk', title: 'Gold Souk' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Desert+Safari', title: 'Desert Safari' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Burj+Al+Arab', title: 'Burj Al Arab' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Dubai+Fountain', title: 'Dubai Fountain' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Jumeirah+Beach', title: 'Jumeirah Beach' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Dubai+Frame', title: 'Dubai Frame' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Atlantis', title: 'Atlantis The Palm' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Ski+Dubai', title: 'Ski Dubai' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Old+Dubai', title: 'Old Dubai' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Dubai+Creek', title: 'Dubai Creek' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Miracle+Garden', title: 'Miracle Garden' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Global+Village', title: 'Global Village' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=JBR+Walk', title: 'JBR Walk' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Dubai+Opera', title: 'Dubai Opera' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=La+Mer', title: 'La Mer Beach' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=City+Walk', title: 'City Walk' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=IMG+Worlds', title: 'IMG Worlds of Adventure' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Dubai+Parks', title: 'Dubai Parks and Resorts' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Aquaventure', title: 'Aquaventure Waterpark' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Museum+of+Future', title: 'Museum of the Future' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Bluewaters+Island', title: 'Bluewaters Island' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Ain+Dubai', title: 'Ain Dubai' },
+            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Kite+Beach', title: 'Kite Beach' },
+            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Al+Fahidi', title: 'Al Fahidi Historical District' },
+            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Spice+Souk', title: 'Spice Souk' },
+            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Downtown+Dubai', title: 'Downtown Dubai' }
+        ];
+
+        // Initialize gallery
+        new PhotoGallery(dubaiPhotos, 'dubai-gallery');
+    </script>
     <script src="script.js"></script>
 </body>
 
