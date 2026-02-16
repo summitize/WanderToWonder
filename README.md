@@ -1,1 +1,1 @@
-# ourlifejourneys
+# WanderToWonder spinning off footer-links into footer-groups and footer-group style later
