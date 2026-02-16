@@ -373,7 +373,7 @@ a {
     animation: float 4s infinite ease-in-out;
 }
 
-spinning off footer-links into footer-groups and footer-group style later .hero-title {
+.hero-title {
     font-size: clamp(2.5rem, 6vw, 5rem);
     margin-bottom: 2rem;
     line-height: 1.1;
