@@ -55,11 +55,23 @@
         <div class="container">
             <p>&copy; 2026 Summitize Life Journeys.</p>
             <div class="footer-links">
-                <a href="dubai.html">Dubai</a>
-                <a href="srilanka.html">Sri Lanka</a>
-                <a href="australia.html">Australia</a>
-                <a href="vision-mission.html">Vision & Mission</a>
-                <a href="board-members.html">Meet the Team</a>
+                <div class="footer-group">
+                    <h4>International</h4>
+                    <a href="dubai.html">Dubai</a>
+                    <a href="srilanka.html">Sri Lanka</a>
+                    <a href="australia.html" class="active">Australia</a>
+                </div>
+                <div class="footer-group">
+                    <h4>India</h4>
+                    <a href="statue-of-unity.html">Statue of Unity</a>
+                    <a href="dapoli.html">Dapoli</a>
+                    <a href="alibaug.html">Alibaug</a>
+                </div>
+                <div class="footer-group">
+                    <h4>About</h4>
+                    <a href="vision-mission.html">Philosophy</a>
+                    <a href="co-travellers.html">Co-Travellers</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -68,36 +80,36 @@
     <script>
         // Placeholder photos for Australia (30 photos)
         const australiaPhotos = [
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Sydney+Opera+House', title: 'Sydney Opera House' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Great+Barrier+Reef', title: 'Great Barrier Reef' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Uluru', title: 'Uluru (Ayers Rock)' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Twelve+Apostles', title: 'Twelve Apostles' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Bondi+Beach', title: 'Bondi Beach' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Blue+Mountains', title: 'Blue Mountains' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Gold+Coast', title: 'Gold Coast' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Daintree+Rainforest', title: 'Daintree Rainforest' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Kangaroo+Island', title: 'Kangaroo Island' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Fraser+Island', title: 'Fraser Island' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Whitsunday+Islands', title: 'Whitsunday Islands' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Melbourne+City', title: 'Melbourne City' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Kakadu+National+Park', title: 'Kakadu National Park' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Port+Douglas', title: 'Port Douglas' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Byron+Bay', title: 'Byron Bay' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Rottnest+Island', title: 'Rottnest Island' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Ningaloo+Reef', title: 'Ningaloo Reef' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Tasmania', title: 'Tasmania Wilderness' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Cairns', title: 'Cairns' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Adelaide', title: 'Adelaide' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Perth', title: 'Perth' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Darwin', title: 'Darwin' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Canberra', title: 'Canberra' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Hobart', title: 'Hobart' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Brisbane', title: 'Brisbane' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Sunshine+Coast', title: 'Sunshine Coast' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Margaret+River', title: 'Margaret River' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Broome', title: 'Broome' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Alice+Springs', title: 'Alice Springs' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Barossa+Valley', title: 'Barossa Valley' }
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Sydney+Opera+House', title: 'Sydney Opera House' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Great+Barrier+Reef', title: 'Great Barrier Reef' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Uluru', title: 'Uluru (Ayers Rock)' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Twelve+Apostles', title: 'Twelve Apostles' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Bondi+Beach', title: 'Bondi Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Blue+Mountains', title: 'Blue Mountains' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Gold+Coast', title: 'Gold Coast' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Daintree+Rainforest', title: 'Daintree Rainforest' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kangaroo+Island', title: 'Kangaroo Island' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Fraser+Island', title: 'Fraser Island' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Whitsunday+Islands', title: 'Whitsunday Islands' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Melbourne+City', title: 'Melbourne City' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kakadu+National+Park', title: 'Kakadu National Park' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Port+Douglas', title: 'Port Douglas' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Byron+Bay', title: 'Byron Bay' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Rottnest+Island', title: 'Rottnest Island' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Ningaloo+Reef', title: 'Ningaloo Reef' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Tasmania', title: 'Tasmania Wilderness' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Cairns', title: 'Cairns' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Adelaide', title: 'Adelaide' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Perth', title: 'Perth' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Darwin', title: 'Darwin' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Canberra', title: 'Canberra' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Hobart', title: 'Hobart' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Brisbane', title: 'Brisbane' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sunshine+Coast', title: 'Sunshine Coast' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Margaret+River', title: 'Margaret River' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Broome', title: 'Broome' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Alice+Springs', title: 'Alice Springs' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Barossa+Valley', title: 'Barossa Valley' }
         ];
 
         // Initialize gallery

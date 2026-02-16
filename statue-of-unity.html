@@ -55,12 +55,23 @@
         <div class="container">
             <p>&copy; 2026 Summitize Life Journeys.</p>
             <div class="footer-links">
-                <a href="dubai.html">Dubai</a>
-                <a href="srilanka.html">Sri Lanka</a>
-                <a href="australia.html">Australia</a>
-                <a href="statue-of-unity.html">Statue of Unity</a>
-                <a href="dapoli.html">Dapoli</a>
-                <a href="alibaug.html">Alibaug</a>
+                <div class="footer-group">
+                    <h4>International</h4>
+                    <a href="dubai.html">Dubai</a>
+                    <a href="srilanka.html">Sri Lanka</a>
+                    <a href="australia.html">Australia</a>
+                </div>
+                <div class="footer-group">
+                    <h4>India</h4>
+                    <a href="statue-of-unity.html" class="active">Statue of Unity</a>
+                    <a href="dapoli.html">Dapoli</a>
+                    <a href="alibaug.html">Alibaug</a>
+                </div>
+                <div class="footer-group">
+                    <h4>About</h4>
+                    <a href="vision-mission.html">Philosophy</a>
+                    <a href="co-travellers.html">Co-Travellers</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -69,36 +80,36 @@
     <script>
         // Placeholder photos for Statue of Unity (30 photos)
         const statuePhotos = [
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Statue+of+Unity', title: 'Statue of Unity' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Sardar+Patel', title: 'Sardar Patel Statue' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Narmada+River', title: 'Narmada River View' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Valley+of+Flowers', title: 'Valley of Flowers' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Viewing+Gallery', title: 'Viewing Gallery' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Sardar+Sarovar+Dam', title: 'Sardar Sarovar Dam' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Laser+Show', title: 'Laser Light Show' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Museum', title: 'Museum & Exhibition' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Sunset+View', title: 'Sunset at Statue' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Gardens', title: 'Landscaped Gardens' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Tent+City', title: 'Tent City' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Cactus+Garden', title: 'Cactus Garden' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Butterfly+Garden', title: 'Butterfly Garden' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Nutrition+Park', title: 'Nutrition Park' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Ekta+Mall', title: 'Ekta Mall' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Food+Court', title: 'Food Court' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Boating', title: 'Boating Experience' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Jungle+Safari', title: 'Jungle Safari' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Tribal+Museum', title: 'Tribal Museum' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Unity+Glow+Garden', title: 'Unity Glow Garden' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Selfie+Point', title: 'Selfie Point' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Observation+Deck', title: 'Observation Deck' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Audio+Visual+Gallery', title: 'Audio Visual Gallery' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Memorial', title: 'Memorial Garden' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Night+View', title: 'Night Illumination' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Helipad', title: 'Helipad View' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Research+Center', title: 'Research Center' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Walkway', title: 'Walkway to Statue' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Panoramic+View', title: 'Panoramic View' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Kevadia', title: 'Kevadia Town' }
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Statue+of+Unity', title: 'Statue of Unity' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sardar+Patel', title: 'Sardar Patel Statue' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Narmada+River', title: 'Narmada River View' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Valley+of+Flowers', title: 'Valley of Flowers' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Viewing+Gallery', title: 'Viewing Gallery' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sardar+Sarovar+Dam', title: 'Sardar Sarovar Dam' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Laser+Show', title: 'Laser Light Show' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Museum', title: 'Museum & Exhibition' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Sunset+View', title: 'Sunset at Statue' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Gardens', title: 'Landscaped Gardens' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Tent+City', title: 'Tent City' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Cactus+Garden', title: 'Cactus Garden' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Butterfly+Garden', title: 'Butterfly Garden' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Nutrition+Park', title: 'Nutrition Park' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Ekta+Mall', title: 'Ekta Mall' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Food+Court', title: 'Food Court' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Boating', title: 'Boating Experience' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Jungle+Safari', title: 'Jungle Safari' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Tribal+Museum', title: 'Tribal Museum' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Unity+Glow+Garden', title: 'Unity Glow Garden' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Selfie+Point', title: 'Selfie Point' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Observation+Deck', title: 'Observation Deck' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Audio+Visual+Gallery', title: 'Audio Visual Gallery' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Memorial', title: 'Memorial Garden' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Night+View', title: 'Night Illumination' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Helipad', title: 'Helipad View' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Research+Center', title: 'Research Center' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Walkway', title: 'Walkway to Statue' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Panoramic+View', title: 'Panoramic View' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Kevadia', title: 'Kevadia Town' }
         ];
 
         // Initialize gallery

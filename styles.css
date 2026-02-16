@@ -635,18 +635,34 @@ a {
     margin: 3rem 0;
     display: flex;
     justify-content: center;
-    gap: 2.5rem;
+    gap: 4rem;
     flex-wrap: wrap;
+    text-align: left;
+}
+
+.footer-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.footer-group h4 {
+    color: var(--color-orange);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    font-weight: 800;
 }
 
 .footer-links a {
     color: var(--text-primary);
-    font-weight: 700;
-    font-size: 0.95rem;
+    font-weight: 600;
+    font-size: 0.85rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     transition: var(--transition);
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 .footer-links a:hover {
@@ -994,8 +1010,8 @@ a {
 }
 
 .lightbox-close:hover {
-    background: var(--color-pink);
-    border-color: var(--color-pink);
+    background: var(--color-orange);
+    border-color: var(--color-orange);
     transform: rotate(90deg);
 }
 

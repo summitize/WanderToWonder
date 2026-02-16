@@ -55,12 +55,23 @@
         <div class="container">
             <p>&copy; 2026 Summitize Life Journeys.</p>
             <div class="footer-links">
-                <a href="dubai.html">Dubai</a>
-                <a href="srilanka.html">Sri Lanka</a>
-                <a href="australia.html">Australia</a>
-                <a href="statue-of-unity.html">Statue of Unity</a>
-                <a href="dapoli.html">Dapoli</a>
-                <a href="alibaug.html">Alibaug</a>
+                <div class="footer-group">
+                    <h4>International</h4>
+                    <a href="dubai.html">Dubai</a>
+                    <a href="srilanka.html">Sri Lanka</a>
+                    <a href="australia.html">Australia</a>
+                </div>
+                <div class="footer-group">
+                    <h4>India</h4>
+                    <a href="statue-of-unity.html">Statue of Unity</a>
+                    <a href="dapoli.html">Dapoli</a>
+                    <a href="alibaug.html" class="active">Alibaug</a>
+                </div>
+                <div class="footer-group">
+                    <h4>About</h4>
+                    <a href="vision-mission.html">Philosophy</a>
+                    <a href="co-travellers.html">Co-Travellers</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -69,36 +80,36 @@
     <script>
         // Placeholder photos for Alibaug (30 photos)
         const alibaugPhotos = [
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Alibaug+Beach', title: 'Alibaug Beach' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Kolaba+Fort', title: 'Kolaba Fort' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Kashid+Beach', title: 'Kashid Beach' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Murud+Janjira+Fort', title: 'Murud Janjira Fort' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Kihim+Beach', title: 'Kihim Beach' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Nagaon+Beach', title: 'Nagaon Beach' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Versoli+Beach', title: 'Versoli Beach' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Akshi+Beach', title: 'Akshi Beach' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Awas+Beach', title: 'Awas Beach' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Mandwa+Beach', title: 'Mandwa Beach' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Korlai+Fort', title: 'Korlai Fort' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Lighthouse', title: 'Korlai Lighthouse' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Ferry+Ride', title: 'Ferry from Gateway' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Water+Sports', title: 'Water Sports' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Parasailing', title: 'Parasailing' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Jet+Ski', title: 'Jet Skiing' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Beach+Camping', title: 'Beach Camping' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Sunset', title: 'Sunset View' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Seafood+Shacks', title: 'Seafood Shacks' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Coconut+Trees', title: 'Coconut Trees' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Beach+Resorts', title: 'Beach Resorts' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Magnetic+Observatory', title: 'Magnetic Observatory' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Kanakeshwar+Temple', title: 'Kanakeshwar Temple' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Birla+Temple', title: 'Birla Temple' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Local+Market', title: 'Local Market' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Village+Tour', title: 'Village Tour' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Casuarina+Trees', title: 'Casuarina Trees' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Beach+Walk', title: 'Beach Walk' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Horseback+Riding', title: 'Horseback Riding' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Coastal+Drive', title: 'Coastal Drive' }
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Alibaug+Beach', title: 'Alibaug Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Kolaba+Fort', title: 'Kolaba Fort' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kashid+Beach', title: 'Kashid Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Murud+Janjira+Fort', title: 'Murud Janjira Fort' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kihim+Beach', title: 'Kihim Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Nagaon+Beach', title: 'Nagaon Beach' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Versoli+Beach', title: 'Versoli Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Akshi+Beach', title: 'Akshi Beach' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Awas+Beach', title: 'Awas Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Mandwa+Beach', title: 'Mandwa Beach' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Korlai+Fort', title: 'Korlai Fort' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Lighthouse', title: 'Korlai Lighthouse' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Ferry+Ride', title: 'Ferry from Gateway' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Water+Sports', title: 'Water Sports' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Parasailing', title: 'Parasailing' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Jet+Ski', title: 'Jet Skiing' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Beach+Camping', title: 'Beach Camping' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sunset', title: 'Sunset View' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Seafood+Shacks', title: 'Seafood Shacks' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Coconut+Trees', title: 'Coconut Trees' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Beach+Resorts', title: 'Beach Resorts' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Magnetic+Observatory', title: 'Magnetic Observatory' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kanakeshwar+Temple', title: 'Kanakeshwar Temple' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Birla+Temple', title: 'Birla Temple' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Local+Market', title: 'Local Market' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Village+Tour', title: 'Village Tour' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Casuarina+Trees', title: 'Casuarina Trees' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Beach+Walk', title: 'Beach Walk' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Horseback+Riding', title: 'Horseback Riding' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Coastal+Drive', title: 'Coastal Drive' }
         ];
 
         // Initialize gallery

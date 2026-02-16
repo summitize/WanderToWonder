@@ -55,12 +55,23 @@
         <div class="container">
             <p>&copy; 2026 Summitize Life Journeys.</p>
             <div class="footer-links">
-                <a href="dubai.html">Dubai</a>
-                <a href="srilanka.html">Sri Lanka</a>
-                <a href="australia.html">Australia</a>
-                <a href="statue-of-unity.html">Statue of Unity</a>
-                <a href="dapoli.html">Dapoli</a>
-                <a href="alibaug.html">Alibaug</a>
+                <div class="footer-group">
+                    <h4>International</h4>
+                    <a href="dubai.html">Dubai</a>
+                    <a href="srilanka.html">Sri Lanka</a>
+                    <a href="australia.html">Australia</a>
+                </div>
+                <div class="footer-group">
+                    <h4>India</h4>
+                    <a href="statue-of-unity.html">Statue of Unity</a>
+                    <a href="dapoli.html" class="active">Dapoli</a>
+                    <a href="alibaug.html">Alibaug</a>
+                </div>
+                <div class="footer-group">
+                    <h4>About</h4>
+                    <a href="vision-mission.html">Philosophy</a>
+                    <a href="co-travellers.html">Co-Travellers</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -69,36 +80,36 @@
     <script>
         // Placeholder photos for Dapoli (30 photos)
         const dapoliPhotos = [
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Murud+Beach', title: 'Murud Beach' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Karde+Beach', title: 'Karde Beach' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Ladghar+Beach', title: 'Ladghar Beach' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Sunset+Point', title: 'Sunset at Beach' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Harnai+Beach', title: 'Harnai Beach' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Suvarnadurg+Fort', title: 'Suvarnadurg Fort' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Kadyavarcha+Ganapati', title: 'Kadyavarcha Ganapati' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Panhalekaji+Caves', title: 'Panhalekaji Caves' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Unhavare+Hot+Springs', title: 'Unhavare Hot Springs' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Coconut+Groves', title: 'Coconut Groves' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Fishing+Village', title: 'Fishing Village' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Local+Market', title: 'Local Market' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Alphonso+Mangoes', title: 'Alphonso Mangoes' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Coastal+Road', title: 'Coastal Road' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Beach+Shacks', title: 'Beach Shacks' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Seafood', title: 'Fresh Seafood' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Dolphin+Spotting', title: 'Dolphin Spotting' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Boat+Ride', title: 'Boat Ride' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Anjarle+Beach', title: 'Anjarle Beach' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Turtle+Festival', title: 'Turtle Festival' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Kelshi+Beach', title: 'Kelshi Beach' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Dabhol+Creek', title: 'Dabhol Creek' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Konkan+Cuisine', title: 'Konkan Cuisine' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Cashew+Plantation', title: 'Cashew Plantation' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Rice+Fields', title: 'Rice Fields' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Village+Life', title: 'Village Life' },
-            { src: 'https://via.placeholder.com/800x600/FFB7B2/FFFFFF?text=Temple', title: 'Local Temple' },
-            { src: 'https://via.placeholder.com/800x600/AEC6CF/FFFFFF?text=Monsoon+View', title: 'Monsoon Beauty' },
-            { src: 'https://via.placeholder.com/800x600/FF8FA3/FFFFFF?text=Backwaters', title: 'Backwaters' },
-            { src: 'https://via.placeholder.com/800x600/6DC4E8/FFFFFF?text=Konkan+Coast', title: 'Konkan Coastline' }
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Murud+Beach', title: 'Murud Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Karde+Beach', title: 'Karde Beach' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Ladghar+Beach', title: 'Ladghar Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sunset+Point', title: 'Sunset at Beach' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Harnai+Beach', title: 'Harnai Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Suvarnadurg+Fort', title: 'Suvarnadurg Fort' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kadyavarcha+Ganapati', title: 'Kadyavarcha Ganapati' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Panhalekaji+Caves', title: 'Panhalekaji Caves' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Unhavare+Hot+Springs', title: 'Unhavare Hot Springs' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Coconut+Groves', title: 'Coconut Groves' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Fishing+Village', title: 'Fishing Village' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Local+Market', title: 'Local Market' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Alphonso+Mangoes', title: 'Alphonso Mangoes' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Coastal+Road', title: 'Coastal Road' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Beach+Shacks', title: 'Beach Shacks' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Seafood', title: 'Fresh Seafood' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Dolphin+Spotting', title: 'Dolphin Spotting' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Boat+Ride', title: 'Boat Ride' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Anjarle+Beach', title: 'Anjarle Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Turtle+Festival', title: 'Turtle Festival' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kelshi+Beach', title: 'Kelshi Beach' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Dabhol+Creek', title: 'Dabhol Creek' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Konkan+Cuisine', title: 'Konkan Cuisine' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Cashew+Plantation', title: 'Cashew Plantation' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Rice+Fields', title: 'Rice Fields' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Village+Life', title: 'Village Life' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Temple', title: 'Local Temple' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Monsoon+View', title: 'Monsoon Beauty' },
+            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Backwaters', title: 'Backwaters' },
+            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Konkan+Coast', title: 'Konkan Coastline' }
         ];
 
         // Initialize gallery
