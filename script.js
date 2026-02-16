@@ -12,24 +12,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Mobile Menu Toggle (Basic implementation)
+    // Mobile Menu Toggle
     const hamburger = document.querySelector('.hamburger');
     const nav = document.querySelector('.nav');
 
     if (hamburger && nav) {
         hamburger.addEventListener('click', () => {
-            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-            if (nav.style.display === 'flex') {
-                nav.style.flexDirection = 'column';
-                nav.style.position = 'absolute';
-                nav.style.top = '70px';
-                nav.style.right = '5%';
-                nav.style.background = '#0a0a0a';
-                nav.style.padding = '2rem';
-                nav.style.border = '1px solid var(--gold-primary)';
-            }
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
         });
     }
+
+    // Dropdown toggle for mobile
+    const dropdowns = document.querySelectorAll('.has-dropdown');
+    dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('.nav-link');
+        link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                dropdown.classList.toggle('open');
+            }
+        });
+    });
 
     // Scroll Animation Observer
     const observerOptions = {
