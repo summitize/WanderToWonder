@@ -302,13 +302,14 @@ a {
     justify-content: space-between;
     gap: 4rem;
     text-align: left;
-    height: 100%;
-    z-index: 1;
+    width: 100%;
+    max-width: 1200px;
+    z-index: 10;
 }
 
 .hero-content {
     flex: 1;
-    max-width: 600px;
+    min-width: 300px;
 }
 
 .hero-image {
@@ -316,18 +317,22 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+    min-width: 300px;
     position: relative;
     animation: float 6s infinite ease-in-out;
 }
 
 .hero-image img {
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
     height: auto;
     border-radius: 30px;
     box-shadow: var(--shadow-hover);
-    border: 1px solid rgba(255, 107, 53, 0.2);
-    filter: drop-shadow(0 0 30px rgba(255, 107, 53, 0.3));
+    border: 2px solid rgba(255, 107, 53, 0.3);
+    filter: drop-shadow(0 0 30px rgba(255, 107, 53, 0.4));
+    background: rgba(255, 107, 53, 0.1);
+    /* Fallback */
+    display: block;
 }
 
 .hero-title {
@@ -783,6 +788,13 @@ a {
 
     .nav-item.has-dropdown.open .dropdown-menu {
         display: block;
+    }
+
+    .hero-container {
+        flex-direction: column-reverse;
+        padding-top: 6rem;
+        text-align: center;
+        gap: 2rem;
     }
 
     .hero-title {
