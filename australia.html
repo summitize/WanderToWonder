@@ -30,42 +30,11 @@
 
     <script src="gallery.js"></script>
     <script>
-        // Placeholder photos for Australia (30 photos)
-        const australiaPhotos = [
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Sydney+Opera+House', title: 'Sydney Opera House' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Great+Barrier+Reef', title: 'Great Barrier Reef' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Uluru', title: 'Uluru (Ayers Rock)' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Twelve+Apostles', title: 'Twelve Apostles' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Bondi+Beach', title: 'Bondi Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Blue+Mountains', title: 'Blue Mountains' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Gold+Coast', title: 'Gold Coast' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Daintree+Rainforest', title: 'Daintree Rainforest' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kangaroo+Island', title: 'Kangaroo Island' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Fraser+Island', title: 'Fraser Island' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Whitsunday+Islands', title: 'Whitsunday Islands' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Melbourne+City', title: 'Melbourne City' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kakadu+National+Park', title: 'Kakadu National Park' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Port+Douglas', title: 'Port Douglas' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Byron+Bay', title: 'Byron Bay' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Rottnest+Island', title: 'Rottnest Island' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Ningaloo+Reef', title: 'Ningaloo Reef' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Tasmania', title: 'Tasmania Wilderness' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Cairns', title: 'Cairns' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Adelaide', title: 'Adelaide' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Perth', title: 'Perth' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Darwin', title: 'Darwin' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Canberra', title: 'Canberra' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Hobart', title: 'Hobart' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Brisbane', title: 'Brisbane' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sunshine+Coast', title: 'Sunshine Coast' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Margaret+River', title: 'Margaret River' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Broome', title: 'Broome' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Alice+Springs', title: 'Alice Springs' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Barossa+Valley', title: 'Barossa Valley' }
-        ];
+        // Use the OneDrive shared album for Australia
+        const AUSTRALIA_LINK = "https://1drv.ms/a/c/97c5e937e7e76f1c/IgAdpW4YCcYNRaVSD1LgqJZpAW7rZfNjUPaM08iT1LQgvdk";
 
-        // Initialize gallery
-        new PhotoGallery(australiaPhotos, 'australia-gallery');
+        // Initialize dynamic gallery
+        PhotoGallery.fromOneDrive(AUSTRALIA_LINK, 'australia-gallery');
     </script>
     <script src="script.js"></script>
 </body>

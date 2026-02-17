@@ -5,11 +5,52 @@
 
 class PhotoGallery {
     constructor(photos, containerId) {
-        this.photos = photos;
+        this.photos = photos || [];
         this.container = document.getElementById(containerId);
         this.currentView = 'grid'; // grid, list, or fullscreen
         this.currentPhotoIndex = 0;
-        this.init();
+        if (this.photos.length > 0) {
+            this.init();
+        }
+    }
+
+    static async fromOneDrive(shareLink, containerId) {
+        // Create an empty gallery first (with loading state potentially)
+        const gallery = new PhotoGallery([], containerId);
+
+        try {
+            // Step 1: Encode the URL to a share ID
+            const base64Value = btoa(shareLink)
+                .replace(/\//g, '_')
+                .replace(/\+/g, '-')
+                .replace(/=/g, '');
+
+            const apiUrl = `https://api.onedrive.com/v1.0/shares/u!${base64Value}/root/children`;
+
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error('OneDrive API failed');
+
+            const data = await response.json();
+
+            // Step 2: Map to gallery format
+            gallery.photos = data.value
+                .filter(item => item.image || item.file?.mimeType?.startsWith('image/'))
+                .map(item => ({
+                    src: item["@content.downloadUrl"],
+                    title: item.name.split('.')[0].replace(/-/g, ' '),
+                    description: `Captured during the Australia journey.`
+                }));
+
+            // Step 3: Initialize with new data
+            gallery.init();
+            return gallery;
+        } catch (error) {
+            console.error("Failed to load OneDrive Album:", error);
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `<p class="error">Oops! Failed to load the Australia album. Please check your connection.</p>`;
+            }
+        }
     }
 
     init() {
