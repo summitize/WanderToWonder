@@ -10,6 +10,9 @@ async function loadComponent(id, file) {
         if (id === 'header-placeholder') {
             initializeNavigation();
         }
+        if (id === 'footer-placeholder') {
+            initializeTheme();
+        }
     } catch (error) {
         console.error(`Error loading component ${file}:`, error);
     }
@@ -90,4 +93,27 @@ document.addEventListener('DOMContentLoaded', () => {
         el.style.transition = 'all 0.6s ease-out';
         observer.observe(el);
     });
+
+    // Initial theme check
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
 });
+
+function initializeTheme() {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
+
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+
+        // Add a small rotation effect on click
+        themeToggle.style.transform = 'scale(0.8) rotate(180deg)';
+        setTimeout(() => {
+            themeToggle.style.transform = '';
+        }, 300);
+    });
+}
