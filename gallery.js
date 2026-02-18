@@ -1,134 +1,316 @@
 /**
  * Photo Gallery Component
- * Supports Grid, List, and Fullscreen viewing modes
+ * - Grid/list/fullscreen modes
+ * - OneDrive shared album/folder loader
+ * - Local JSON manifest fallback
  */
 
 class PhotoGallery {
     constructor(photos, containerId) {
-        this.photos = photos || [];
+        this.photos = Array.isArray(photos) ? photos : [];
         this.container = document.getElementById(containerId);
-        this.currentView = 'grid'; // grid, list, or fullscreen
+        this.currentView = 'grid';
         this.currentPhotoIndex = 0;
-        if (this.photos.length > 0) {
+        this.viewToggle = null;
+        this.galleryContainer = null;
+        this.keyboardBound = false;
+        this.keydownHandler = (event) => {
+            if (PhotoGallery.activeGallery !== this) return;
+
+            if (event.key === 'Escape') this.closeLightbox();
+            if (event.key === 'ArrowLeft') this.navigateLightbox(-1);
+            if (event.key === 'ArrowRight') this.navigateLightbox(1);
+        };
+
+        if (this.container && this.photos.length > 0) {
             this.init();
         }
     }
 
-    static async fromLocal(jsonPath, containerId, options = {}) {
-        const gallery = new PhotoGallery([], containerId);
-        const container = document.getElementById(containerId);
-        const { suppressErrorUi = false, description = 'Captured during the journey.' } = options;
+    static textOrDefault(value, fallback) {
+        if (typeof value !== 'string') return fallback;
+        const trimmed = value.trim();
+        return trimmed.length > 0 ? trimmed : fallback;
+    }
 
-        try {
-            const response = await fetch(jsonPath);
-            if (!response.ok) throw new Error('Local manifest not found');
-            const data = await response.json();
-
-            gallery.photos = data.map(photo => ({
-                src: photo.src,
-                title: photo.title || photo.name.split('.')[0].replace(/-/g, ' '),
-                description: photo.description || description
-            }));
-
-            gallery.init();
-            return gallery;
-        } catch (error) {
-            console.error("Local load failed:", error);
-            if (container && !suppressErrorUi) {
-                container.innerHTML = `<p class="error">Wait! We couldn't find the cached images. Please run the sync script.</p>`;
-            }
-            return null;
+    static derivePhotoTitle(fileName, fallbackIndex) {
+        if (typeof fileName !== 'string' || fileName.trim().length === 0) {
+            return `Photo ${fallbackIndex}`;
         }
+
+        return fileName
+            .replace(/\.[^/.]+$/, '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    static isConfiguredShareLink(shareLink) {
+        return (
+            typeof shareLink === 'string'
+            && shareLink.trim().length > 0
+            && !shareLink.includes('PASTE_')
+        );
+    }
+
+    static async fetchJson(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`OneDrive API request failed (${response.status}).`);
+        }
+        return response.json();
+    }
+
+    static extractItemsPage(data) {
+        if (!data || typeof data !== 'object') {
+            return { items: [], nextLink: null };
+        }
+
+        if (Array.isArray(data.value)) {
+            return {
+                items: data.value,
+                nextLink: data['@odata.nextLink'] || null
+            };
+        }
+
+        if (Array.isArray(data.children)) {
+            return {
+                items: data.children,
+                nextLink: data['children@odata.nextLink'] || null
+            };
+        }
+
+        return { items: [], nextLink: null };
+    }
+
+    static async collectPagedItems(firstPage) {
+        const allItems = [];
+        let currentPage = firstPage;
+        let pageCount = 0;
+
+        while (currentPage) {
+            const { items, nextLink } = PhotoGallery.extractItemsPage(currentPage);
+            allItems.push(...items);
+
+            if (!nextLink) break;
+
+            pageCount += 1;
+            if (pageCount > 100) {
+                throw new Error('OneDrive pagination did not terminate.');
+            }
+
+            currentPage = await PhotoGallery.fetchJson(nextLink);
+        }
+
+        return allItems;
     }
 
     static toOneDriveShareId(shareLink) {
-        const bytes = new TextEncoder().encode(shareLink);
-        let binary = '';
+        const encoder = typeof TextEncoder !== 'undefined' ? new TextEncoder() : null;
+        const bytes = encoder
+            ? encoder.encode(shareLink)
+            : unescape(encodeURIComponent(shareLink)).split('').map((char) => char.charCodeAt(0));
 
-        bytes.forEach(byte => {
+        let binary = '';
+        for (const byte of bytes) {
             binary += String.fromCharCode(byte);
-        });
+        }
 
         return btoa(binary)
             .replace(/\//g, '_')
             .replace(/\+/g, '-')
-            .replace(/=/g, '');
+            .replace(/=+$/g, '');
     }
 
-    static async fetchOneDriveItems(shareLink) {
-        const shareId = PhotoGallery.toOneDriveShareId(shareLink);
-        const endpoints = [
-            `https://api.onedrive.com/v1.0/shares/u!${shareId}/root/children`,
-            `https://api.onedrive.com/v1.0/shares/u!${shareId}/driveItem/children`
-        ];
-
+    static async fetchFirstWorkingCollection(endpoints) {
         let lastError = null;
 
-        for (const url of endpoints) {
+        for (const endpoint of endpoints) {
             try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    lastError = new Error(`OneDrive API Error: ${response.status}`);
-                    continue;
+                const firstPage = await PhotoGallery.fetchJson(endpoint);
+                const items = await PhotoGallery.collectPagedItems(firstPage);
+                if (items.length > 0) {
+                    return items;
                 }
-
-                const data = await response.json();
-                return data.value || [];
             } catch (error) {
                 lastError = error;
             }
         }
 
-        throw lastError || new Error('Unable to reach OneDrive API.');
+        throw lastError || new Error('Could not retrieve data from OneDrive.');
     }
 
-    static async fromOneDrive(shareLink, containerId, options = {}) {
-        // Create an empty gallery first (with loading state potentially)
+    static isImageItem(item) {
+        if (!item || typeof item !== 'object') return false;
+        if (item.image) return true;
+
+        const mimeType = item.file && typeof item.file.mimeType === 'string'
+            ? item.file.mimeType.toLowerCase()
+            : '';
+
+        return mimeType.startsWith('image/');
+    }
+
+    static itemDownloadUrl(item) {
+        if (!item || typeof item !== 'object') return '';
+
+        return (
+            item['@content.downloadUrl']
+            || item['@microsoft.graph.downloadUrl']
+            || item.webUrl
+            || ''
+        );
+    }
+
+    static mapOneDriveItemsToPhotos(items, description) {
+        const photos = [];
+        const seen = new Set();
+        const sorted = [...items].sort((left, right) => {
+            const leftName = PhotoGallery.textOrDefault(left && left.name, '');
+            const rightName = PhotoGallery.textOrDefault(right && right.name, '');
+            return leftName.localeCompare(rightName, undefined, {
+                numeric: true,
+                sensitivity: 'base'
+            });
+        });
+
+        for (const item of sorted) {
+            if (!PhotoGallery.isImageItem(item)) continue;
+
+            const src = PhotoGallery.itemDownloadUrl(item);
+            if (!src) continue;
+
+            const uniqueKey = item.id || src;
+            if (seen.has(uniqueKey)) continue;
+            seen.add(uniqueKey);
+
+            photos.push({
+                src,
+                title: PhotoGallery.derivePhotoTitle(item.name, photos.length + 1),
+                description
+            });
+        }
+
+        return photos;
+    }
+
+    static async fetchOneDriveItems(shareLink) {
+        const encodedShareId = PhotoGallery.toOneDriveShareId(shareLink);
+        const shareId = `u!${encodedShareId}`;
+        const baseUrl = `https://api.onedrive.com/v1.0/shares/${shareId}`;
+
+        const endpoints = [
+            `${baseUrl}/driveItem/children?$top=200`,
+            `${baseUrl}/root/children?$top=200`,
+            `${baseUrl}/driveItem?$expand=children`
+        ];
+
+        return PhotoGallery.fetchFirstWorkingCollection(endpoints);
+    }
+
+    static renderLoading(container, message) {
+        if (!container) return;
+        container.innerHTML = `<p class="loading" style="text-align: center; padding: 2rem;">${message}</p>`;
+    }
+
+    static renderError(container, destinationName, message) {
+        if (!container) return;
+
+        const safeDestination = PhotoGallery.textOrDefault(destinationName, 'this trip');
+        const safeMessage = PhotoGallery.textOrDefault(
+            message,
+            'Could not connect to OneDrive.'
+        );
+
+        container.innerHTML = `
+            <div class="gallery-error" style="padding: 3rem; text-align: center; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--color-coral); margin: 2rem 0;">
+                <h3 style="color: var(--color-coral); margin-bottom: 1rem;">Gallery Not Available</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-primary);">Unable to load photos for ${safeDestination}.</p>
+                <p style="margin-bottom: 1rem; color: var(--text-primary);">${safeMessage}</p>
+                <ol style="padding-left: 1.2rem; line-height: 1.8; text-align: left; display: inline-block;">
+                    <li>Use a OneDrive shared album/folder link with "Anyone with the link can view".</li>
+                    <li>If you use local fallback, ensure the manifest JSON exists in <code>data/</code>.</li>
+                </ol>
+            </div>
+        `;
+    }
+
+    static parseLocalManifest(data, description) {
+        const rows = Array.isArray(data)
+            ? data
+            : (Array.isArray(data && data.photos) ? data.photos : []);
+
+        return rows
+            .filter((row) => row && typeof row === 'object')
+            .map((row, index) => ({
+                src: PhotoGallery.textOrDefault(row.src, ''),
+                title: PhotoGallery.textOrDefault(
+                    row.title,
+                    PhotoGallery.derivePhotoTitle(row.name, index + 1)
+                ),
+                description: PhotoGallery.textOrDefault(row.description, description)
+            }))
+            .filter((photo) => photo.src.length > 0);
+    }
+
+    static async fromLocal(jsonPath, containerId, options = {}) {
         const gallery = new PhotoGallery([], containerId);
         const container = document.getElementById(containerId);
-        const { suppressErrorUi = false, description = 'Captured during the journey.' } = options;
+        const {
+            suppressErrorUi = false,
+            description = 'Captured during the journey.'
+        } = options;
 
         try {
-            if (container) container.innerHTML = '<p class="loading" style="text-align:center; padding: 2rem;">Loading from OneDrive...</p>';
-
-            const items = await PhotoGallery.fetchOneDriveItems(shareLink);
-
-            // Step 2: Map to gallery format
-            gallery.photos = (items || [])
-                .filter(item => item.image || item.file?.mimeType?.startsWith('image/'))
-                .map(item => ({
-                    src: item["@content.downloadUrl"] || item.webUrl,
-                    title: item.name.split('.')[0].replace(/-/g, ' ').replace(/_/g, ' '),
-                    description
-                }))
-                .filter(photo => Boolean(photo.src));
-
-            if (gallery.photos.length === 0) {
-                throw new Error('No images found in the shared folder.');
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error('Local manifest not found.');
             }
 
-            // Step 3: Initialize with new data
-            if (container) container.innerHTML = ''; // Clear loading
+            const data = await response.json();
+            gallery.photos = PhotoGallery.parseLocalManifest(data, description);
+
+            if (gallery.photos.length === 0) {
+                throw new Error('Local manifest does not contain images.');
+            }
+
             gallery.init();
             return gallery;
         } catch (error) {
-            console.error("Failed to load OneDrive Album:", error);
+            console.error('Local gallery load failed:', error);
             if (container && !suppressErrorUi) {
-                container.innerHTML = `
-                    <div class="gallery-error" style="padding: 3rem; text-align: center; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--color-coral); margin: 2rem 0;">
-                        <h3 style="color: var(--color-coral); margin-bottom: 1rem;">Gallery Connection Issue</h3>
-                        <p style="margin-bottom: 2rem; color: var(--text-primary);">${error.message}</p>
-                        <div style="background: var(--bg-card); padding: 2rem; border-radius: 16px; font-size: 0.95rem; text-align: left; box-shadow: var(--shadow-soft);">
-                            <strong style="color: var(--color-primary); display: block; margin-bottom: 0.5rem;">How to fix this:</strong>
-                            <ol style="padding-left: 1.2rem; line-height: 1.8;">
-                                <li>Go to the <strong>Folder</strong> containing the photos (not the Album view).</li>
-                                <li>Click <strong>Share</strong> &rarr; <strong>Copy Link</strong>.</li>
-                                <li>Ensure it is set to <strong>"Anyone with the link can view"</strong>.</li>
-                                <li>Replace the link in your <code>australia.html</code> file.</li>
-                            </ol>
-                        </div>
-                    </div>
-                `;
+                PhotoGallery.renderError(container, 'this trip', error.message);
+            }
+            return null;
+        }
+    }
+
+    static async fromOneDrive(shareLink, containerId, options = {}) {
+        const gallery = new PhotoGallery([], containerId);
+        const container = document.getElementById(containerId);
+        const {
+            suppressErrorUi = false,
+            description = 'Captured during the journey.',
+            destinationName = 'this trip'
+        } = options;
+
+        try {
+            PhotoGallery.renderLoading(container, 'Loading photos from OneDrive...');
+
+            const items = await PhotoGallery.fetchOneDriveItems(shareLink);
+            gallery.photos = PhotoGallery.mapOneDriveItemsToPhotos(items, description);
+
+            if (gallery.photos.length === 0) {
+                throw new Error('No image files were found in this shared album.');
+            }
+
+            if (container) container.innerHTML = '';
+            gallery.init();
+            return gallery;
+        } catch (error) {
+            console.error('OneDrive gallery load failed:', error);
+            if (container && !suppressErrorUi) {
+                PhotoGallery.renderError(container, destinationName, error.message);
             }
             return null;
         }
@@ -141,136 +323,165 @@ class PhotoGallery {
         destinationName = 'journey'
     }) {
         const description = `Captured during the ${destinationName} journey.`;
-        const hasShareLink = typeof shareLink === 'string' && shareLink.trim() && !shareLink.includes('PASTE_');
 
-        if (hasShareLink) {
+        if (PhotoGallery.isConfiguredShareLink(shareLink)) {
             const remoteGallery = await PhotoGallery.fromOneDrive(shareLink.trim(), containerId, {
                 suppressErrorUi: true,
-                description
+                description,
+                destinationName
             });
-            if (remoteGallery) return remoteGallery;
+
+            if (remoteGallery) {
+                return remoteGallery;
+            }
         }
 
-        if (localJsonPath) {
+        if (typeof localJsonPath === 'string' && localJsonPath.trim().length > 0) {
             const localGallery = await PhotoGallery.fromLocal(localJsonPath, containerId, {
                 suppressErrorUi: true,
                 description
             });
-            if (localGallery) return localGallery;
+
+            if (localGallery) {
+                return localGallery;
+            }
         }
 
         const container = document.getElementById(containerId);
         if (container) {
-            container.innerHTML = `
-                <div class="gallery-error" style="padding: 3rem; text-align: center; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--color-coral); margin: 2rem 0;">
-                    <h3 style="color: var(--color-coral); margin-bottom: 1rem;">Gallery Not Available</h3>
-                    <p style="margin-bottom: 1rem; color: var(--text-primary);">Could not load photos from OneDrive or local cache.</p>
-                    <ol style="padding-left: 1.2rem; line-height: 1.8; text-align: left; display: inline-block;">
-                        <li>Use a OneDrive <strong>folder</strong> share link with "Anyone with the link can view".</li>
-                        <li>Or generate local cache using <code>python scripts/sync-gallery.py --trip ${destinationName.toLowerCase()} --source "C:\\path\\to\\photos"</code>.</li>
-                    </ol>
-                </div>
-            `;
+            PhotoGallery.renderError(
+                container,
+                destinationName,
+                'Could not load photos from OneDrive or local cache.'
+            );
         }
 
         return null;
     }
 
     init() {
+        if (!this.container) return;
+
+        this.container.innerHTML = '';
         this.renderViewToggle();
         this.renderGallery();
         this.setupKeyboardNavigation();
     }
 
     renderViewToggle() {
-        const toggleHTML = `
-            <div class="view-toggle">
-                <button class="view-btn ${this.currentView === 'grid' ? 'active' : ''}" data-view="grid">
-                    <span>⊞</span> Grid
-                </button>
-                <button class="view-btn ${this.currentView === 'list' ? 'active' : ''}" data-view="list">
-                    <span>☰</span> List
-                </button>
-            </div>
-        `;
+        const toggle = document.createElement('div');
+        toggle.className = 'view-toggle';
 
-        const toggleDiv = document.createElement('div');
-        toggleDiv.innerHTML = toggleHTML;
-        this.container.insertBefore(toggleDiv.firstElementChild, this.container.firstChild);
+        const views = [
+            { key: 'grid', label: 'Grid' },
+            { key: 'list', label: 'List' }
+        ];
 
-        // Add event listeners
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.switchView(e.target.closest('.view-btn').dataset.view);
-            });
-        });
+        for (const view of views) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = `view-btn ${this.currentView === view.key ? 'active' : ''}`;
+            button.dataset.view = view.key;
+            button.textContent = view.label;
+            button.addEventListener('click', () => this.switchView(view.key));
+            toggle.appendChild(button);
+        }
+
+        this.viewToggle = toggle;
+        this.container.appendChild(toggle);
     }
 
     switchView(view) {
+        if (view !== 'grid' && view !== 'list') return;
+        if (this.currentView === view) return;
+
         this.currentView = view;
-
-        // Update active button
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.view === view);
-        });
-
+        this.refreshToggleState();
         this.renderGallery();
     }
 
+    refreshToggleState() {
+        if (!this.viewToggle) return;
+
+        this.viewToggle.querySelectorAll('.view-btn').forEach((button) => {
+            button.classList.toggle('active', button.dataset.view === this.currentView);
+        });
+    }
+
     renderGallery() {
-        const galleryContainer = this.container.querySelector('.gallery-container') ||
-            document.createElement('div');
-        galleryContainer.className = `gallery-container ${this.currentView}-view`;
-        galleryContainer.innerHTML = '';
+        if (!this.container) return;
+
+        if (!this.galleryContainer) {
+            this.galleryContainer = document.createElement('div');
+            this.container.appendChild(this.galleryContainer);
+        }
+
+        this.galleryContainer.className = `gallery-container ${this.currentView}-view`;
+        this.galleryContainer.innerHTML = '';
 
         this.photos.forEach((photo, index) => {
-            const photoCard = this.createPhotoCard(photo, index);
-            galleryContainer.appendChild(photoCard);
+            this.galleryContainer.appendChild(this.createPhotoCard(photo, index));
         });
-
-        if (!this.container.querySelector('.gallery-container')) {
-            this.container.appendChild(galleryContainer);
-        }
     }
 
     createPhotoCard(photo, index) {
         const card = document.createElement('div');
         card.className = 'photo-card';
 
-        card.innerHTML = `
-            <div class="photo-wrapper">
-                <img src="${photo.src}" alt="${photo.title}" loading="lazy">
-                <div class="photo-overlay">
-                    <button class="fullscreen-btn" data-index="${index}">
-                        <span>⛶</span> View Fullscreen
-                    </button>
-                </div>
-            </div>
-            ${this.currentView === 'list' ? `
-                <div class="photo-info">
-                    <h3>${photo.title}</h3>
-                    <p>${photo.description || ''}</p>
-                </div>
-            ` : ''}
-        `;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'photo-wrapper';
 
-        // Add click handler for fullscreen
-        card.querySelector('.fullscreen-btn').addEventListener('click', () => {
-            this.openFullscreen(index);
-        });
+        const image = document.createElement('img');
+        image.src = photo.src;
+        image.alt = photo.title;
+        image.loading = 'lazy';
+        image.addEventListener('click', () => this.openFullscreen(index));
 
-        // Also allow clicking the image itself
-        card.querySelector('img').addEventListener('click', () => {
-            this.openFullscreen(index);
-        });
+        const overlay = document.createElement('div');
+        overlay.className = 'photo-overlay';
+
+        const fullButton = document.createElement('button');
+        fullButton.type = 'button';
+        fullButton.className = 'fullscreen-btn';
+        fullButton.dataset.index = `${index}`;
+        fullButton.textContent = 'View Fullscreen';
+        fullButton.addEventListener('click', () => this.openFullscreen(index));
+
+        overlay.appendChild(fullButton);
+        wrapper.appendChild(image);
+        wrapper.appendChild(overlay);
+        card.appendChild(wrapper);
+
+        if (this.currentView === 'list') {
+            const info = document.createElement('div');
+            info.className = 'photo-info';
+
+            const title = document.createElement('h3');
+            title.textContent = photo.title;
+            info.appendChild(title);
+
+            const description = document.createElement('p');
+            description.textContent = PhotoGallery.textOrDefault(photo.description, '');
+            info.appendChild(description);
+
+            card.appendChild(info);
+        }
 
         return card;
     }
 
     openFullscreen(index) {
+        if (index < 0 || index >= this.photos.length) return;
+
         this.currentPhotoIndex = index;
-        const lightbox = this.createLightbox();
-        document.body.appendChild(lightbox);
+        PhotoGallery.activeGallery = this;
+
+        const previousLightbox = document.getElementById('photo-lightbox');
+        if (previousLightbox) {
+            previousLightbox.remove();
+        }
+
+        document.body.appendChild(this.createLightbox());
         document.body.style.overflow = 'hidden';
     }
 
@@ -279,96 +490,115 @@ class PhotoGallery {
         lightbox.className = 'lightbox';
         lightbox.id = 'photo-lightbox';
 
-        const photo = this.photos[this.currentPhotoIndex];
+        const content = document.createElement('div');
+        content.className = 'lightbox-content';
 
-        lightbox.innerHTML = `
-            <div class="lightbox-content">
-                <button class="lightbox-close">&times;</button>
-                <button class="lightbox-nav lightbox-prev" ${this.currentPhotoIndex === 0 ? 'disabled' : ''}>
-                    ‹
-                </button>
-                <div class="lightbox-image-container">
-                    <img src="${photo.src}" alt="${photo.title}">
-                    <div class="lightbox-caption">
-                        <h3>${photo.title}</h3>
-                        <p class="photo-counter">${this.currentPhotoIndex + 1} / ${this.photos.length}</p>
-                    </div>
-                </div>
-                <button class="lightbox-nav lightbox-next" ${this.currentPhotoIndex === this.photos.length - 1 ? 'disabled' : ''}>
-                    ›
-                </button>
-            </div>
-        `;
+        const closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.className = 'lightbox-close';
+        closeButton.setAttribute('aria-label', 'Close');
+        closeButton.innerHTML = '&times;';
+        closeButton.addEventListener('click', () => this.closeLightbox());
 
-        // Event listeners
-        lightbox.querySelector('.lightbox-close').addEventListener('click', () => this.closeLightbox());
-        lightbox.querySelector('.lightbox-prev').addEventListener('click', () => this.navigateLightbox(-1));
-        lightbox.querySelector('.lightbox-next').addEventListener('click', () => this.navigateLightbox(1));
+        const prevButton = document.createElement('button');
+        prevButton.type = 'button';
+        prevButton.className = 'lightbox-nav lightbox-prev';
+        prevButton.textContent = '<';
+        prevButton.addEventListener('click', () => this.navigateLightbox(-1));
 
-        // Click outside to close
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'lightbox-image-container';
+
+        const image = document.createElement('img');
+        imageContainer.appendChild(image);
+
+        const caption = document.createElement('div');
+        caption.className = 'lightbox-caption';
+
+        const title = document.createElement('h3');
+        title.className = 'lightbox-title';
+
+        const counter = document.createElement('p');
+        counter.className = 'photo-counter';
+
+        caption.appendChild(title);
+        caption.appendChild(counter);
+        imageContainer.appendChild(caption);
+
+        const nextButton = document.createElement('button');
+        nextButton.type = 'button';
+        nextButton.className = 'lightbox-nav lightbox-next';
+        nextButton.textContent = '>';
+        nextButton.addEventListener('click', () => this.navigateLightbox(1));
+
+        content.appendChild(closeButton);
+        content.appendChild(prevButton);
+        content.appendChild(imageContainer);
+        content.appendChild(nextButton);
+        lightbox.appendChild(content);
+
+        lightbox.addEventListener('click', (event) => {
+            if (event.target === lightbox) {
                 this.closeLightbox();
             }
         });
 
+        this.updateLightbox();
         return lightbox;
     }
 
     navigateLightbox(direction) {
-        const newIndex = this.currentPhotoIndex + direction;
+        const nextIndex = this.currentPhotoIndex + direction;
+        if (nextIndex < 0 || nextIndex >= this.photos.length) return;
 
-        if (newIndex >= 0 && newIndex < this.photos.length) {
-            this.currentPhotoIndex = newIndex;
-            this.updateLightbox();
-        }
+        this.currentPhotoIndex = nextIndex;
+        this.updateLightbox();
     }
 
     updateLightbox() {
         const lightbox = document.getElementById('photo-lightbox');
+        if (!lightbox) return;
+
         const photo = this.photos[this.currentPhotoIndex];
+        if (!photo) return;
 
-        lightbox.querySelector('img').src = photo.src;
-        lightbox.querySelector('img').alt = photo.title;
-        lightbox.querySelector('.lightbox-caption h3').textContent = photo.title;
-        lightbox.querySelector('.photo-counter').textContent =
-            `${this.currentPhotoIndex + 1} / ${this.photos.length}`;
+        const image = lightbox.querySelector('.lightbox-image-container img');
+        const title = lightbox.querySelector('.lightbox-caption .lightbox-title');
+        const counter = lightbox.querySelector('.lightbox-caption .photo-counter');
+        const prevButton = lightbox.querySelector('.lightbox-prev');
+        const nextButton = lightbox.querySelector('.lightbox-next');
 
-        // Update button states
-        lightbox.querySelector('.lightbox-prev').disabled = this.currentPhotoIndex === 0;
-        lightbox.querySelector('.lightbox-next').disabled =
-            this.currentPhotoIndex === this.photos.length - 1;
+        image.src = photo.src;
+        image.alt = photo.title;
+        title.textContent = photo.title;
+        counter.textContent = `${this.currentPhotoIndex + 1} / ${this.photos.length}`;
+
+        prevButton.disabled = this.currentPhotoIndex === 0;
+        nextButton.disabled = this.currentPhotoIndex === this.photos.length - 1;
     }
 
     closeLightbox() {
         const lightbox = document.getElementById('photo-lightbox');
         if (lightbox) {
             lightbox.remove();
-            document.body.style.overflow = '';
+        }
+
+        document.body.style.overflow = '';
+        if (PhotoGallery.activeGallery === this) {
+            PhotoGallery.activeGallery = null;
         }
     }
 
     setupKeyboardNavigation() {
-        document.addEventListener('keydown', (e) => {
-            const lightbox = document.getElementById('photo-lightbox');
-            if (!lightbox) return;
+        if (this.keyboardBound) return;
 
-            switch (e.key) {
-                case 'Escape':
-                    this.closeLightbox();
-                    break;
-                case 'ArrowLeft':
-                    this.navigateLightbox(-1);
-                    break;
-                case 'ArrowRight':
-                    this.navigateLightbox(1);
-                    break;
-            }
-        });
+        document.addEventListener('keydown', this.keydownHandler);
+        this.keyboardBound = true;
     }
 }
 
-// Export for use in other files
+PhotoGallery.activeGallery = null;
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = PhotoGallery;
 }

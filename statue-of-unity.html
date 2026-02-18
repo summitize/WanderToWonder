@@ -30,42 +30,15 @@
 
     <script src="gallery.js"></script>
     <script>
-        // Placeholder photos for Statue of Unity (30 photos)
-        const statuePhotos = [
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Statue+of+Unity', title: 'Statue of Unity' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sardar+Patel', title: 'Sardar Patel Statue' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Narmada+River', title: 'Narmada River View' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Valley+of+Flowers', title: 'Valley of Flowers' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Viewing+Gallery', title: 'Viewing Gallery' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sardar+Sarovar+Dam', title: 'Sardar Sarovar Dam' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Laser+Show', title: 'Laser Light Show' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Museum', title: 'Museum & Exhibition' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Sunset+View', title: 'Sunset at Statue' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Gardens', title: 'Landscaped Gardens' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Tent+City', title: 'Tent City' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Cactus+Garden', title: 'Cactus Garden' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Butterfly+Garden', title: 'Butterfly Garden' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Nutrition+Park', title: 'Nutrition Park' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Ekta+Mall', title: 'Ekta Mall' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Food+Court', title: 'Food Court' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Boating', title: 'Boating Experience' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Jungle+Safari', title: 'Jungle Safari' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Tribal+Museum', title: 'Tribal Museum' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Unity+Glow+Garden', title: 'Unity Glow Garden' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Selfie+Point', title: 'Selfie Point' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Observation+Deck', title: 'Observation Deck' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Audio+Visual+Gallery', title: 'Audio Visual Gallery' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Memorial', title: 'Memorial Garden' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Night+View', title: 'Night Illumination' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Helipad', title: 'Helipad View' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Research+Center', title: 'Research Center' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Walkway', title: 'Walkway to Statue' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Panoramic+View', title: 'Panoramic View' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Kevadia', title: 'Kevadia Town' }
-        ];
+        // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
+        const statueOneDriveShareLink = 'PASTE_STATUE_OF_UNITY_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
 
-        // Initialize gallery
-        new PhotoGallery(statuePhotos, 'statue-gallery');
+        PhotoGallery.loadBestSource({
+            containerId: 'statue-gallery',
+            shareLink: statueOneDriveShareLink,
+            localJsonPath: 'data/statue-of-unity.json',
+            destinationName: 'Statue of Unity'
+        });
     </script>
     <script src="script.js"></script>
 </body>

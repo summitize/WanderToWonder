@@ -30,42 +30,15 @@
 
     <script src="gallery.js"></script>
     <script>
-        // Placeholder photos for Alibaug (30 photos)
-        const alibaugPhotos = [
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Alibaug+Beach', title: 'Alibaug Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Kolaba+Fort', title: 'Kolaba Fort' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kashid+Beach', title: 'Kashid Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Murud+Janjira+Fort', title: 'Murud Janjira Fort' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kihim+Beach', title: 'Kihim Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Nagaon+Beach', title: 'Nagaon Beach' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Versoli+Beach', title: 'Versoli Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Akshi+Beach', title: 'Akshi Beach' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Awas+Beach', title: 'Awas Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Mandwa+Beach', title: 'Mandwa Beach' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Korlai+Fort', title: 'Korlai Fort' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Lighthouse', title: 'Korlai Lighthouse' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Ferry+Ride', title: 'Ferry from Gateway' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Water+Sports', title: 'Water Sports' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Parasailing', title: 'Parasailing' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Jet+Ski', title: 'Jet Skiing' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Beach+Camping', title: 'Beach Camping' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sunset', title: 'Sunset View' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Seafood+Shacks', title: 'Seafood Shacks' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Coconut+Trees', title: 'Coconut Trees' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Beach+Resorts', title: 'Beach Resorts' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Magnetic+Observatory', title: 'Magnetic Observatory' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kanakeshwar+Temple', title: 'Kanakeshwar Temple' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Birla+Temple', title: 'Birla Temple' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Local+Market', title: 'Local Market' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Village+Tour', title: 'Village Tour' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Casuarina+Trees', title: 'Casuarina Trees' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Beach+Walk', title: 'Beach Walk' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Horseback+Riding', title: 'Horseback Riding' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Coastal+Drive', title: 'Coastal Drive' }
-        ];
+        // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
+        const alibaugOneDriveShareLink = 'PASTE_ALIBAUG_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
 
-        // Initialize gallery
-        new PhotoGallery(alibaugPhotos, 'alibaug-gallery');
+        PhotoGallery.loadBestSource({
+            containerId: 'alibaug-gallery',
+            shareLink: alibaugOneDriveShareLink,
+            localJsonPath: 'data/alibaug.json',
+            destinationName: 'Alibaug'
+        });
     </script>
     <script src="script.js"></script>
 </body>

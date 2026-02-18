@@ -30,42 +30,15 @@
 
     <script src="gallery.js"></script>
     <script>
-        // Placeholder photos for Sri Lanka (30 photos)
-        const srilankaPhotos = [
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Sigiriya+Rock', title: 'Sigiriya Rock Fortress' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Ella+Train', title: 'Ella Train Journey' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Mirissa+Beach', title: 'Mirissa Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Temple+of+Tooth', title: 'Temple of the Tooth' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Galle+Fort', title: 'Galle Fort' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Tea+Plantations', title: 'Tea Plantations' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Yala+Safari', title: 'Yala National Park' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Dambulla+Caves', title: 'Dambulla Cave Temple' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Unawatuna', title: 'Unawatuna Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Adams+Peak', title: 'Adams Peak' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Polonnaruwa', title: 'Polonnaruwa Ruins' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Arugam+Bay', title: 'Arugam Bay' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Nuwara+Eliya', title: 'Nuwara Eliya' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Udawalawe', title: 'Udawalawe Elephants' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Bentota', title: 'Bentota' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Anuradhapura', title: 'Anuradhapura' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Trincomalee', title: 'Trincomalee' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Horton+Plains', title: 'Horton Plains' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Colombo', title: 'Colombo City' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Hikkaduwa', title: 'Hikkaduwa' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Pinnawala', title: 'Pinnawala Elephant Orphanage' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Jaffna', title: 'Jaffna' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Negombo', title: 'Negombo' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Kandy+Lake', title: 'Kandy Lake' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Tangalle', title: 'Tangalle Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Minneriya', title: 'Minneriya National Park' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kalpitiya', title: 'Kalpitiya' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Batticaloa', title: 'Batticaloa' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Matara', title: 'Matara' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Nine+Arch+Bridge', title: 'Nine Arch Bridge' }
-        ];
+        // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
+        const srilankaOneDriveShareLink = 'PASTE_SRILANKA_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
 
-        // Initialize gallery
-        new PhotoGallery(srilankaPhotos, 'srilanka-gallery');
+        PhotoGallery.loadBestSource({
+            containerId: 'srilanka-gallery',
+            shareLink: srilankaOneDriveShareLink,
+            localJsonPath: 'data/srilanka.json',
+            destinationName: 'Sri Lanka'
+        });
     </script>
     <script src="script.js"></script>
 </body>

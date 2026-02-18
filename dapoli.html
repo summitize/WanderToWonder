@@ -30,42 +30,15 @@
 
     <script src="gallery.js"></script>
     <script>
-        // Placeholder photos for Dapoli (30 photos)
-        const dapoliPhotos = [
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Murud+Beach', title: 'Murud Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Karde+Beach', title: 'Karde Beach' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Ladghar+Beach', title: 'Ladghar Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Sunset+Point', title: 'Sunset at Beach' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Harnai+Beach', title: 'Harnai Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Suvarnadurg+Fort', title: 'Suvarnadurg Fort' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kadyavarcha+Ganapati', title: 'Kadyavarcha Ganapati' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Panhalekaji+Caves', title: 'Panhalekaji Caves' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Unhavare+Hot+Springs', title: 'Unhavare Hot Springs' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Coconut+Groves', title: 'Coconut Groves' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Fishing+Village', title: 'Fishing Village' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Local+Market', title: 'Local Market' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Alphonso+Mangoes', title: 'Alphonso Mangoes' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Coastal+Road', title: 'Coastal Road' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Beach+Shacks', title: 'Beach Shacks' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Seafood', title: 'Fresh Seafood' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Dolphin+Spotting', title: 'Dolphin Spotting' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Boat+Ride', title: 'Boat Ride' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Anjarle+Beach', title: 'Anjarle Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Turtle+Festival', title: 'Turtle Festival' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kelshi+Beach', title: 'Kelshi Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Dabhol+Creek', title: 'Dabhol Creek' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Konkan+Cuisine', title: 'Konkan Cuisine' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Cashew+Plantation', title: 'Cashew Plantation' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Rice+Fields', title: 'Rice Fields' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Village+Life', title: 'Village Life' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Temple', title: 'Local Temple' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Monsoon+View', title: 'Monsoon Beauty' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Backwaters', title: 'Backwaters' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Konkan+Coast', title: 'Konkan Coastline' }
-        ];
+        // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
+        const dapoliOneDriveShareLink = 'PASTE_DAPOLI_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
 
-        // Initialize gallery
-        new PhotoGallery(dapoliPhotos, 'dapoli-gallery');
+        PhotoGallery.loadBestSource({
+            containerId: 'dapoli-gallery',
+            shareLink: dapoliOneDriveShareLink,
+            localJsonPath: 'data/dapoli.json',
+            destinationName: 'Dapoli'
+        });
     </script>
     <script src="script.js"></script>
 </body>
