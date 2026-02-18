@@ -213,6 +213,37 @@ class PhotoGallery {
         container.innerHTML = `<p class="loading" style="text-align: center; padding: 2rem;">${message}</p>`;
     }
 
+    static escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    static normalizeExternalUrl(rawUrl) {
+        const trimmed = PhotoGallery.textOrDefault(rawUrl, '');
+        if (!trimmed) return '';
+
+        try {
+            const baseUrl = (
+                typeof window !== 'undefined'
+                && window.location
+                && typeof window.location.href === 'string'
+            ) ? window.location.href : 'https://localhost/';
+
+            const parsed = new URL(trimmed, baseUrl);
+            if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+                return parsed.toString();
+            }
+        } catch (error) {
+            return '';
+        }
+
+        return '';
+    }
+
     static renderError(container, destinationName, message) {
         if (!container) return;
 
@@ -221,16 +252,57 @@ class PhotoGallery {
             message,
             'Could not connect to OneDrive.'
         );
+        const escapedDestination = PhotoGallery.escapeHtml(safeDestination);
+        const escapedMessage = PhotoGallery.escapeHtml(safeMessage);
 
         container.innerHTML = `
             <div class="gallery-error" style="padding: 3rem; text-align: center; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--color-coral); margin: 2rem 0;">
                 <h3 style="color: var(--color-coral); margin-bottom: 1rem;">Gallery Not Available</h3>
-                <p style="margin-bottom: 1rem; color: var(--text-primary);">Unable to load photos for ${safeDestination}.</p>
-                <p style="margin-bottom: 1rem; color: var(--text-primary);">${safeMessage}</p>
+                <p style="margin-bottom: 1rem; color: var(--text-primary);">Unable to load photos for ${escapedDestination}.</p>
+                <p style="margin-bottom: 1rem; color: var(--text-primary);">${escapedMessage}</p>
                 <ol style="padding-left: 1.2rem; line-height: 1.8; text-align: left; display: inline-block;">
                     <li>Use a OneDrive shared album/folder link with "Anyone with the link can view".</li>
                     <li>If you use local fallback, ensure the manifest JSON exists in <code>data/</code>.</li>
                 </ol>
+            </div>
+        `;
+    }
+
+    static renderOneDriveOpenFallback(container, shareLink, destinationName, message) {
+        if (!container) return;
+
+        const href = PhotoGallery.normalizeExternalUrl(shareLink);
+        if (!href) {
+            PhotoGallery.renderError(container, destinationName, message);
+            return;
+        }
+
+        const safeDestination = PhotoGallery.escapeHtml(
+            PhotoGallery.textOrDefault(destinationName, 'this trip')
+        );
+        const safeMessage = PhotoGallery.escapeHtml(
+            PhotoGallery.textOrDefault(message, 'Could not connect to OneDrive.')
+        );
+        const safeHref = PhotoGallery.escapeHtml(href);
+
+        container.innerHTML = `
+            <div class="gallery-error" style="padding: 3rem; text-align: center; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--color-coral); margin: 2rem 0;">
+                <h3 style="color: var(--color-coral); margin-bottom: 1rem;">Open OneDrive Album</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-primary);">Unable to list files for ${safeDestination} via API.</p>
+                <p style="margin-bottom: 1rem; color: var(--text-primary);">${safeMessage}</p>
+                <p style="margin-bottom: 1.5rem; color: var(--text-primary);">
+                    Microsoft blocks anonymous API listing for many shared albums. Open the album directly below:
+                </p>
+                <p style="margin-bottom: 1.2rem;">
+                    <a href="${safeHref}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open Shared Album</a>
+                </p>
+                <iframe
+                    src="${safeHref}"
+                    title="${safeDestination} OneDrive Album"
+                    loading="lazy"
+                    style="width: 100%; min-height: 70vh; border: 1px solid var(--border-light); border-radius: 16px; background: #fff;"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
         `;
     }
@@ -295,6 +367,7 @@ class PhotoGallery {
         } = options;
 
         try {
+            PhotoGallery.lastOneDriveErrorMessage = '';
             PhotoGallery.renderLoading(container, 'Loading photos from OneDrive...');
 
             const items = await PhotoGallery.fetchOneDriveItems(shareLink);
@@ -309,6 +382,11 @@ class PhotoGallery {
             return gallery;
         } catch (error) {
             console.error('OneDrive gallery load failed:', error);
+            PhotoGallery.lastOneDriveErrorMessage = PhotoGallery.textOrDefault(
+                error && error.message,
+                'Could not connect to OneDrive.'
+            );
+
             if (container && !suppressErrorUi) {
                 PhotoGallery.renderError(container, destinationName, error.message);
             }
@@ -323,8 +401,10 @@ class PhotoGallery {
         destinationName = 'journey'
     }) {
         const description = `Captured during the ${destinationName} journey.`;
+        const hasShareLink = PhotoGallery.isConfiguredShareLink(shareLink);
+        let oneDriveErrorMessage = '';
 
-        if (PhotoGallery.isConfiguredShareLink(shareLink)) {
+        if (hasShareLink) {
             const remoteGallery = await PhotoGallery.fromOneDrive(shareLink.trim(), containerId, {
                 suppressErrorUi: true,
                 description,
@@ -334,6 +414,11 @@ class PhotoGallery {
             if (remoteGallery) {
                 return remoteGallery;
             }
+
+            oneDriveErrorMessage = PhotoGallery.textOrDefault(
+                PhotoGallery.lastOneDriveErrorMessage,
+                ''
+            );
         }
 
         if (typeof localJsonPath === 'string' && localJsonPath.trim().length > 0) {
@@ -349,11 +434,20 @@ class PhotoGallery {
 
         const container = document.getElementById(containerId);
         if (container) {
-            PhotoGallery.renderError(
-                container,
-                destinationName,
-                'Could not load photos from OneDrive or local cache.'
-            );
+            if (hasShareLink) {
+                PhotoGallery.renderOneDriveOpenFallback(
+                    container,
+                    shareLink,
+                    destinationName,
+                    oneDriveErrorMessage || 'Could not load photos from OneDrive or local cache.'
+                );
+            } else {
+                PhotoGallery.renderError(
+                    container,
+                    destinationName,
+                    'Could not load photos from OneDrive or local cache.'
+                );
+            }
         }
 
         return null;
@@ -598,6 +692,7 @@ class PhotoGallery {
 }
 
 PhotoGallery.activeGallery = null;
+PhotoGallery.lastOneDriveErrorMessage = '';
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = PhotoGallery;
