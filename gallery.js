@@ -14,9 +14,10 @@ class PhotoGallery {
         }
     }
 
-    static async fromLocal(jsonPath, containerId) {
+    static async fromLocal(jsonPath, containerId, options = {}) {
         const gallery = new PhotoGallery([], containerId);
         const container = document.getElementById(containerId);
+        const { suppressErrorUi = false, description = 'Captured during the journey.' } = options;
 
         try {
             const response = await fetch(jsonPath);
@@ -26,53 +27,81 @@ class PhotoGallery {
             gallery.photos = data.map(photo => ({
                 src: photo.src,
                 title: photo.title || photo.name.split('.')[0].replace(/-/g, ' '),
-                description: photo.description || 'Captured during the Australian journey.'
+                description: photo.description || description
             }));
 
             gallery.init();
             return gallery;
         } catch (error) {
             console.error("Local load failed:", error);
-            if (container) {
+            if (container && !suppressErrorUi) {
                 container.innerHTML = `<p class="error">Wait! We couldn't find the cached images. Please run the sync script.</p>`;
             }
+            return null;
         }
     }
 
-    static async fromOneDrive(shareLink, containerId) {
+    static toOneDriveShareId(shareLink) {
+        const bytes = new TextEncoder().encode(shareLink);
+        let binary = '';
+
+        bytes.forEach(byte => {
+            binary += String.fromCharCode(byte);
+        });
+
+        return btoa(binary)
+            .replace(/\//g, '_')
+            .replace(/\+/g, '-')
+            .replace(/=/g, '');
+    }
+
+    static async fetchOneDriveItems(shareLink) {
+        const shareId = PhotoGallery.toOneDriveShareId(shareLink);
+        const endpoints = [
+            `https://api.onedrive.com/v1.0/shares/u!${shareId}/root/children`,
+            `https://api.onedrive.com/v1.0/shares/u!${shareId}/driveItem/children`
+        ];
+
+        let lastError = null;
+
+        for (const url of endpoints) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    lastError = new Error(`OneDrive API Error: ${response.status}`);
+                    continue;
+                }
+
+                const data = await response.json();
+                return data.value || [];
+            } catch (error) {
+                lastError = error;
+            }
+        }
+
+        throw lastError || new Error('Unable to reach OneDrive API.');
+    }
+
+    static async fromOneDrive(shareLink, containerId, options = {}) {
         // Create an empty gallery first (with loading state potentially)
         const gallery = new PhotoGallery([], containerId);
         const container = document.getElementById(containerId);
+        const { suppressErrorUi = false, description = 'Captured during the journey.' } = options;
 
         try {
             if (container) container.innerHTML = '<p class="loading" style="text-align:center; padding: 2rem;">Loading from OneDrive...</p>';
 
-            // Step 1: Encode the URL to a share ID
-            const base64Value = btoa(shareLink)
-                .replace(/\//g, '_')
-                .replace(/\+/g, '-')
-                .replace(/=/g, '');
-
-            const apiUrl = `https://api.onedrive.com/v1.0/shares/u!${base64Value}/root/children`;
-
-            const response = await fetch(apiUrl);
-
-            if (response.status === 401 || response.status === 403) {
-                throw new Error('Access Restricted: OneDrive "Albums" are private by default. Please share the **Folder** instead.');
-            }
-
-            if (!response.ok) throw new Error(`OneDrive API Error: ${response.status}`);
-
-            const data = await response.json();
+            const items = await PhotoGallery.fetchOneDriveItems(shareLink);
 
             // Step 2: Map to gallery format
-            gallery.photos = (data.value || [])
+            gallery.photos = (items || [])
                 .filter(item => item.image || item.file?.mimeType?.startsWith('image/'))
                 .map(item => ({
-                    src: item["@content.downloadUrl"],
+                    src: item["@content.downloadUrl"] || item.webUrl,
                     title: item.name.split('.')[0].replace(/-/g, ' ').replace(/_/g, ' '),
-                    description: `Captured during the Australia journey.`
-                }));
+                    description
+                }))
+                .filter(photo => Boolean(photo.src));
 
             if (gallery.photos.length === 0) {
                 throw new Error('No images found in the shared folder.');
@@ -84,7 +113,7 @@ class PhotoGallery {
             return gallery;
         } catch (error) {
             console.error("Failed to load OneDrive Album:", error);
-            if (container) {
+            if (container && !suppressErrorUi) {
                 container.innerHTML = `
                     <div class="gallery-error" style="padding: 3rem; text-align: center; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--color-coral); margin: 2rem 0;">
                         <h3 style="color: var(--color-coral); margin-bottom: 1rem;">Gallery Connection Issue</h3>
@@ -101,7 +130,50 @@ class PhotoGallery {
                     </div>
                 `;
             }
+            return null;
         }
+    }
+
+    static async loadBestSource({
+        containerId,
+        shareLink,
+        localJsonPath,
+        destinationName = 'journey'
+    }) {
+        const description = `Captured during the ${destinationName} journey.`;
+        const hasShareLink = typeof shareLink === 'string' && shareLink.trim() && !shareLink.includes('PASTE_');
+
+        if (hasShareLink) {
+            const remoteGallery = await PhotoGallery.fromOneDrive(shareLink.trim(), containerId, {
+                suppressErrorUi: true,
+                description
+            });
+            if (remoteGallery) return remoteGallery;
+        }
+
+        if (localJsonPath) {
+            const localGallery = await PhotoGallery.fromLocal(localJsonPath, containerId, {
+                suppressErrorUi: true,
+                description
+            });
+            if (localGallery) return localGallery;
+        }
+
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.innerHTML = `
+                <div class="gallery-error" style="padding: 3rem; text-align: center; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--color-coral); margin: 2rem 0;">
+                    <h3 style="color: var(--color-coral); margin-bottom: 1rem;">Gallery Not Available</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-primary);">Could not load photos from OneDrive or local cache.</p>
+                    <ol style="padding-left: 1.2rem; line-height: 1.8; text-align: left; display: inline-block;">
+                        <li>Use a OneDrive <strong>folder</strong> share link with "Anyone with the link can view".</li>
+                        <li>Or generate local cache using <code>python scripts/sync-gallery.py --trip ${destinationName.toLowerCase()} --source "C:\\path\\to\\photos"</code>.</li>
+                    </ol>
+                </div>
+            `;
+        }
+
+        return null;
     }
 
     init() {

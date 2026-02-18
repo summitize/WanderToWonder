@@ -30,42 +30,14 @@
 
     <script src="gallery.js"></script>
     <script>
-        // Placeholder photos for Dubai (30 photos)
-        const dubaiPhotos = [
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Burj+Khalifa', title: 'Burj Khalifa' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Palm+Jumeirah', title: 'Palm Jumeirah' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Dubai+Mall', title: 'Dubai Mall' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Dubai+Marina', title: 'Dubai Marina' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Gold+Souk', title: 'Gold Souk' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Desert+Safari', title: 'Desert Safari' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Burj+Al+Arab', title: 'Burj Al Arab' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Dubai+Fountain', title: 'Dubai Fountain' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Jumeirah+Beach', title: 'Jumeirah Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Dubai+Frame', title: 'Dubai Frame' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Atlantis', title: 'Atlantis The Palm' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Ski+Dubai', title: 'Ski Dubai' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Old+Dubai', title: 'Old Dubai' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Dubai+Creek', title: 'Dubai Creek' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Miracle+Garden', title: 'Miracle Garden' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Global+Village', title: 'Global Village' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=JBR+Walk', title: 'JBR Walk' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Dubai+Opera', title: 'Dubai Opera' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=La+Mer', title: 'La Mer Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=City+Walk', title: 'City Walk' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=IMG+Worlds', title: 'IMG Worlds of Adventure' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Dubai+Parks', title: 'Dubai Parks and Resorts' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Aquaventure', title: 'Aquaventure Waterpark' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Museum+of+Future', title: 'Museum of the Future' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Bluewaters+Island', title: 'Bluewaters Island' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Ain+Dubai', title: 'Ain Dubai' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Kite+Beach', title: 'Kite Beach' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Al+Fahidi', title: 'Al Fahidi Historical District' },
-            { src: 'https://placehold.jp/333333/ffffff/800x600.png?text=Spice+Souk', title: 'Spice Souk' },
-            { src: 'https://placehold.jp/444444/ffffff/800x600.png?text=Downtown+Dubai', title: 'Downtown Dubai' }
-        ];
-
-        // Initialize gallery
-        new PhotoGallery(dubaiPhotos, 'dubai-gallery');
+        // Prefer OneDrive shared folder link. Fallback to local cached manifest.
+        const dubaiOneDriveShareLink = 'PASTE_DUBAI_ONEDRIVE_FOLDER_SHARE_LINK_HERE';
+        PhotoGallery.loadBestSource({
+            containerId: 'dubai-gallery',
+            shareLink: dubaiOneDriveShareLink,
+            localJsonPath: 'data/dubai.json',
+            destinationName: 'Dubai'
+        });
     </script>
     <script src="script.js"></script>
 </body>
