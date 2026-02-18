@@ -280,29 +280,39 @@ class PhotoGallery {
         const safeDestination = PhotoGallery.escapeHtml(
             PhotoGallery.textOrDefault(destinationName, 'this trip')
         );
-        const safeMessage = PhotoGallery.escapeHtml(
-            PhotoGallery.textOrDefault(message, 'Could not connect to OneDrive.')
-        );
+        const rawMessage = PhotoGallery.textOrDefault(message, 'Could not connect to OneDrive.');
+        const safeMessage = PhotoGallery.escapeHtml(rawMessage);
         const safeHref = PhotoGallery.escapeHtml(href);
+        const isFilePreview = (
+            typeof window !== 'undefined'
+            && window.location
+            && window.location.protocol === 'file:'
+        );
+        const likelyApiBlock = /401|403|unauthorized|forbidden|failed to fetch/i.test(rawMessage);
+        const primaryHint = isFilePreview
+            ? 'You are previewing from file://. Browser CORS rules block OneDrive API calls in this mode.'
+            : (likelyApiBlock
+                ? 'OneDrive is refusing anonymous API listing for this shared album.'
+                : 'The OneDrive API request did not complete.');
+        const escapedPrimaryHint = PhotoGallery.escapeHtml(primaryHint);
 
         container.innerHTML = `
             <div class="gallery-error" style="padding: 3rem; text-align: center; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--color-coral); margin: 2rem 0;">
                 <h3 style="color: var(--color-coral); margin-bottom: 1rem;">Open OneDrive Album</h3>
                 <p style="margin-bottom: 1rem; color: var(--text-primary);">Unable to list files for ${safeDestination} via API.</p>
+                <p style="margin-bottom: 1rem; color: var(--text-primary);">${escapedPrimaryHint}</p>
                 <p style="margin-bottom: 1rem; color: var(--text-primary);">${safeMessage}</p>
                 <p style="margin-bottom: 1.5rem; color: var(--text-primary);">
-                    Microsoft blocks anonymous API listing for many shared albums. Open the album directly below:
+                    Open the shared album directly:
                 </p>
                 <p style="margin-bottom: 1.2rem;">
                     <a href="${safeHref}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open Shared Album</a>
                 </p>
-                <iframe
-                    src="${safeHref}"
-                    title="${safeDestination} OneDrive Album"
-                    loading="lazy"
-                    style="width: 100%; min-height: 70vh; border: 1px solid var(--border-light); border-radius: 16px; background: #fff;"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
+                <ol style="padding-left: 1.2rem; line-height: 1.8; text-align: left; display: inline-block; margin-top: 0.75rem;">
+                    <li>If testing locally, run a server instead of opening HTML directly: <code>python -m http.server 5500</code>.</li>
+                    <li>For a grid gallery on your site, use local cache JSON + images under <code>data/</code> and <code>images/</code>.</li>
+                    <li>If you need live OneDrive API listing, add a backend token proxy (Graph delegated auth).</li>
+                </ol>
             </div>
         `;
     }
