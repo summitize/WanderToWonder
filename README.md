@@ -6,17 +6,48 @@ Personal travelogue sharing experiences from journeys across the globe.
 
 Each destination page now loads photos directly from a OneDrive shared album/folder link via `gallery.js`.
 
+## Recommended Production Path: Cloudflare Worker + Graph
+
+Direct browser calls to OneDrive/Graph often fail with `401` for shared albums.  
+This repo now supports a Worker-backed API source:
+
+- Worker endpoint: `/photos?trip=<destination>`
+- Worker proxies Graph and handles token refresh
+- Website uses `apiEndpoint` first, then existing OneDrive/local fallback
+
+Implementation files:
+
+- `cloudflare-worker/src/index.js`
+- `cloudflare-worker/wrangler.toml.example`
+- `cloudflare-worker/README.md`
+- `scripts/get-ms-refresh-token.ps1`
+
 ### How to configure a destination gallery
 
 1. Open the destination page (`australia.html`, `dubai.html`, `srilanka.html`, etc.).
-2. Replace the `PASTE_..._ONEDRIVE_SHARED_ALBUM_LINK_HERE` value with your OneDrive shared link.
-3. Ensure the link permission is `Anyone with the link can view`.
-4. Reload the page.
+2. Set `galleryApiBase` to your Worker URL (for example `https://wander-to-wonder-photos.<subdomain>.workers.dev`).
+3. Replace `PASTE_..._ONEDRIVE_SHARED_ALBUM_LINK_HERE` with your OneDrive shared link.
+4. Ensure the link permission is `Anyone with the link can view`.
+5. Reload the page.
 
 ### Fallback behavior
 
+- If Worker API loading fails, the gallery tries direct OneDrive loading.
 - If OneDrive loading fails, the gallery tries local JSON from `data/<destination>.json`.
-- If both fail, an error panel is shown with setup guidance.
+- If all fail, an error panel is shown with setup guidance.
+
+### Worker deployment summary
+
+1. Register Microsoft app (delegated `Files.Read` + `offline_access`, public client flows enabled).
+2. Generate refresh token:
+
+```powershell
+.\scripts\get-ms-refresh-token.ps1 -ClientId "<YOUR_CLIENT_ID>"
+```
+
+3. Deploy Worker using instructions in `cloudflare-worker/README.md`.
+4. Put `TRIP_SHARE_URLS_JSON` mapping in Worker config.
+5. Put Worker URL into each trip page `galleryApiBase`.
 
 ### Reliable workaround (recommended)
 

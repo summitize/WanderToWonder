@@ -30,11 +30,23 @@
 
     <script src="gallery.js"></script>
     <script>
+        // Cloudflare Worker URL (recommended). Keep blank/placeholder to skip API mode.
+        const galleryApiBase = 'PASTE_CLOUDFLARE_WORKER_URL_HERE';
+        const normalizedGalleryApiBase = (
+            typeof galleryApiBase === 'string'
+            && galleryApiBase.trim().length > 0
+            && !galleryApiBase.includes('PASTE_')
+        ) ? galleryApiBase.replace(/\/+$/, '') : '';
+        const alibaugApiEndpoint = normalizedGalleryApiBase
+            ? `${normalizedGalleryApiBase}/photos?trip=alibaug`
+            : '';
+
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
         const alibaugOneDriveShareLink = 'PASTE_ALIBAUG_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
 
         PhotoGallery.loadBestSource({
             containerId: 'alibaug-gallery',
+            apiEndpoint: alibaugApiEndpoint,
             shareLink: alibaugOneDriveShareLink,
             localJsonPath: 'data/alibaug.json',
             destinationName: 'Alibaug'

@@ -53,6 +53,14 @@ class PhotoGallery {
         );
     }
 
+    static isConfiguredApiEndpoint(apiEndpoint) {
+        return (
+            typeof apiEndpoint === 'string'
+            && apiEndpoint.trim().length > 0
+            && !apiEndpoint.includes('PASTE_')
+        );
+    }
+
     static async fetchJson(url) {
         const response = await fetch(url);
         if (!response.ok) {
@@ -335,6 +343,77 @@ class PhotoGallery {
             .filter((photo) => photo.src.length > 0);
     }
 
+    static parseApiManifest(data, description) {
+        const rows = Array.isArray(data)
+            ? data
+            : (Array.isArray(data && data.photos) ? data.photos : []);
+
+        return rows
+            .filter((row) => row && typeof row === 'object')
+            .map((row, index) => {
+                const src = PhotoGallery.textOrDefault(
+                    row.src,
+                    PhotoGallery.textOrDefault(
+                        row.thumbnail,
+                        PhotoGallery.textOrDefault(row.downloadUrl, '')
+                    )
+                );
+
+                return {
+                    src,
+                    title: PhotoGallery.textOrDefault(
+                        row.title,
+                        PhotoGallery.derivePhotoTitle(row.name, index + 1)
+                    ),
+                    description: PhotoGallery.textOrDefault(row.description, description)
+                };
+            })
+            .filter((photo) => photo.src.length > 0);
+    }
+
+    static async fromApi(apiEndpoint, containerId, options = {}) {
+        const gallery = new PhotoGallery([], containerId);
+        const container = document.getElementById(containerId);
+        const {
+            suppressErrorUi = false,
+            description = 'Captured during the journey.',
+            destinationName = 'this trip'
+        } = options;
+
+        try {
+            PhotoGallery.renderLoading(container, 'Loading photos from gallery API...');
+
+            const response = await fetch(apiEndpoint, {
+                headers: { Accept: 'application/json' }
+            });
+            if (!response.ok) {
+                throw new Error(`Gallery API request failed (${response.status}).`);
+            }
+
+            const data = await response.json();
+            gallery.photos = PhotoGallery.parseApiManifest(data, description);
+
+            if (gallery.photos.length === 0) {
+                throw new Error('Gallery API returned no image entries.');
+            }
+
+            if (container) container.innerHTML = '';
+            gallery.init();
+            return gallery;
+        } catch (error) {
+            console.error('Gallery API load failed:', error);
+            PhotoGallery.lastApiErrorMessage = PhotoGallery.textOrDefault(
+                error && error.message,
+                'Could not connect to gallery API.'
+            );
+
+            if (container && !suppressErrorUi) {
+                PhotoGallery.renderError(container, destinationName, error.message);
+            }
+            return null;
+        }
+    }
+
     static async fromLocal(jsonPath, containerId, options = {}) {
         const gallery = new PhotoGallery([], containerId);
         const container = document.getElementById(containerId);
@@ -406,13 +485,33 @@ class PhotoGallery {
 
     static async loadBestSource({
         containerId,
+        apiEndpoint,
         shareLink,
         localJsonPath,
         destinationName = 'journey'
     }) {
         const description = `Captured during the ${destinationName} journey.`;
+        const hasApiEndpoint = PhotoGallery.isConfiguredApiEndpoint(apiEndpoint);
         const hasShareLink = PhotoGallery.isConfiguredShareLink(shareLink);
+        let apiErrorMessage = '';
         let oneDriveErrorMessage = '';
+
+        if (hasApiEndpoint) {
+            const apiGallery = await PhotoGallery.fromApi(apiEndpoint.trim(), containerId, {
+                suppressErrorUi: true,
+                description,
+                destinationName
+            });
+
+            if (apiGallery) {
+                return apiGallery;
+            }
+
+            apiErrorMessage = PhotoGallery.textOrDefault(
+                PhotoGallery.lastApiErrorMessage,
+                ''
+            );
+        }
 
         if (hasShareLink) {
             const remoteGallery = await PhotoGallery.fromOneDrive(shareLink.trim(), containerId, {
@@ -444,18 +543,22 @@ class PhotoGallery {
 
         const container = document.getElementById(containerId);
         if (container) {
+            const mergedFailureMessage = [apiErrorMessage, oneDriveErrorMessage]
+                .filter((entry) => typeof entry === 'string' && entry.trim().length > 0)
+                .join(' | ');
+
             if (hasShareLink) {
                 PhotoGallery.renderOneDriveOpenFallback(
                     container,
                     shareLink,
                     destinationName,
-                    oneDriveErrorMessage || 'Could not load photos from OneDrive or local cache.'
+                    mergedFailureMessage || 'Could not load photos from API, OneDrive, or local cache.'
                 );
             } else {
                 PhotoGallery.renderError(
                     container,
                     destinationName,
-                    'Could not load photos from OneDrive or local cache.'
+                    mergedFailureMessage || 'Could not load photos from API, OneDrive, or local cache.'
                 );
             }
         }
@@ -702,6 +805,7 @@ class PhotoGallery {
 }
 
 PhotoGallery.activeGallery = null;
+PhotoGallery.lastApiErrorMessage = '';
 PhotoGallery.lastOneDriveErrorMessage = '';
 
 if (typeof module !== 'undefined' && module.exports) {
