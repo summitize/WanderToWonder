@@ -28,3 +28,37 @@ python scripts/sync-gallery.py --source "C:\path\to\Australia\photos" --trip aus
 ```
 
 This command copies images into `images/australia/` and creates `data/australia.json`.
+
+## Cloudinary Automation (recommended for hosted galleries)
+
+If OneDrive API listing is blocked, upload photos to Cloudinary and generate `data/<trip>.json`.
+
+### 1. Install Python SDK
+
+```bash
+pip install -r scripts/requirements-cloudinary.txt
+```
+
+### 2. Set Cloudinary credentials
+
+PowerShell example:
+
+```powershell
+$env:CLOUDINARY_CLOUD_NAME="your_cloud_name"
+$env:CLOUDINARY_API_KEY="your_api_key"
+$env:CLOUDINARY_API_SECRET="your_api_secret"
+```
+
+### 3. Upload and generate manifest
+
+```bash
+python scripts/sync-cloudinary.py --source "C:\path\to\Australia\photos" --trip australia
+```
+
+Optional flags:
+
+- `--folder "wander-to-wonder/australia"` to override destination folder
+- `--max 50` to limit upload count
+- `--overwrite` to replace existing assets with same public IDs
+
+After the command, `data/australia.json` is updated with Cloudinary CDN URLs and the gallery loads from local manifest fallback.
