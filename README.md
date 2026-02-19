@@ -93,3 +93,82 @@ Optional flags:
 - `--overwrite` to replace existing assets with same public IDs
 
 After the command, `data/australia.json` is updated with Cloudinary CDN URLs and the gallery loads from local manifest fallback.
+
+## Fully Automated (No Entra): OneDrive -> Cloudinary -> Website
+
+This path avoids Microsoft Entra app registration completely.
+
+How it works:
+
+1. GitHub Actions runs on a schedule.
+2. Action pulls files from OneDrive using `rclone`.
+3. Action uploads to Cloudinary and rebuilds `data/<trip>.json`.
+4. Action commits updated manifest JSON files automatically.
+
+Implementation files:
+
+- `.github/workflows/sync-onedrive-cloudinary.yml`
+- `scripts/sync-onedrive-cloudinary.py`
+- `scripts/sync-cloudinary.py`
+
+### 1. One-time setup on your machine (rclone token)
+
+Install `rclone`, then run:
+
+```bash
+rclone config
+```
+
+Create a remote named `onedrive` (Personal OneDrive).
+
+After setup, verify:
+
+```bash
+rclone lsd onedrive:
+```
+
+Base64-encode your `rclone.conf`:
+
+PowerShell:
+
+```powershell
+$conf = Get-Content "$env:APPDATA\rclone\rclone.conf" -Raw
+[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($conf))
+```
+
+Save this output for GitHub secret `RCLONE_CONF_B64`.
+
+### 2. Add GitHub Actions secrets
+
+In repo -> `Settings` -> `Secrets and variables` -> `Actions`, add:
+
+- `RCLONE_CONF_B64`: base64 of your `rclone.conf`
+- `ONEDRIVE_TRIP_PATHS_JSON`: trip -> OneDrive folder map
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+
+Example `ONEDRIVE_TRIP_PATHS_JSON`:
+
+```json
+{
+  "australia": "TravelPhotos/Australia",
+  "dubai": "TravelPhotos/Dubai",
+  "srilanka": "TravelPhotos/SriLanka"
+}
+```
+
+### 3. Run workflow
+
+Open Actions -> `Sync OneDrive to Cloudinary` -> `Run workflow`.
+
+After success:
+
+- `data/<trip>.json` is updated
+- commit is pushed automatically
+- website uses updated gallery manifest via existing local JSON fallback
+
+Notes:
+
+- `sync-cloudinary.py` now supports `.heic/.heif` uploads.
+- Existing Cloudinary assets are reused automatically unless `--overwrite` is enabled.

@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 
-SUPPORTED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+SUPPORTED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"}
 
 
 def slugify(value: str) -> str:
@@ -45,6 +45,11 @@ def load_cloudinary_sdk():
         ) from exc
 
 
+def should_skip_existing_upload(error: Exception) -> bool:
+    message = str(error).lower()
+    return "already exists" in message or "duplicate" in message
+
+
 def upload_and_build_manifest(
     source_dir: Path,
     trip: str,
@@ -81,14 +86,23 @@ def upload_and_build_manifest(
         public_leaf = f"{base_id}{suffix}"
         public_id = f"{normalized_folder}/{public_leaf}" if normalized_folder else public_leaf
 
-        result = cloudinary.uploader.upload(
-            str(image_path),
-            public_id=public_id,
-            overwrite=overwrite,
-            resource_type="image",
-            use_filename=False,
-            unique_filename=False,
-        )
+        try:
+            result = cloudinary.uploader.upload(
+                str(image_path),
+                public_id=public_id,
+                overwrite=overwrite,
+                resource_type="image",
+                use_filename=False,
+                unique_filename=False,
+            )
+            print(f"Uploaded {index}/{len(files)}: {image_path.name}")
+        except Exception as exc:
+            if overwrite or not should_skip_existing_upload(exc):
+                raise
+
+            # Idempotent automation mode: reuse existing asset when public_id already exists.
+            result = {"public_id": public_id}
+            print(f"Reused existing {index}/{len(files)}: {image_path.name}")
 
         uploaded_public_id = result.get("public_id", public_id)
         optimized_url, _ = cloudinary.utils.cloudinary_url(
@@ -109,7 +123,6 @@ def upload_and_build_manifest(
                 "name": image_path.name,
             }
         )
-        print(f"Uploaded {index}/{len(files)}: {image_path.name}")
 
     return manifest
 

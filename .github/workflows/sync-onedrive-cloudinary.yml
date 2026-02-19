@@ -1,0 +1,74 @@
+name: Sync OneDrive to Cloudinary
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */12 * * *"
+
+concurrency:
+  group: onedrive-cloudinary-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements-cloudinary.txt
+
+      - name: Install rclone
+        run: |
+          curl -fsSL https://rclone.org/install.sh | sudo bash
+          rclone --version
+
+      - name: Configure rclone
+        env:
+          RCLONE_CONF_B64: ${{ secrets.RCLONE_CONF_B64 }}
+        run: |
+          if [ -z "$RCLONE_CONF_B64" ]; then
+            echo "Missing secret: RCLONE_CONF_B64"
+            exit 1
+          fi
+          mkdir -p ~/.config/rclone
+          echo "$RCLONE_CONF_B64" | base64 -d > ~/.config/rclone/rclone.conf
+
+      - name: Sync OneDrive to Cloudinary and regenerate manifests
+        env:
+          ONEDRIVE_TRIP_PATHS_JSON: ${{ secrets.ONEDRIVE_TRIP_PATHS_JSON }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        run: |
+          if [ -z "$ONEDRIVE_TRIP_PATHS_JSON" ]; then
+            echo "Missing secret: ONEDRIVE_TRIP_PATHS_JSON"
+            exit 1
+          fi
+          python scripts/sync-onedrive-cloudinary.py --map-json "$ONEDRIVE_TRIP_PATHS_JSON"
+
+      - name: Commit and push manifest updates
+        run: |
+          if git diff --quiet -- data; then
+            echo "No manifest changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "Automated OneDrive -> Cloudinary gallery sync"
+          git push
