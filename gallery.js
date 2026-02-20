@@ -566,6 +566,207 @@ class PhotoGallery {
         return null;
     }
 
+    static resolveSourceMode(rawMode, fallback = 'auto') {
+        const normalized = PhotoGallery.textOrDefault(rawMode, '').toLowerCase();
+
+        if (normalized === 'auto' || normalized === 'gallery' || normalized === 'best') {
+            return 'auto';
+        }
+
+        if (
+            normalized === 'album'
+            || normalized === 'direct'
+            || normalized === 'shared-album'
+            || normalized === 'onedrive'
+        ) {
+            return 'album';
+        }
+
+        return fallback;
+    }
+
+    static safeLocalStorageGet(key) {
+        if (typeof window === 'undefined' || !window.localStorage) return '';
+        try {
+            return PhotoGallery.textOrDefault(window.localStorage.getItem(key), '');
+        } catch (error) {
+            return '';
+        }
+    }
+
+    static safeLocalStorageSet(key, value) {
+        if (typeof window === 'undefined' || !window.localStorage) return;
+        try {
+            window.localStorage.setItem(key, value);
+        } catch (error) {
+            // Ignore storage failures (private mode or blocked storage).
+        }
+    }
+
+    static getInitialSourceMode(storageKey, defaultMode = 'auto') {
+        let queryMode = '';
+
+        if (
+            typeof window !== 'undefined'
+            && window.location
+            && typeof window.location.search === 'string'
+        ) {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                queryMode = PhotoGallery.textOrDefault(
+                    params.get('galleryMode')
+                    || params.get('sourceMode')
+                    || params.get('gallery'),
+                    ''
+                );
+            } catch (error) {
+                queryMode = '';
+            }
+        }
+
+        if (queryMode) {
+            const resolvedFromQuery = PhotoGallery.resolveSourceMode(queryMode, '');
+            if (resolvedFromQuery) {
+                PhotoGallery.safeLocalStorageSet(storageKey, resolvedFromQuery);
+                return resolvedFromQuery;
+            }
+        }
+
+        const storedMode = PhotoGallery.safeLocalStorageGet(storageKey);
+        return PhotoGallery.resolveSourceMode(storedMode, defaultMode);
+    }
+
+    static renderDirectAlbumMode(container, shareLink, destinationName) {
+        if (!container) return;
+
+        const href = PhotoGallery.normalizeExternalUrl(shareLink);
+        if (!href) {
+            PhotoGallery.renderError(
+                container,
+                destinationName,
+                'Direct album mode is enabled, but shared link is missing or invalid.'
+            );
+            return;
+        }
+
+        const safeDestination = PhotoGallery.escapeHtml(
+            PhotoGallery.textOrDefault(destinationName, 'this trip')
+        );
+        const safeHref = PhotoGallery.escapeHtml(href);
+
+        container.innerHTML = `
+            <div class="gallery-error" style="padding: 3rem; text-align: center; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--color-coral); margin: 1rem 0 2rem;">
+                <h3 style="color: var(--color-coral); margin-bottom: 1rem;">Direct Album Mode</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-primary);">
+                    Live shared album mode is enabled for ${safeDestination}.
+                </p>
+                <p style="margin-bottom: 1.4rem; color: var(--text-primary);">
+                    Open the OneDrive shared album directly:
+                </p>
+                <p style="margin-bottom: 1.1rem;">
+                    <a href="${safeHref}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open Shared Album</a>
+                </p>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                    Switch back to <strong>Auto Gallery</strong> above after folder-based sync is ready.
+                </p>
+            </div>
+        `;
+    }
+
+    static async loadWithSourceToggle({
+        containerId,
+        apiEndpoint,
+        shareLink,
+        localJsonPath,
+        destinationName = 'journey',
+        defaultMode = 'auto',
+        modeStorageKey = ''
+    }) {
+        const hostContainer = document.getElementById(containerId);
+        if (!hostContainer) return null;
+
+        const normalizedDefaultMode = PhotoGallery.resolveSourceMode(defaultMode, 'auto');
+        const storageKey = PhotoGallery.textOrDefault(
+            modeStorageKey,
+            `photo-gallery-mode:${containerId}`
+        );
+        const initialMode = PhotoGallery.getInitialSourceMode(storageKey, normalizedDefaultMode);
+        const contentId = `${containerId}__content`;
+
+        hostContainer.innerHTML = '';
+
+        const toggle = document.createElement('div');
+        toggle.className = 'view-toggle';
+        toggle.style.justifyContent = 'center';
+        toggle.style.marginBottom = '0.6rem';
+
+        const autoButton = document.createElement('button');
+        autoButton.type = 'button';
+        autoButton.className = 'view-btn';
+        autoButton.textContent = 'Auto Gallery';
+
+        const albumButton = document.createElement('button');
+        albumButton.type = 'button';
+        albumButton.className = 'view-btn';
+        albumButton.textContent = 'Direct Album';
+
+        toggle.appendChild(autoButton);
+        toggle.appendChild(albumButton);
+
+        const modeHint = document.createElement('p');
+        modeHint.style.textAlign = 'center';
+        modeHint.style.marginBottom = '1rem';
+        modeHint.style.color = 'var(--text-secondary)';
+        modeHint.style.fontSize = '0.95rem';
+
+        const content = document.createElement('div');
+        content.id = contentId;
+
+        hostContainer.appendChild(toggle);
+        hostContainer.appendChild(modeHint);
+        hostContainer.appendChild(content);
+
+        const setModeUi = (mode) => {
+            autoButton.classList.toggle('active', mode === 'auto');
+            albumButton.classList.toggle('active', mode === 'album');
+            modeHint.textContent = mode === 'album'
+                ? 'Direct Album: opens OneDrive shared album directly.'
+                : 'Auto Gallery: API -> OneDrive -> local cache fallback.';
+        };
+
+        const applyMode = async (mode, persist) => {
+            const resolvedMode = PhotoGallery.resolveSourceMode(mode, normalizedDefaultMode);
+            if (persist) {
+                PhotoGallery.safeLocalStorageSet(storageKey, resolvedMode);
+            }
+
+            setModeUi(resolvedMode);
+
+            if (resolvedMode === 'album') {
+                PhotoGallery.renderDirectAlbumMode(content, shareLink, destinationName);
+                return null;
+            }
+
+            return PhotoGallery.loadBestSource({
+                containerId: contentId,
+                apiEndpoint,
+                shareLink,
+                localJsonPath,
+                destinationName
+            });
+        };
+
+        autoButton.addEventListener('click', () => {
+            void applyMode('auto', true);
+        });
+
+        albumButton.addEventListener('click', () => {
+            void applyMode('album', true);
+        });
+
+        return applyMode(initialMode, false);
+    }
+
     init() {
         if (!this.container) return;
 

@@ -43,12 +43,14 @@
 
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
         const dubaiOneDriveShareLink = 'PASTE_DUBAI_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
-        PhotoGallery.loadBestSource({
+        PhotoGallery.loadWithSourceToggle({
             containerId: 'dubai-gallery',
             apiEndpoint: dubaiApiEndpoint,
             shareLink: dubaiOneDriveShareLink,
             localJsonPath: 'data/dubai.json',
-            destinationName: 'Dubai'
+            destinationName: 'Dubai',
+            defaultMode: 'auto',
+            modeStorageKey: 'gallery-mode:dubai'
         });
     </script>
     <script src="script.js"></script>

@@ -44,12 +44,14 @@
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
         const srilankaOneDriveShareLink = 'PASTE_SRILANKA_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
 
-        PhotoGallery.loadBestSource({
+        PhotoGallery.loadWithSourceToggle({
             containerId: 'srilanka-gallery',
             apiEndpoint: srilankaApiEndpoint,
             shareLink: srilankaOneDriveShareLink,
             localJsonPath: 'data/srilanka.json',
-            destinationName: 'Sri Lanka'
+            destinationName: 'Sri Lanka',
+            defaultMode: 'auto',
+            modeStorageKey: 'gallery-mode:srilanka'
         });
     </script>
     <script src="script.js"></script>

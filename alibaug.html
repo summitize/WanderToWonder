@@ -44,12 +44,14 @@
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
         const alibaugOneDriveShareLink = 'PASTE_ALIBAUG_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
 
-        PhotoGallery.loadBestSource({
+        PhotoGallery.loadWithSourceToggle({
             containerId: 'alibaug-gallery',
             apiEndpoint: alibaugApiEndpoint,
             shareLink: alibaugOneDriveShareLink,
             localJsonPath: 'data/alibaug.json',
-            destinationName: 'Alibaug'
+            destinationName: 'Alibaug',
+            defaultMode: 'auto',
+            modeStorageKey: 'gallery-mode:alibaug'
         });
     </script>
     <script src="script.js"></script>

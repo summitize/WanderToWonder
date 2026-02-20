@@ -44,12 +44,14 @@
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
         const australiaOneDriveShareLink = 'https://1drv.ms/a/c/97c5e937e7e76f1c/IgAdpW4YCcYNRaVSD1LgqJZpATYP0xKXm44REXTqb0BANCc?e=nAaejO';
 
-        PhotoGallery.loadBestSource({
+        PhotoGallery.loadWithSourceToggle({
             containerId: 'australia-gallery',
             apiEndpoint: australiaApiEndpoint,
             shareLink: australiaOneDriveShareLink,
             localJsonPath: 'data/australia.json',
-            destinationName: 'Australia'
+            destinationName: 'Australia',
+            defaultMode: 'auto',
+            modeStorageKey: 'gallery-mode:australia'
         });
     </script>
     <script src="script.js"></script>

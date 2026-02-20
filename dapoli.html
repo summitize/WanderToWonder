@@ -44,12 +44,14 @@
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
         const dapoliOneDriveShareLink = 'PASTE_DAPOLI_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
 
-        PhotoGallery.loadBestSource({
+        PhotoGallery.loadWithSourceToggle({
             containerId: 'dapoli-gallery',
             apiEndpoint: dapoliApiEndpoint,
             shareLink: dapoliOneDriveShareLink,
             localJsonPath: 'data/dapoli.json',
-            destinationName: 'Dapoli'
+            destinationName: 'Dapoli',
+            defaultMode: 'auto',
+            modeStorageKey: 'gallery-mode:dapoli'
         });
     </script>
     <script src="script.js"></script>
