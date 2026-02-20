@@ -987,6 +987,11 @@ def parse_args() -> argparse.Namespace:
         default=5,
         help="Max subfolder depth to crawl while searching for images. Default: 5.",
     )
+    parser.add_argument(
+        "--fail-on-empty",
+        action="store_true",
+        help="Fail the run when a trip has zero images after crawling.",
+    )
     return parser.parse_args()
 
 
@@ -1055,6 +1060,17 @@ def main() -> int:
             )
 
             if not photos:
+                if not args.fail_on_empty:
+                    if existing_manifest_rows:
+                        print(
+                            f"No images found for {trip}; keeping existing manifest with "
+                            f"{len(existing_manifest_rows)} item(s)."
+                        )
+                    else:
+                        manifest_path = write_manifest(trip, [])
+                        print(f"No images found for {trip}; wrote empty manifest: {manifest_path}")
+                    continue
+
                 debug_items: list[dict[str, Any]] = []
                 try:
                     if mode == "drive_item":
