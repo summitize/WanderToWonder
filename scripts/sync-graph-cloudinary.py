@@ -271,7 +271,31 @@ def is_image_item(item: dict[str, Any]) -> bool:
     if item.get("image"):
         return True
     mime_type = text_or_default(item.get("file", {}).get("mimeType"), "").lower()
-    return mime_type.startswith("image/")
+    if mime_type.startswith("image/"):
+        return True
+
+    remote_item = item.get("remoteItem") if isinstance(item.get("remoteItem"), dict) else {}
+    if remote_item.get("image"):
+        return True
+    remote_mime_type = text_or_default(remote_item.get("file", {}).get("mimeType"), "").lower()
+    if remote_mime_type.startswith("image/"):
+        return True
+
+    candidate_name = text_or_default(item.get("name"), "") or text_or_default(remote_item.get("name"), "")
+    extension = Path(candidate_name).suffix.lower()
+    return extension in {
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".webp",
+        ".bmp",
+        ".tif",
+        ".tiff",
+        ".heic",
+        ".heif",
+        ".avif",
+    }
 
 
 def should_skip_existing_upload(error: Exception) -> bool:
