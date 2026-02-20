@@ -18,7 +18,7 @@ def try_api(url):
         print(f"  Failed: {e}")
     return None
 
-link = "https://1drv.ms/a/c/97c5e937e7e76f1c/IgAdpW4YCcYNRaVSD1LgqJZpATYP0xKXm44REXTqb0BANCc"
+link = "https://1drv.ms/f/c/97c5e937e7e76f1c/IgAuiJr8Frc_R6pSvEhbhj1wATRFY3lnLV0D7b9Z4SYr-tM"
 photos = try_api(link)
 
 if not photos:

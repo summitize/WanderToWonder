@@ -56,7 +56,7 @@ copy wrangler.toml.example wrangler.toml
 Edit `wrangler.toml` and set `TRIP_SHARE_URLS_JSON`, for example:
 
 ```toml
-TRIP_SHARE_URLS_JSON = "{\"australia\":\"https://1drv.ms/a/c/97c5e937e7e76f1c/IgAdpW4YCcYNRaVSD1LgqJZpATYP0xKXm44REXTqb0BANCc?e=nAaejO\"}"
+TRIP_SHARE_URLS_JSON = "{\"australia\":\"https://1drv.ms/f/c/97c5e937e7e76f1c/IgAuiJr8Frc_R6pSvEhbhj1wATRFY3lnLV0D7b9Z4SYr-tM?e=DxaBFn\"}"
 MS_TENANT = "consumers"
 MS_SCOPE = "Files.Read offline_access"
 ```
