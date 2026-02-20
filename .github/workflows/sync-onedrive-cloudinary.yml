@@ -54,7 +54,7 @@ jobs:
 
       - name: Commit and push manifest updates
         run: |
-          if git diff --quiet -- data; then
+          if [ -z "$(git status --porcelain -- data)" ]; then
             echo "No manifest changes."
             exit 0
           fi
@@ -62,5 +62,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/
+          if git diff --cached --quiet; then
+            echo "No staged manifest changes."
+            exit 0
+          fi
           git commit -m "Automated Graph -> Cloudinary gallery sync"
           git push
