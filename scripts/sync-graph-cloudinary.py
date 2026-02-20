@@ -3,6 +3,7 @@ import json
 import os
 import re
 import tempfile
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -12,6 +13,9 @@ from urllib.request import Request, urlopen
 
 DEFAULT_SCOPE = "Files.Read offline_access"
 GRAPH_BASE = "https://graph.microsoft.com/v1.0"
+TIMESTAMP_FILE_RE = re.compile(
+    r"^(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2})_(?P<hour>\d{2})(?P<minute>\d{2})(?P<second>\d{2})"
+)
 
 
 def text_or_default(value: Any, fallback: str) -> str:
@@ -36,8 +40,22 @@ def slugify(value: str) -> str:
 
 
 def to_title(file_name: str, fallback: str) -> str:
-    stem = Path(file_name).stem.replace("-", " ").replace("_", " ").strip()
-    return stem if stem else fallback
+    stem = Path(file_name).stem.strip()
+    match = TIMESTAMP_FILE_RE.match(stem)
+    if match:
+        bits = match.groupdict()
+        dt = datetime(
+            int(bits["year"]),
+            int(bits["month"]),
+            int(bits["day"]),
+            int(bits["hour"]),
+            int(bits["minute"]),
+            int(bits["second"]),
+        )
+        return dt.strftime("%d %b %Y, %I:%M %p")
+
+    pretty = stem.replace("-", " ").replace("_", " ").strip()
+    return pretty if pretty else fallback
 
 
 def encode_sharing_url(url: str) -> str:
