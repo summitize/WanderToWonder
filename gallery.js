@@ -859,6 +859,9 @@ class PhotoGallery {
     createPhotoCard(photo, index) {
         const card = document.createElement('div');
         card.className = 'photo-card';
+        card.tabIndex = 0;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Open ${photo.title} in fullscreen`);
 
         const wrapper = document.createElement('div');
         wrapper.className = 'photo-wrapper';
@@ -898,6 +901,20 @@ class PhotoGallery {
 
             card.appendChild(info);
         }
+
+        card.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target instanceof Element && target.closest('.fullscreen-btn')) {
+                return;
+            }
+            this.openFullscreen(index);
+        });
+
+        card.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            this.openFullscreen(index);
+        });
 
         return card;
     }
