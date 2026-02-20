@@ -94,83 +94,64 @@ Optional flags:
 
 After the command, `data/australia.json` is updated with Cloudinary CDN URLs and the gallery loads from local manifest fallback.
 
-## Fully Automated (No Entra): OneDrive -> Cloudinary -> Website
-
-This path avoids Microsoft Entra app registration completely.
+## Fully Automated (Entra + Graph): OneDrive -> Cloudinary -> Website
 
 How it works:
 
 1. GitHub Actions runs on a schedule.
-2. Action pulls files from OneDrive using `rclone`.
-3. Action uploads to Cloudinary and rebuilds `data/<trip>.json`.
-4. Action commits updated manifest JSON files automatically.
+2. Workflow uses Microsoft Graph (`/shares`) with Entra refresh token.
+3. Images are uploaded to Cloudinary and `data/<trip>.json` is regenerated.
+4. Manifest changes are committed to GitHub automatically.
 
 Implementation files:
 
 - `.github/workflows/sync-onedrive-cloudinary.yml`
-- `scripts/sync-onedrive-cloudinary.py`
+- `scripts/sync-graph-cloudinary.py`
 - `scripts/sync-cloudinary.py`
 
-### 1. One-time setup on your machine (rclone token)
+### 1. Configure app + refresh token once
 
-Install `rclone`, then run:
-
-```bash
-rclone config
-```
-
-Create a remote named `onedrive` (Personal OneDrive).
-
-After setup, verify:
-
-```bash
-rclone lsd onedrive:
-```
-
-Base64-encode your `rclone.conf`:
-
-PowerShell:
+1. Create app registration with delegated permissions `Files.Read` and `offline_access`.
+2. Enable public client flows (`Authentication` -> `Allow public client flows` = Yes).
+3. Generate refresh token:
 
 ```powershell
-$conf = Get-Content "$env:APPDATA\rclone\rclone.conf" -Raw
-[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($conf))
+.\scripts\get-ms-refresh-token.ps1 -ClientId "<YOUR_CLIENT_ID>" -Tenant "consumers" -Scope "Files.Read offline_access"
 ```
-
-Save this output for GitHub secret `RCLONE_CONF_B64`.
 
 ### 2. Add GitHub Actions secrets
 
 In repo -> `Settings` -> `Secrets and variables` -> `Actions`, add:
 
-- `RCLONE_CONF_B64`: base64 of your `rclone.conf`
-- `ONEDRIVE_TRIP_PATHS_JSON`: trip -> OneDrive folder map
+- `MS_CLIENT_ID`
+- `MS_REFRESH_TOKEN`
+- `MS_TENANT` (recommended: `consumers`)
+- `MS_SCOPE` (recommended: `Files.Read offline_access`)
+- `TRIP_SHARE_URLS_JSON`: trip -> OneDrive shared URL map
 - `CLOUDINARY_CLOUD_NAME`
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
-- `VERCEL_DEPLOY_HOOK_URL` (optional): deploy hook URL from Vercel project settings
 
-Example `ONEDRIVE_TRIP_PATHS_JSON`:
+Example `TRIP_SHARE_URLS_JSON`:
 
 ```json
 {
-  "australia": "TravelPhotos/Australia",
-  "dubai": "TravelPhotos/Dubai",
-  "srilanka": "TravelPhotos/SriLanka"
+  "australia": "https://1drv.ms/a/c/97c5e937e7e76f1c/IgAdpW4YCcYNRaVSD1LgqJZpATYP0xKXm44REXTqb0BANCc?e=nAaejO",
+  "dubai": "PASTE_DUBAI_SHARE_LINK_HERE"
 }
 ```
 
 ### 3. Run workflow
 
-Open Actions -> `Sync OneDrive to Cloudinary` -> `Run workflow`.
+Open Actions -> `Sync Graph to Cloudinary` -> `Run workflow`.
 
 After success:
 
 - `data/<trip>.json` is updated
 - commit is pushed automatically
-- Vercel deploy hook is called automatically when manifest files changed (if configured)
 - website uses updated gallery manifest via existing local JSON fallback
 
 Notes:
 
-- `sync-cloudinary.py` now supports `.heic/.heif` uploads.
 - Existing Cloudinary assets are reused automatically unless `--overwrite` is enabled.
+- If you expose a refresh token, rotate it immediately and update `MS_REFRESH_TOKEN` secret.
