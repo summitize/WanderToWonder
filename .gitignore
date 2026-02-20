@@ -4,3 +4,4 @@ cloudflare-worker/node_modules/
 cloudflare-worker/.wrangler/
 cloudflare-worker/wrangler.toml
 .tmp/
+scripts/Token.*
