@@ -479,6 +479,90 @@ def expand_trip_targets(
     return trip_targets
 
 
+def collect_image_items(
+    mode: str,
+    share_url: str,
+    drive_id: str,
+    item_id: str,
+    access_token: str,
+    max_items: int,
+    max_depth: int,
+) -> list[dict[str, Any]]:
+    # Crawl nested folders because many OneDrive shares keep photos inside subfolders.
+    queue: list[dict[str, Any]] = [
+        {
+            "mode": mode,
+            "share_url": share_url,
+            "drive_id": drive_id,
+            "item_id": item_id,
+            "depth": 0,
+        }
+    ]
+    visited_drive_items: set[tuple[str, str]] = set()
+    image_items: list[dict[str, Any]] = []
+    list_limit = max(200, max_items)
+
+    while queue and len(image_items) < max_items:
+        node = queue.pop(0)
+        node_mode = text_or_default(node.get("mode"), "share")
+        node_depth = int(node.get("depth", 0))
+
+        if node_mode == "drive_item":
+            node_drive_id = text_or_default(node.get("drive_id"), "")
+            node_item_id = text_or_default(node.get("item_id"), "")
+            if not node_drive_id or not node_item_id:
+                continue
+
+            visit_key = (node_drive_id, node_item_id)
+            if visit_key in visited_drive_items:
+                continue
+            visited_drive_items.add(visit_key)
+
+            children = fetch_drive_children(
+                drive_id=node_drive_id,
+                item_id=node_item_id,
+                access_token=access_token,
+                max_items=list_limit,
+            )
+        else:
+            node_share_url = text_or_default(node.get("share_url"), "")
+            if not node_share_url:
+                continue
+            children = fetch_share_children(
+                share_url=node_share_url,
+                access_token=access_token,
+                max_items=list_limit,
+            )
+
+        for child in children:
+            if is_image_item(child):
+                image_items.append(child)
+                if len(image_items) >= max_items:
+                    break
+
+            if node_depth >= max_depth:
+                continue
+
+            if not is_folder_item(child):
+                continue
+
+            child_item_id, child_drive_id = resolve_item_ids(child)
+            if not child_item_id or not child_drive_id:
+                continue
+
+            queue.append(
+                {
+                    "mode": "drive_item",
+                    "share_url": "",
+                    "drive_id": child_drive_id,
+                    "item_id": child_item_id,
+                    "depth": node_depth + 1,
+                }
+            )
+
+    return image_items[:max_items]
+
+
 def load_cloudinary_sdk():
     try:
         import cloudinary
@@ -784,6 +868,12 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Overwrite existing Cloudinary assets with same public IDs.",
     )
+    parser.add_argument(
+        "--max-depth",
+        type=int,
+        default=5,
+        help="Max subfolder depth to crawl while searching for images. Default: 5.",
+    )
     return parser.parse_args()
 
 
@@ -826,19 +916,17 @@ def main() -> int:
         print(f"\n=== Syncing trip: {trip} ===")
 
         try:
-            if mode == "drive_item":
-                drive_id = text_or_default(target.get("drive_id"), "")
-                item_id = text_or_default(target.get("item_id"), "")
-                if not drive_id or not item_id:
-                    raise RuntimeError("Missing drive_id/item_id for drive_item trip mode.")
-                items = fetch_drive_children(
-                    drive_id=drive_id,
-                    item_id=item_id,
-                    access_token=access_token,
-                    max_items=args.max_files,
-                )
-            else:
-                items = fetch_share_children(share_url, access_token, max_items=args.max_files)
+            drive_id = text_or_default(target.get("drive_id"), "")
+            item_id = text_or_default(target.get("item_id"), "")
+            items = collect_image_items(
+                mode=mode,
+                share_url=share_url,
+                drive_id=drive_id,
+                item_id=item_id,
+                access_token=access_token,
+                max_items=args.max_files,
+                max_depth=max(0, args.max_depth),
+            )
 
             existing_manifest_rows = load_existing_manifest(trip)
             existing_metadata_map = build_existing_metadata_map(existing_manifest_rows)
