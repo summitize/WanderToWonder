@@ -147,6 +147,7 @@ In repo -> `Settings` -> `Secrets and variables` -> `Actions`, add:
 - `CLOUDINARY_CLOUD_NAME`
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
+- `VERCEL_DEPLOY_HOOK_URL` (optional): deploy hook URL from Vercel project settings
 
 Example `ONEDRIVE_TRIP_PATHS_JSON`:
 
@@ -166,6 +167,7 @@ After success:
 
 - `data/<trip>.json` is updated
 - commit is pushed automatically
+- Vercel deploy hook is called automatically when manifest files changed (if configured)
 - website uses updated gallery manifest via existing local JSON fallback
 
 Notes:

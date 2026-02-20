@@ -61,9 +61,11 @@ jobs:
           python scripts/sync-onedrive-cloudinary.py --map-json "$ONEDRIVE_TRIP_PATHS_JSON"
 
       - name: Commit and push manifest updates
+        id: commit_push
         run: |
           if git diff --quiet -- data; then
             echo "No manifest changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -72,3 +74,17 @@ jobs:
           git add data/
           git commit -m "Automated OneDrive -> Cloudinary gallery sync"
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger Vercel deploy hook
+        if: steps.commit_push.outputs.changed == 'true'
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK_URL" ]; then
+            echo "VERCEL_DEPLOY_HOOK_URL not set, skipping Vercel deploy hook."
+            exit 0
+          fi
+
+          curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_URL"
+          echo "Triggered Vercel deploy hook."
