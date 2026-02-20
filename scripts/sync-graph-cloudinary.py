@@ -58,6 +58,22 @@ def to_title(file_name: str, fallback: str) -> str:
     return pretty if pretty else fallback
 
 
+def to_description(title: str, trip_label: str) -> str:
+    normalized_title = text_or_default(title, "")
+    normalized_trip = text_or_default(trip_label, "")
+    if not normalized_title:
+        return f"Captured during {normalized_trip or 'this trip'}."
+
+    prefix = f"{normalized_trip} - " if normalized_trip else ""
+    detail = normalized_title
+    if prefix and normalized_title.lower().startswith(prefix.lower()):
+        detail = normalized_title[len(prefix):].strip()
+
+    if re.search(r"\d{1,2}\s[A-Za-z]{3}\s\d{4}", detail):
+        return f"Captured on {detail}."
+    return f"{detail}."
+
+
 def encode_sharing_url(url: str) -> str:
     import base64
 
@@ -334,14 +350,19 @@ def load_existing_manifest(trip: str) -> list[dict[str, Any]]:
     return []
 
 
-def build_existing_title_map(rows: list[dict[str, Any]]) -> dict[str, str]:
-    title_map: dict[str, str] = {}
+def build_existing_metadata_map(rows: list[dict[str, Any]]) -> dict[str, dict[str, str]]:
+    metadata_map: dict[str, dict[str, str]] = {}
     for row in rows:
         file_name = text_or_default(row.get("name"), "")
         title = text_or_default(row.get("title"), "")
-        if file_name and title:
-            title_map[file_name] = title
-    return title_map
+        description = text_or_default(row.get("description"), "")
+        if not file_name:
+            continue
+        metadata_map[file_name] = {
+            "title": title,
+            "description": description,
+        }
+    return metadata_map
 
 
 def cloudinary_upload_from_graph_items(
@@ -351,7 +372,8 @@ def cloudinary_upload_from_graph_items(
     folder: str,
     access_token: str,
     overwrite: bool,
-    existing_titles: dict[str, str] | None = None,
+    trip_label: str,
+    existing_metadata: dict[str, dict[str, str]] | None = None,
 ) -> list[dict[str, str]]:
     share_id = encode_sharing_url(share_url)
     manifest: list[dict[str, str]] = []
@@ -525,12 +547,19 @@ def cloudinary_upload_from_graph_items(
             )
 
             preserved_title = ""
-            if isinstance(existing_titles, dict):
-                preserved_title = text_or_default(existing_titles.get(file_name), "")
+            preserved_description = ""
+            if isinstance(existing_metadata, dict):
+                row = existing_metadata.get(file_name)
+                if isinstance(row, dict):
+                    preserved_title = text_or_default(row.get("title"), "")
+                    preserved_description = text_or_default(row.get("description"), "")
+            resolved_title = preserved_title or to_title(file_name, f"Photo {index}")
+            resolved_description = preserved_description or to_description(resolved_title, trip_label)
             manifest.append(
                 {
                     "src": optimized_url,
-                    "title": preserved_title or to_title(file_name, f"Photo {index}"),
+                    "title": resolved_title,
+                    "description": resolved_description,
                     "name": file_name,
                 }
             )
@@ -609,7 +638,8 @@ def main() -> int:
         try:
             items = fetch_share_children(share_url, access_token, max_items=args.max_files)
             existing_manifest_rows = load_existing_manifest(trip)
-            existing_title_map = build_existing_title_map(existing_manifest_rows)
+            existing_metadata_map = build_existing_metadata_map(existing_manifest_rows)
+            trip_label = trip.replace("-", " ").title()
             photos = cloudinary_upload_from_graph_items(
                 cloudinary=cloudinary,
                 items=items,
@@ -617,7 +647,8 @@ def main() -> int:
                 folder=folder,
                 access_token=access_token,
                 overwrite=args.overwrite,
-                existing_titles=existing_title_map,
+                trip_label=trip_label,
+                existing_metadata=existing_metadata_map,
             )
 
             if not photos:

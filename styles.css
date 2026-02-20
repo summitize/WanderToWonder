@@ -877,6 +877,26 @@ a {
    PHOTO GALLERY COMPONENT STYLES
    ======================================== */
 
+.gallery-coming-soon {
+    padding: 3rem;
+    text-align: center;
+    background: var(--bg-card);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 107, 53, 0.25);
+    margin: 2rem 0;
+}
+
+.gallery-coming-soon h3 {
+    color: var(--color-orange);
+    margin-bottom: 0.75rem;
+    font-size: 1.6rem;
+}
+
+.gallery-coming-soon p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
 /* View Toggle Buttons */
 .view-toggle {
     display: flex;

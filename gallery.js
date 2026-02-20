@@ -45,6 +45,28 @@ class PhotoGallery {
             .trim();
     }
 
+    static derivePhotoDescription(title, fallbackDescription) {
+        const normalizedTitle = PhotoGallery.textOrDefault(title, '');
+        const normalizedFallback = PhotoGallery.textOrDefault(
+            fallbackDescription,
+            'Travel memory.'
+        );
+
+        if (!normalizedTitle) {
+            return normalizedFallback;
+        }
+
+        const detail = normalizedTitle.includes(' - ')
+            ? normalizedTitle.split(' - ').slice(1).join(' - ').trim()
+            : normalizedTitle;
+
+        if (/\d{1,2}\s[A-Za-z]{3}\s\d{4}/.test(detail)) {
+            return `Captured on ${detail}.`;
+        }
+
+        return normalizedFallback;
+    }
+
     static isConfiguredShareLink(shareLink) {
         return (
             typeof shareLink === 'string'
@@ -192,10 +214,11 @@ class PhotoGallery {
             if (seen.has(uniqueKey)) continue;
             seen.add(uniqueKey);
 
+            const title = PhotoGallery.derivePhotoTitle(item.name, photos.length + 1);
             photos.push({
                 src,
-                title: PhotoGallery.derivePhotoTitle(item.name, photos.length + 1),
-                description
+                title,
+                description: PhotoGallery.derivePhotoDescription(title, description)
             });
         }
 
@@ -219,6 +242,20 @@ class PhotoGallery {
     static renderLoading(container, message) {
         if (!container) return;
         container.innerHTML = `<p class="loading" style="text-align: center; padding: 2rem;">${message}</p>`;
+    }
+
+    static renderComingSoon(container, destinationName) {
+        if (!container) return;
+
+        const safeDestination = PhotoGallery.escapeHtml(
+            PhotoGallery.textOrDefault(destinationName, 'this destination')
+        );
+        container.innerHTML = `
+            <div class="gallery-coming-soon">
+                <h3>Coming Soon</h3>
+                <p>Photos for ${safeDestination} will be available soon.</p>
+            </div>
+        `;
     }
 
     static escapeHtml(value) {
@@ -332,14 +369,20 @@ class PhotoGallery {
 
         return rows
             .filter((row) => row && typeof row === 'object')
-            .map((row, index) => ({
-                src: PhotoGallery.textOrDefault(row.src, ''),
-                title: PhotoGallery.textOrDefault(
+            .map((row, index) => {
+                const title = PhotoGallery.textOrDefault(
                     row.title,
                     PhotoGallery.derivePhotoTitle(row.name, index + 1)
-                ),
-                description: PhotoGallery.textOrDefault(row.description, description)
-            }))
+                );
+                return {
+                    src: PhotoGallery.textOrDefault(row.src, ''),
+                    title,
+                    description: PhotoGallery.textOrDefault(
+                        row.description,
+                        PhotoGallery.derivePhotoDescription(title, description)
+                    )
+                };
+            })
             .filter((photo) => photo.src.length > 0);
     }
 
@@ -359,13 +402,17 @@ class PhotoGallery {
                     )
                 );
 
+                const title = PhotoGallery.textOrDefault(
+                    row.title,
+                    PhotoGallery.derivePhotoTitle(row.name, index + 1)
+                );
                 return {
                     src,
-                    title: PhotoGallery.textOrDefault(
-                        row.title,
-                        PhotoGallery.derivePhotoTitle(row.name, index + 1)
-                    ),
-                    description: PhotoGallery.textOrDefault(row.description, description)
+                    title,
+                    description: PhotoGallery.textOrDefault(
+                        row.description,
+                        PhotoGallery.derivePhotoDescription(title, description)
+                    )
                 };
             })
             .filter((photo) => photo.src.length > 0);
@@ -408,7 +455,7 @@ class PhotoGallery {
             );
 
             if (container && !suppressErrorUi) {
-                PhotoGallery.renderError(container, destinationName, error.message);
+                PhotoGallery.renderComingSoon(container, destinationName);
             }
             return null;
         }
@@ -419,7 +466,8 @@ class PhotoGallery {
         const container = document.getElementById(containerId);
         const {
             suppressErrorUi = false,
-            description = 'Captured during the journey.'
+            description = 'Memories from this trip.',
+            destinationName = 'this trip'
         } = options;
 
         try {
@@ -440,7 +488,7 @@ class PhotoGallery {
         } catch (error) {
             console.error('Local gallery load failed:', error);
             if (container && !suppressErrorUi) {
-                PhotoGallery.renderError(container, 'this trip', error.message);
+                PhotoGallery.renderComingSoon(container, destinationName);
             }
             return null;
         }
@@ -477,7 +525,7 @@ class PhotoGallery {
             );
 
             if (container && !suppressErrorUi) {
-                PhotoGallery.renderError(container, destinationName, error.message);
+                PhotoGallery.renderComingSoon(container, destinationName);
             }
             return null;
         }
@@ -490,7 +538,7 @@ class PhotoGallery {
         localJsonPath,
         destinationName = 'journey'
     }) {
-        const description = `Captured during the ${destinationName} journey.`;
+        const description = `Memories from ${destinationName}.`;
         const hasApiEndpoint = PhotoGallery.isConfiguredApiEndpoint(apiEndpoint);
         const hasShareLink = PhotoGallery.isConfiguredShareLink(shareLink);
         let apiErrorMessage = '';
@@ -546,21 +594,10 @@ class PhotoGallery {
             const mergedFailureMessage = [apiErrorMessage, oneDriveErrorMessage]
                 .filter((entry) => typeof entry === 'string' && entry.trim().length > 0)
                 .join(' | ');
-
-            if (hasShareLink) {
-                PhotoGallery.renderOneDriveOpenFallback(
-                    container,
-                    shareLink,
-                    destinationName,
-                    mergedFailureMessage || 'Could not load photos from API, OneDrive, or local cache.'
-                );
-            } else {
-                PhotoGallery.renderError(
-                    container,
-                    destinationName,
-                    mergedFailureMessage || 'Could not load photos from API, OneDrive, or local cache.'
-                );
+            if (mergedFailureMessage) {
+                console.warn(`Gallery load fallback for ${destinationName}: ${mergedFailureMessage}`);
             }
+            PhotoGallery.renderComingSoon(container, destinationName);
         }
 
         return null;

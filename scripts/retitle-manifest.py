@@ -34,6 +34,21 @@ def title_from_name(name: str, trip_display_name: str, index: int) -> str:
     return f"{trip_display_name} Moment {index:02d}"
 
 
+def description_from_title(title: str, trip_display_name: str) -> str:
+    safe_title = text_or_default(title, "")
+    safe_trip = text_or_default(trip_display_name, "")
+    if not safe_title:
+        return f"Captured during {safe_trip or 'this trip'}."
+
+    prefix = f"{safe_trip} - " if safe_trip else ""
+    detail = safe_title
+    if prefix and safe_title.lower().startswith(prefix.lower()):
+        detail = safe_title[len(prefix):].strip()
+    if re.search(r"\d{1,2}\s[A-Za-z]{3}\s\d{4}", detail):
+        return f"Captured on {detail}."
+    return f"{detail}."
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="One-time retitle of manifest entries to avoid file-name style titles."
@@ -81,11 +96,15 @@ def main() -> int:
         if text_or_default(row.get("title"), "") != next_title:
             row["title"] = next_title
             updated_count += 1
+        next_description = description_from_title(next_title, title_prefix)
+        if text_or_default(row.get("description"), "") != next_description:
+            row["description"] = next_description
+            updated_count += 1
 
     with manifest_path.open("w", encoding="utf-8") as file_obj:
         json.dump(payload, file_obj, indent=2)
 
-    print(f"Updated {updated_count} titles in {manifest_path}")
+    print(f"Updated {updated_count} title/description fields in {manifest_path}")
     return 0
 
 
