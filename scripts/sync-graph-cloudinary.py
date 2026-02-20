@@ -274,84 +274,84 @@ def cloudinary_upload_from_graph_items(
         encoded_drive_id = quote(drive_id, safe="")
 
         temp_path: Path | None = None
-        if direct_download_url:
-            temp_path = fetch_binary_to_tempfile(
-                direct_download_url,
-                headers=None,
-                suffix=extension,
-            )
-        else:
-            metadata_candidates = [
-                f"{GRAPH_BASE}/drives/{encoded_drive_id}/items/{encoded_item_id}"
-                "?$select=id,name,@microsoft.graph.downloadUrl",
-                f"{GRAPH_BASE}/shares/{share_id}/driveItem/children/{encoded_item_id}"
-                "?$select=id,name,@microsoft.graph.downloadUrl",
-                f"{GRAPH_BASE}/shares/{share_id}/driveItem/items/{encoded_item_id}"
-                "?$select=id,name,@microsoft.graph.downloadUrl",
-            ]
-            metadata_candidates = [
-                url for url in metadata_candidates
-                if "drives//" not in url
-            ]
-
-            for metadata_url in metadata_candidates:
-                payload = try_http_get_json(
-                    metadata_url,
-                    headers={
-                        "Authorization": f"Bearer {access_token}",
-                        "Accept": "application/json",
-                    },
-                )
-                if not payload:
-                    continue
-
-                resolved_url = text_or_default(payload.get("@microsoft.graph.downloadUrl"), "")
-                if resolved_url:
-                    direct_download_url = resolved_url
-                    break
-
+        try:
             if direct_download_url:
                 temp_path = fetch_binary_to_tempfile(
                     direct_download_url,
                     headers=None,
                     suffix=extension,
                 )
+            else:
+                metadata_candidates = [
+                    f"{GRAPH_BASE}/drives/{encoded_drive_id}/items/{encoded_item_id}"
+                    "?$select=id,name,@microsoft.graph.downloadUrl",
+                    f"{GRAPH_BASE}/shares/{share_id}/driveItem/children/{encoded_item_id}"
+                    "?$select=id,name,@microsoft.graph.downloadUrl",
+                    f"{GRAPH_BASE}/shares/{share_id}/driveItem/items/{encoded_item_id}"
+                    "?$select=id,name,@microsoft.graph.downloadUrl",
+                ]
+                metadata_candidates = [
+                    url for url in metadata_candidates
+                    if "drives//" not in url
+                ]
 
-        if temp_path is None:
-            candidate_urls = [
-                f"{GRAPH_BASE}/drives/{encoded_drive_id}/items/{encoded_item_id}/content",
-                f"{GRAPH_BASE}/shares/{share_id}/driveItem:/{encoded_name}:/content",
-                f"{GRAPH_BASE}/shares/{share_id}/driveItem/children/{encoded_item_id}/content",
-                f"{GRAPH_BASE}/shares/{share_id}/driveItem/items/{encoded_item_id}/content",
-            ]
-            candidate_urls = [
-                url for url in candidate_urls
-                if "drives//" not in url
-            ]
+                for metadata_url in metadata_candidates:
+                    payload = try_http_get_json(
+                        metadata_url,
+                        headers={
+                            "Authorization": f"Bearer {access_token}",
+                            "Accept": "application/json",
+                        },
+                    )
+                    if not payload:
+                        continue
 
-            last_error: Exception | None = None
-            for candidate_url in candidate_urls:
-                try:
+                    resolved_url = text_or_default(payload.get("@microsoft.graph.downloadUrl"), "")
+                    if resolved_url:
+                        direct_download_url = resolved_url
+                        break
+
+                if direct_download_url:
                     temp_path = fetch_binary_to_tempfile(
-                        candidate_url,
-                        headers={"Authorization": f"Bearer {access_token}"},
+                        direct_download_url,
+                        headers=None,
                         suffix=extension,
                     )
-                    break
-                except Exception as exc:
-                    last_error = exc
 
             if temp_path is None:
-                if last_error is not None:
-                    raise last_error
-                raise RuntimeError("Could not resolve a valid download URL for item.")
+                candidate_urls = [
+                    f"{GRAPH_BASE}/drives/{encoded_drive_id}/items/{encoded_item_id}/content",
+                    f"{GRAPH_BASE}/shares/{share_id}/driveItem:/{encoded_name}:/content",
+                    f"{GRAPH_BASE}/shares/{share_id}/driveItem/children/{encoded_item_id}/content",
+                    f"{GRAPH_BASE}/shares/{share_id}/driveItem/items/{encoded_item_id}/content",
+                ]
+                candidate_urls = [
+                    url for url in candidate_urls
+                    if "drives//" not in url
+                ]
 
-        base_id = slugify(Path(file_name).stem)
-        item_slug = slugify(item_id)[:12]
-        public_leaf = f"{base_id}-{item_slug}" if item_slug else base_id
-        public_id = f"{folder.strip('/')}/{public_leaf}" if folder.strip("/") else public_leaf
+                last_error: Exception | None = None
+                for candidate_url in candidate_urls:
+                    try:
+                        temp_path = fetch_binary_to_tempfile(
+                            candidate_url,
+                            headers={"Authorization": f"Bearer {access_token}"},
+                            suffix=extension,
+                        )
+                        break
+                    except Exception as exc:
+                        last_error = exc
 
-        try:
+                if temp_path is None:
+                    if last_error is not None:
+                        raise last_error
+                    raise RuntimeError("Could not resolve a valid download URL for item.")
+
+            base_id = slugify(Path(file_name).stem)
+            item_slug = slugify(item_id)[:12]
+            public_leaf = f"{base_id}-{item_slug}" if item_slug else base_id
+            public_id = f"{folder.strip('/')}/{public_leaf}" if folder.strip("/") else public_leaf
+
             try:
                 result = cloudinary.uploader.upload(
                     str(temp_path),
@@ -367,32 +367,34 @@ def cloudinary_upload_from_graph_items(
                     raise
                 result = {"public_id": public_id}
                 print(f"Reused existing {index}/{len(image_items)}: {file_name}")
+
+            uploaded_public_id = result.get("public_id", public_id)
+            optimized_url, _ = cloudinary.utils.cloudinary_url(
+                uploaded_public_id,
+                secure=True,
+                resource_type="image",
+                type="upload",
+                fetch_format="auto",
+                quality="auto",
+                width=1800,
+                crop="limit",
+            )
+
+            manifest.append(
+                {
+                    "src": optimized_url,
+                    "title": to_title(file_name, f"Photo {index}"),
+                    "name": file_name,
+                }
+            )
+        except Exception as exc:
+            print(f"Skipped {index}/{len(image_items)} ({file_name}): {exc}")
         finally:
             if temp_path is not None:
                 try:
                     temp_path.unlink(missing_ok=True)
                 except OSError:
                     pass
-
-        uploaded_public_id = result.get("public_id", public_id)
-        optimized_url, _ = cloudinary.utils.cloudinary_url(
-            uploaded_public_id,
-            secure=True,
-            resource_type="image",
-            type="upload",
-            fetch_format="auto",
-            quality="auto",
-            width=1800,
-            crop="limit",
-        )
-
-        manifest.append(
-            {
-                "src": optimized_url,
-                "title": to_title(file_name, f"Photo {index}"),
-                "name": file_name,
-            }
-        )
 
     return manifest
 
