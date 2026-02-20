@@ -407,6 +407,57 @@ def fetch_drive_children(
     return items[:max_items]
 
 
+def fetch_share_item_children(
+    share_id: str,
+    item_id: str,
+    access_token: str,
+    max_items: int,
+) -> list[dict[str, Any]]:
+    encoded_share_id = quote(share_id, safe="")
+    encoded_item_id = quote(item_id, safe="")
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Accept": "application/json",
+    }
+
+    endpoint_candidates = [
+        f"{GRAPH_BASE}/shares/{encoded_share_id}/driveItem/items/{encoded_item_id}/children"
+        f"?$top={min(max_items, 200)}"
+        "&$select=id,name,file,folder,image,webUrl,parentReference,remoteItem,thumbnails,@microsoft.graph.downloadUrl",
+        f"{GRAPH_BASE}/shares/{encoded_share_id}/items/{encoded_item_id}/driveItem/children"
+        f"?$top={min(max_items, 200)}"
+        "&$select=id,name,file,folder,image,webUrl,parentReference,remoteItem,thumbnails,@microsoft.graph.downloadUrl",
+    ]
+
+    last_error: Exception | None = None
+    for first_url in endpoint_candidates:
+        next_url = first_url
+        page_count = 0
+        items: list[dict[str, Any]] = []
+        try:
+            while next_url:
+                payload = http_get_json(next_url, headers=headers)
+                page_items = payload.get("value", [])
+                if isinstance(page_items, list):
+                    items.extend([row for row in page_items if isinstance(row, dict)])
+
+                if len(items) >= max_items:
+                    break
+
+                next_link = payload.get("@odata.nextLink")
+                next_url = next_link if isinstance(next_link, str) and next_link.strip() else ""
+                page_count += 1
+                if page_count > 20:
+                    break
+            return items[:max_items]
+        except Exception as exc:
+            last_error = exc
+
+    if last_error:
+        raise last_error
+    return []
+
+
 def is_folder_item(item: dict[str, Any]) -> bool:
     if not isinstance(item, dict):
         return False
@@ -513,23 +564,28 @@ def collect_image_items(
     max_depth: int,
 ) -> list[dict[str, Any]]:
     # Crawl nested folders because many OneDrive shares keep photos inside subfolders.
+    initial_mode = "drive_item" if mode == "drive_item" else "share_root"
+    initial_share_id = encode_sharing_url(share_url) if share_url else ""
     queue: list[dict[str, Any]] = [
         {
-            "mode": mode,
+            "mode": initial_mode,
             "share_url": share_url,
+            "share_id": initial_share_id,
             "drive_id": drive_id,
             "item_id": item_id,
             "depth": 0,
         }
     ]
     visited_drive_items: set[tuple[str, str]] = set()
+    visited_share_items: set[tuple[str, str]] = set()
     image_items: list[dict[str, Any]] = []
     list_limit = max(200, max_items)
 
     while queue and len(image_items) < max_items:
         node = queue.pop(0)
-        node_mode = text_or_default(node.get("mode"), "share")
+        node_mode = text_or_default(node.get("mode"), "share_root")
         node_depth = int(node.get("depth", 0))
+        node_share_id = text_or_default(node.get("share_id"), "")
 
         if node_mode == "drive_item":
             node_drive_id = text_or_default(node.get("drive_id"), "")
@@ -548,10 +604,28 @@ def collect_image_items(
                 access_token=access_token,
                 max_items=list_limit,
             )
+        elif node_mode == "share_item":
+            node_item_id = text_or_default(node.get("item_id"), "")
+            if not node_share_id or not node_item_id:
+                continue
+
+            visit_key = (node_share_id, node_item_id)
+            if visit_key in visited_share_items:
+                continue
+            visited_share_items.add(visit_key)
+
+            children = fetch_share_item_children(
+                share_id=node_share_id,
+                item_id=node_item_id,
+                access_token=access_token,
+                max_items=list_limit,
+            )
         else:
             node_share_url = text_or_default(node.get("share_url"), "")
             if not node_share_url:
                 continue
+            if not node_share_id:
+                node_share_id = encode_sharing_url(node_share_url)
             children = fetch_share_children(
                 share_url=node_share_url,
                 access_token=access_token,
@@ -571,18 +645,33 @@ def collect_image_items(
                 continue
 
             child_item_id, child_drive_id = resolve_item_ids(child)
-            if not child_item_id or not child_drive_id:
+            if not child_item_id:
                 continue
 
-            queue.append(
-                {
-                    "mode": "drive_item",
-                    "share_url": "",
-                    "drive_id": child_drive_id,
-                    "item_id": child_item_id,
-                    "depth": node_depth + 1,
-                }
-            )
+            if child_drive_id:
+                queue.append(
+                    {
+                        "mode": "drive_item",
+                        "share_url": "",
+                        "share_id": node_share_id,
+                        "drive_id": child_drive_id,
+                        "item_id": child_item_id,
+                        "depth": node_depth + 1,
+                    }
+                )
+                continue
+
+            if node_share_id:
+                queue.append(
+                    {
+                        "mode": "share_item",
+                        "share_url": "",
+                        "share_id": node_share_id,
+                        "drive_id": "",
+                        "item_id": child_item_id,
+                        "depth": node_depth + 1,
+                    }
+                )
 
     return image_items[:max_items]
 
