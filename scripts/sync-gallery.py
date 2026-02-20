@@ -44,7 +44,7 @@ def sync_gallery(source_dir: Path, trip: str, max_files: int | None = None) -> t
 
         photos.append(
             {
-                "src": f"images/{trip}/{new_name}",
+                "src": f"photos/{trip}/{new_name}",
                 "title": to_title(source_path.name, f"Photo {index}"),
                 "name": source_path.name,
             }

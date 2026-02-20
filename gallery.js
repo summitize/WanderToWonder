@@ -318,7 +318,7 @@ class PhotoGallery {
                 </p>
                 <ol style="padding-left: 1.2rem; line-height: 1.8; text-align: left; display: inline-block; margin-top: 0.75rem;">
                     <li>If testing locally, run a server instead of opening HTML directly: <code>python -m http.server 5500</code>.</li>
-                    <li>For a grid gallery on your site, use local cache JSON + images under <code>data/</code> and <code>images/</code>.</li>
+                    <li>For a grid gallery on your site, use local cache JSON + images under <code>data/</code> and <code>photos/</code>.</li>
                     <li>If you need live OneDrive API listing, add a backend token proxy (Graph delegated auth).</li>
                 </ol>
             </div>

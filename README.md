@@ -58,7 +58,7 @@ Use local sync once, then the website gallery works normally:
 python scripts/sync-gallery.py --source "C:\path\to\Australia\photos" --trip australia
 ```
 
-This command copies images into `images/australia/` and creates `data/australia.json`.
+This command copies images into `photos/australia/` and creates `data/australia.json`.
 
 ## Cloudinary Automation (recommended for hosted galleries)
 

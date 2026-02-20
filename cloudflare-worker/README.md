@@ -5,7 +5,7 @@ This Worker exposes a public gallery API for the static website by calling Micro
 ## What it solves
 
 - Your browser pages cannot reliably call Graph `/shares` anonymously.
-- Worker holds Graph auth and proxies images/thumbnails.
+- Worker holds Graph auth and proxies photos/thumbnails.
 - Website fetches `/photos?trip=<destination>` with no login prompts.
 
 ## Prerequisites
