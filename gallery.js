@@ -967,7 +967,9 @@ class PhotoGallery {
             previousLightbox.remove();
         }
 
-        document.body.appendChild(this.createLightbox());
+        const lightbox = this.createLightbox();
+        document.body.appendChild(lightbox);
+        this.updateLightbox(lightbox);
         document.body.style.overflow = 'hidden';
     }
 
@@ -1029,7 +1031,6 @@ class PhotoGallery {
             }
         });
 
-        this.updateLightbox();
         return lightbox;
     }
 
@@ -1041,8 +1042,8 @@ class PhotoGallery {
         this.updateLightbox();
     }
 
-    updateLightbox() {
-        const lightbox = document.getElementById('photo-lightbox');
+    updateLightbox(lightboxElement = null) {
+        const lightbox = lightboxElement || document.getElementById('photo-lightbox');
         if (!lightbox) return;
 
         const photo = this.photos[this.currentPhotoIndex];
