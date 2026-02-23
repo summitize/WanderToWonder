@@ -472,7 +472,7 @@
     }
 
     function initializeMapExplorer() {
-        if (!document.getElementById('travel-map')) return;
+        if (!document.getElementById('journey-map-explorer')) return;
 
         initializeMapOptionTabs();
         initializeRealMap();

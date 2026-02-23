@@ -481,6 +481,26 @@ a {
     padding-top: 0;
 }
 
+.hero-map-shell {
+    flex-direction: column !important;
+    padding: 1.5rem !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    background: rgba(15, 23, 42, 0.4) !important;
+    backdrop-filter: blur(10px);
+}
+
+.hero-map-intro {
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    margin-bottom: 1.2rem;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+
 .map-explorer-subtitle {
     text-align: center;
     color: var(--text-secondary);
@@ -520,6 +540,25 @@ a {
     color: #fff;
     border-color: transparent;
     box-shadow: 0 10px 26px rgba(6, 182, 212, 0.35);
+}
+
+.map-tab-icon {
+    display: inline-block;
+    margin-right: 0.6rem;
+    font-size: 1.1rem;
+    vertical-align: middle;
+}
+
+.map-tab-icon-real::before {
+    content: '🗺️';
+}
+
+.map-tab-icon-globe::before {
+    content: '🌍';
+}
+
+.map-tab-icon-focus::before {
+    content: '🧭';
 }
 
 .map-option-panels {
