@@ -608,6 +608,23 @@ a {
     min-height: 560px;
 }
 
+.timeline-map-wrap {
+    width: 100%;
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+}
+
+@media (max-width: 991px) {
+    .timeline-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-map-canvas {
+        min-height: 380px;
+    }
+}
+
 .timeline-side {
     background: rgba(15, 23, 42, 0.58);
     border: 1px solid rgba(148, 163, 184, 0.28);
@@ -653,7 +670,23 @@ a {
     display: grid;
     gap: 0.55rem;
     max-height: 430px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 0.4rem;
+}
+
+.timeline-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.timeline-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.timeline-list::-webkit-scrollbar-thumb {
+    background: rgba(34, 211, 238, 0.3);
+    border-radius: 10px;
 }
 
 .timeline-item {

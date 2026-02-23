@@ -67,7 +67,7 @@
     let timelineMap = null;
     let timelineMarkersLayer = null;
     let timelineRouteLayer = null;
-    let timelineStep = DESTINATIONS.length;
+    let timelineStep = 1;
     let timelineTimerId = null;
     let timelineRangeInput = null;
     let timelinePlayButton = null;
@@ -325,7 +325,14 @@
         }).addTo(timelineMap);
 
         timelineMarkersLayer = window.L.layerGroup().addTo(timelineMap);
-        renderTimeline(timelineStep);
+
+        // Ensure map is properly sized and showing first step
+        setTimeout(() => {
+            if (timelineMap) {
+                timelineMap.invalidateSize();
+                renderTimeline(timelineStep);
+            }
+        }, 100);
     }
 
     function renderTimeline(step) {
@@ -339,7 +346,11 @@
         if (timelineStepList) {
             const items = timelineStepList.querySelectorAll('.timeline-item');
             items.forEach((item, index) => {
-                item.classList.toggle('active', index < safeStep);
+                const isActive = index < safeStep;
+                item.classList.toggle('active', isActive);
+                if (index === safeStep - 1 && isActive) {
+                    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
             });
         }
 
@@ -404,7 +415,7 @@
         }
 
         if (timelinePlayButton) {
-            timelinePlayButton.textContent = 'Play Route';
+            timelinePlayButton.textContent = 'Play Spots';
         }
     }
 
@@ -444,12 +455,16 @@
         }
 
         if (option === 'real' && realMap) {
-            realMap.invalidateSize();
+            setTimeout(() => {
+                realMap.invalidateSize();
+            }, 50);
         }
 
         if (option === 'timeline' && timelineMap) {
-            timelineMap.invalidateSize();
-            renderTimeline(timelineStep);
+            setTimeout(() => {
+                timelineMap.invalidateSize();
+                renderTimeline(timelineStep);
+            }, 50);
         }
 
         if (option === 'globe') {
