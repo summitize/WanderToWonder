@@ -12,6 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -121,15 +122,55 @@
             </div>
         </section>
 
-        <section id="travel-map" class="section visited-map-section">
+        <section id="travel-map" class="section map-explorer-section">
             <div class="container">
-                <h2 class="section-title">Visited <span class="text-highlight">Destinations Map</span></h2>
-                <p class="visited-map-subtitle">A snapshot of the places already explored across the globe.</p>
-                <figure class="visited-map-frame">
-                    <img src="assets/visited-world-map.svg"
-                        alt="World map highlighting visited destinations: Dubai, Statue of Unity, Dapoli and Alibaug, Sri Lanka, and Sydney."
-                        loading="lazy">
-                </figure>
+                <h2 class="section-title">Journey <span class="text-highlight">Map Explorer</span></h2>
+                <p class="map-explorer-subtitle">Switch between three map styles to explore all visited destinations.</p>
+
+                <div class="map-option-toggle" role="tablist" aria-label="Map representation options">
+                    <button class="map-option-btn active" id="map-tab-real" data-map-option="real" role="tab"
+                        aria-selected="true" aria-controls="map-panel-real">
+                        3. Real Map
+                    </button>
+                    <button class="map-option-btn" id="map-tab-globe" data-map-option="globe" role="tab"
+                        aria-selected="false" aria-controls="map-panel-globe">
+                        4. Animated Globe
+                    </button>
+                    <button class="map-option-btn" id="map-tab-timeline" data-map-option="timeline" role="tab"
+                        aria-selected="false" aria-controls="map-panel-timeline">
+                        5. Timeline Journey
+                    </button>
+                </div>
+
+                <div class="map-option-panels">
+                    <section class="map-panel is-active" id="map-panel-real" role="tabpanel" aria-labelledby="map-tab-real">
+                        <div class="map-canvas" id="journey-real-map"
+                            aria-label="Interactive map showing visited destinations with route"></div>
+                    </section>
+
+                    <section class="map-panel" id="map-panel-globe" role="tabpanel" aria-labelledby="map-tab-globe" hidden>
+                        <div class="map-canvas" id="journey-globe-map"
+                            aria-label="Animated globe showing visited destinations"></div>
+                    </section>
+
+                    <section class="map-panel" id="map-panel-timeline" role="tabpanel" aria-labelledby="map-tab-timeline"
+                        hidden>
+                        <div class="timeline-layout">
+                            <div class="timeline-map-wrap">
+                                <div class="map-canvas timeline-map-canvas" id="journey-timeline-map"
+                                    aria-label="Timeline route map"></div>
+                            </div>
+                            <aside class="timeline-side">
+                                <div class="timeline-controls">
+                                    <label for="journey-step-range">Journey step</label>
+                                    <input type="range" id="journey-step-range" min="1" max="6" value="6">
+                                    <button type="button" class="timeline-play-btn" id="journey-play-btn">Play Route</button>
+                                </div>
+                                <ol class="timeline-list" id="journey-step-list"></ol>
+                            </aside>
+                        </div>
+                    </section>
+                </div>
             </div>
         </section>
 
@@ -147,6 +188,9 @@
     <div id="footer-placeholder"></div>
 
     <script src="script.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script src="map-experiences.js"></script>
 </body>
 
 </html>
