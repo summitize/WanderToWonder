@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 220" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">Wander To Wonder</title>
+  <desc id="logoDesc">Wander To Wonder travel logo with circular journey mark and cursive title.</desc>
+  <defs>
+    <linearGradient id="wtwGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="55%" stop-color="#0EA5E9" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    <filter id="wtwGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g transform="translate(26 28)" filter="url(#wtwGlow)">
+    <circle cx="78" cy="82" r="68" fill="none" stroke="url(#wtwGradient)" stroke-width="9" opacity="0.9" />
+    <path d="M34 116 C56 88, 98 69, 129 46" fill="none" stroke="#10B981" stroke-width="6" stroke-linecap="round" />
+    <path d="M126 42 l15 2 l-9 12 z" fill="#10B981" />
+    <path d="M51 106 C74 128, 100 132, 125 121" fill="none" stroke="#06B6D4" stroke-width="5" stroke-linecap="round" />
+    <circle cx="41" cy="117" r="6.5" fill="#06B6D4" />
+  </g>
+
+  <text
+    x="176"
+    y="128"
+    font-size="92"
+    font-weight="600"
+    font-family="Brush Script MT, Segoe Script, Lucida Handwriting, cursive"
+    letter-spacing="0.2"
+    fill="url(#wtwGradient)">
+    Wander To Wonder
+  </text>
+</svg>

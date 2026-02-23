@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 760" role="img" aria-labelledby="mapTitle mapDesc">
+  <title id="mapTitle">Visited destinations world map</title>
+  <desc id="mapDesc">Dotted world map with highlighted points for Dubai, Statue of Unity, Dapoli and Alibaug, Sri Lanka, and Sydney.</desc>
+  <defs>
+    <pattern id="landDots" width="12" height="12" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="2.1" fill="#85a9cd" />
+    </pattern>
+    <filter id="pinGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3.2" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="760" fill="#0b2a56" />
+
+  <g opacity="0.9">
+    <path fill="url(#landDots)" d="M84 228 L160 156 L308 126 L420 174 L464 258 L404 330 L278 360 L172 330 L110 272 Z" />
+    <path fill="url(#landDots)" d="M398 72 L476 46 L556 70 L586 118 L540 162 L448 154 L396 114 Z" />
+    <path fill="url(#landDots)" d="M364 404 L438 434 L492 526 L472 640 L422 726 L360 664 L332 568 Z" />
+    <path fill="url(#landDots)" d="M650 244 L760 182 L946 170 L1144 190 L1318 228 L1326 310 L1218 348 L1088 342 L974 354 L848 346 L738 318 L674 280 Z" />
+    <path fill="url(#landDots)" d="M746 352 L846 370 L904 458 L876 584 L804 656 L726 614 L700 516 L706 424 Z" />
+    <path fill="url(#landDots)" d="M1104 526 L1214 546 L1298 610 L1268 694 L1174 706 L1098 632 Z" />
+  </g>
+
+  <g fill="#f97316" filter="url(#pinGlow)">
+    <circle cx="844" cy="356" r="14" opacity="0.24" />
+    <circle cx="844" cy="356" r="5.5" />
+
+    <circle cx="820" cy="376" r="13" opacity="0.22" />
+    <circle cx="820" cy="376" r="5.2" />
+
+    <circle cx="864" cy="402" r="13" opacity="0.22" />
+    <circle cx="864" cy="402" r="5.2" />
+
+    <circle cx="910" cy="434" r="13" opacity="0.22" />
+    <circle cx="910" cy="434" r="5.2" />
+
+    <circle cx="1248" cy="642" r="15" opacity="0.24" />
+    <circle cx="1248" cy="642" r="5.7" />
+  </g>
+
+  <g font-family="Inter, Segoe UI, Arial, sans-serif" font-weight="700" font-size="28" fill="#e2ecf6">
+    <text x="874" y="364">Dubai</text>
+    <text x="648" y="388">Statue of Unity</text>
+    <text x="884" y="410">Dapoli &amp; Alibaug</text>
+    <text x="930" y="444">Sri Lanka</text>
+    <text x="1272" y="650">Sydney</text>
+  </g>
+</svg>
