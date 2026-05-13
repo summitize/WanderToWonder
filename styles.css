@@ -62,7 +62,9 @@ html {
 }
 
 body {
-    background-color: var(--bg-color);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.98)),
+        url('photos/landing_page.png') center top / cover fixed;
     color: var(--text-primary);
     font-family: var(--font-body);
     line-height: 1.6;
@@ -103,11 +105,11 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(248, 250, 252, 0.9);
+    background: rgba(255, 255, 255, 0.78);
     backdrop-filter: blur(20px);
     z-index: 1000;
     box-shadow: 0 4px 30px rgba(6, 182, 212, 0.1);
-    border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+    border-bottom: 1px solid rgba(6, 182, 212, 0.18);
 }
 
 [data-theme="dark"] .header {
@@ -189,16 +191,17 @@ a {
     position: absolute;
     top: 100%;
     left: 0;
-    background: var(--bg-secondary);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(18px);
     border: 1px solid rgba(6, 182, 212, 0.2);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 0.5rem 0;
     min-width: 200px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(6, 182, 212, 0.1);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(6, 182, 212, 0.1);
     margin-top: 1rem;
 }
 
@@ -238,6 +241,11 @@ a {
     padding-left: 2rem;
 }
 
+.dropdown-item.active {
+    color: var(--color-primary);
+    background: rgba(6, 182, 212, 0.08);
+}
+
 .dropdown-item:hover::before {
     height: 70%;
 }
@@ -259,44 +267,38 @@ a {
 
 /* Hero Section */
 .hero {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0 10%;
     position: relative;
-    background: radial-gradient(circle at 50% 50%, var(--bg-card) 0%, var(--bg-color) 100%);
+    background:
+        linear-gradient(100deg, rgba(4, 13, 27, 0.86) 0%, rgba(4, 13, 27, 0.64) 46%, rgba(4, 13, 27, 0.18) 100%),
+        url('photos/landing_page.png') center / cover;
     overflow: hidden;
     text-align: center;
 }
 
-/* Decorative Blobs */
 .hero::before {
     content: '';
     position: absolute;
-    top: -20%;
-    right: -10%;
-    width: 800px;
-    height: 800px;
-    background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
-    border-radius: 50%;
-    filter: blur(80px);
+    inset: auto 0 0;
+    height: 42%;
+    background: linear-gradient(180deg, transparent, rgba(248, 250, 252, 0.98));
     z-index: 0;
-    animation: float 15s infinite ease-in-out;
 }
 
 .hero::after {
     content: '';
     position: absolute;
-    bottom: -20%;
-    left: -10%;
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
-    border-radius: 50%;
-    filter: blur(80px);
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 72px 72px;
     z-index: 0;
-    animation: float 18s infinite ease-in-out reverse;
+    opacity: 0.45;
 }
 
 @keyframes float {
@@ -320,13 +322,14 @@ a {
     gap: 4rem;
     text-align: left;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     z-index: 10;
 }
 
 .hero-content {
     flex: 1;
     min-width: 300px;
+    color: #fff;
 }
 
 .hero-image {
@@ -337,22 +340,17 @@ a {
     min-width: 300px;
     min-height: 500px;
     position: relative;
-    border-radius: 40px;
+    border-radius: 18px;
     overflow: hidden;
-    background: var(--bg-card);
-    box-shadow: var(--shadow-hover);
-    border: 1px solid rgba(6, 182, 212, 0.1);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 26px 70px rgba(2, 6, 23, 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.28);
 }
 
 /* Glassmorphism spheres for a premium look */
 .hero-image::before,
 .hero-image::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(40px);
-    z-index: 0;
-    animation: float 10s infinite ease-in-out;
+    display: none;
 }
 
 .hero-image::before {
@@ -395,17 +393,16 @@ a {
     margin-bottom: 2rem;
     line-height: 1.1;
     font-weight: 900;
-    letter-spacing: -2px;
-    background: var(--gradient-text);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 30px rgba(6, 182, 212, 0.2));
+    letter-spacing: 0;
+    color: #ffffff;
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    filter: drop-shadow(0 12px 28px rgba(2, 6, 23, 0.35));
 }
 
 .hero-subtitle {
     font-size: clamp(1rem, 1.5vw, 1.25rem);
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.86);
     margin-bottom: 3.5rem;
     font-weight: 500;
 }
@@ -418,7 +415,7 @@ a {
 /* Buttons */
 .btn {
     padding: 1.2rem 3rem;
-    border-radius: 16px;
+    border-radius: 8px;
     font-size: 1rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -446,7 +443,7 @@ a {
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 254, 0.1);
+    background: rgba(255, 255, 255, 0.16);
     color: white;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -462,12 +459,13 @@ a {
 /* Cards & Grids */
 .section {
     padding: 6rem 10%;
+    background: rgba(248, 250, 252, 0.94);
 }
 
 .section-title {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 4vw, 3.25rem);
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
     color: var(--text-primary);
 }
 
@@ -486,19 +484,19 @@ a {
     padding: 1.5rem !important;
     justify-content: flex-start !important;
     align-items: stretch !important;
-    background: rgba(15, 23, 42, 0.4) !important;
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.16) !important;
+    backdrop-filter: blur(18px);
 }
 
 .hero-map-intro {
     font-size: 0.85rem;
-    color: var(--color-primary);
+    color: #ecfeff;
     margin-bottom: 1.2rem;
     text-align: center;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    text-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    text-shadow: 0 8px 20px rgba(2, 6, 23, 0.4);
 }
 
 .map-explorer-subtitle {
@@ -518,11 +516,11 @@ a {
 }
 
 .map-option-btn {
-    border: 1px solid rgba(6, 182, 212, 0.35);
-    background: rgba(6, 182, 212, 0.06);
-    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    background: rgba(255, 255, 255, 0.12);
+    color: #e0f2fe;
     padding: 0.75rem 1.2rem;
-    border-radius: 999px;
+    border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0.4px;
@@ -531,8 +529,8 @@ a {
 }
 
 .map-option-btn:hover {
-    color: var(--color-primary);
-    border-color: rgba(6, 182, 212, 0.55);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.72);
 }
 
 .map-option-btn.active {
@@ -562,9 +560,9 @@ a {
 }
 
 .map-option-panels {
-    background: linear-gradient(135deg, rgba(11, 42, 86, 0.96), rgba(24, 64, 118, 0.95));
+    background: linear-gradient(135deg, rgba(4, 13, 27, 0.92), rgba(14, 77, 112, 0.84));
     border: 1px solid rgba(6, 182, 212, 0.28);
-    border-radius: 30px;
+    border-radius: 12px;
     padding: 1rem;
     box-shadow: 0 24px 60px rgba(6, 182, 212, 0.16);
 }
@@ -580,7 +578,7 @@ a {
 .map-canvas {
     width: 100%;
     min-height: 560px;
-    border-radius: 22px;
+    border-radius: 8px;
     overflow: hidden;
     background: #0b2a56;
 }
@@ -592,10 +590,6 @@ a {
     color: #dbeafe;
     font-weight: 600;
     padding: 1.5rem;
-}
-
-#journey-globe-map .modebar {
-    display: none !important;
 }
 
 .timeline-layout {
@@ -628,7 +622,7 @@ a {
 .timeline-side {
     background: rgba(15, 23, 42, 0.58);
     border: 1px solid rgba(148, 163, 184, 0.28);
-    border-radius: 18px;
+    border-radius: 8px;
     padding: 1rem;
     color: #e2ecf6;
 }
@@ -654,7 +648,7 @@ a {
 
 .timeline-play-btn {
     border: none;
-    border-radius: 999px;
+    border-radius: 8px;
     padding: 0.6rem 1rem;
     font-weight: 700;
     font-size: 0.86rem;
@@ -694,7 +688,7 @@ a {
     grid-template-columns: 36px minmax(0, 1fr);
     gap: 0.55rem;
     align-items: start;
-    border-radius: 14px;
+    border-radius: 8px;
     border: 1px solid rgba(148, 163, 184, 0.22);
     background: rgba(15, 23, 42, 0.45);
     padding: 0.62rem;
@@ -715,7 +709,7 @@ a {
 .timeline-step-index {
     width: 28px;
     height: 28px;
-    border-radius: 50%;
+    border-radius: 8px;
     background: rgba(148, 163, 184, 0.25);
     color: #e2ecf6;
     display: grid;
@@ -783,13 +777,13 @@ a {
 }
 
 .travel-card {
-    background: var(--bg-card);
-    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.11);
     transition: var(--transition);
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(14, 165, 233, 0.12);
 }
 
 .travel-card:hover {
@@ -800,11 +794,13 @@ a {
 
 .card-img-placeholder {
     height: 240px;
-    background: linear-gradient(135deg, #16213E, #1A1A2E);
+    background:
+        linear-gradient(135deg, rgba(14, 165, 233, 0.92), rgba(16, 185, 129, 0.82)),
+        url('photos/landing_page.png') center / cover;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 5rem;
+    font-size: 4.5rem;
     position: relative;
 }
 
@@ -816,11 +812,31 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, transparent 0%, rgba(15, 14, 23, 0.8) 100%);
+    background:
+        linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0.72) 100%),
+        linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 25%, transparent 25% 100%);
+}
+
+.travel-card:nth-child(2n) .card-img-placeholder {
+    background:
+        linear-gradient(135deg, rgba(251, 113, 133, 0.88), rgba(250, 204, 21, 0.76)),
+        url('photos/landing_page.png') center / cover;
+}
+
+.travel-card:nth-child(3n) .card-img-placeholder {
+    background:
+        linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(14, 165, 233, 0.78)),
+        url('photos/landing_page.png') center / cover;
+}
+
+.travel-card:nth-child(4n) .card-img-placeholder {
+    background:
+        linear-gradient(135deg, rgba(99, 102, 241, 0.86), rgba(6, 182, 212, 0.74)),
+        url('photos/landing_page.png') center / cover;
 }
 
 .card-content {
-    padding: 2.5rem;
+    padding: 2rem;
 }
 
 .card-title {

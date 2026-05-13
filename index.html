@@ -58,7 +58,7 @@
             <div class="container hero-container">
                 <div class="hero-content">
                     <h1 class="hero-title">Wander-ful <span class="text-highlight">Journeys!</span></h1>
-                    <p class="hero-subtitle">My personal travel diary exploring vibrant destinations across the globe -
+                    <p class="hero-subtitle">My personal travel diary exploring vibrant destinations around the world -
                         from
                         international adventures to discovering the beauty of India.</p>
                     <div class="hero-buttons">
@@ -75,11 +75,6 @@
                             <span class="map-tab-icon map-tab-icon-real" aria-hidden="true"></span>
                             Real Map
                         </button>
-                        <button class="map-option-btn" id="map-tab-globe" data-map-option="globe" role="tab"
-                            aria-selected="false" aria-controls="map-panel-globe">
-                            <span class="map-tab-icon map-tab-icon-globe" aria-hidden="true"></span>
-                            Globe View
-                        </button>
                         <button class="map-option-btn" id="map-tab-timeline" data-map-option="timeline" role="tab"
                             aria-selected="false" aria-controls="map-panel-timeline">
                             <span class="map-tab-icon map-tab-icon-focus" aria-hidden="true"></span>
@@ -92,12 +87,6 @@
                             aria-labelledby="map-tab-real">
                             <div class="map-canvas" id="journey-real-map"
                                 aria-label="Interactive map showing visited destinations as disconnected points"></div>
-                        </section>
-
-                        <section class="map-panel" id="map-panel-globe" role="tabpanel" aria-labelledby="map-tab-globe"
-                            hidden>
-                            <div class="map-canvas" id="journey-globe-map"
-                                aria-label="Animated globe showing visited destinations as disconnected points"></div>
                         </section>
 
                         <section class="map-panel" id="map-panel-timeline" role="tabpanel"
@@ -265,7 +254,6 @@
 
     <script src="script.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <script src="map-experiences.js"></script>
 </body>
 

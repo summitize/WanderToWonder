@@ -1,8 +1,7 @@
 /**
  * Homepage Map Explorer
  * Option 3: Real map (Leaflet)
- * Option 4: Animated globe (Plotly)
- * Option 5: Timeline journey map (Leaflet + step controls)
+ * Option 4: Timeline journey map (Leaflet + step controls)
  */
 (function () {
     const DESTINATIONS = [
@@ -108,8 +107,6 @@
     let timelineRangeInput = null;
     let timelinePlayButton = null;
     let timelineStepList = null;
-    let globeInitialized = false;
-    let globeRotationTimerId = null;
 
     function buildPopup(destination) {
         return `
@@ -176,127 +173,6 @@
         }).addTo(realMap);
 
         realMap.fitBounds(routeCoordinates, { padding: [36, 36] });
-    }
-
-    function initializeGlobe() {
-        const container = document.getElementById('journey-globe-map');
-        if (!container) return;
-
-        if (typeof window.Plotly === 'undefined') {
-            renderFallbackMessage(container, 'Animated globe is unavailable right now.');
-            return;
-        }
-
-        const latitudes = DESTINATIONS.map((destination) => destination.lat);
-        const longitudes = DESTINATIONS.map((destination) => destination.lng);
-
-        const routeTrace = {
-            type: 'scattergeo',
-            mode: 'lines',
-            lat: latitudes,
-            lon: longitudes,
-            line: {
-                color: '#22d3ee',
-                width: 2.2
-            },
-            opacity: 0.75,
-            hoverinfo: 'skip',
-            showlegend: false
-        };
-
-        const markerTrace = {
-            type: 'scattergeo',
-            mode: 'markers+text',
-            name: 'destinations',
-            lat: latitudes,
-            lon: longitudes,
-            text: DESTINATIONS.map((destination) => destination.shortLabel),
-            textposition: [
-                'top right',
-                'top right',
-                'bottom right',
-                'top left',
-                'top right',
-                'bottom right'
-            ],
-            customdata: DESTINATIONS.map((destination) => destination.page),
-            marker: {
-                size: 10,
-                color: '#f97316',
-                line: {
-                    color: '#ffffff',
-                    width: 1.3
-                }
-            },
-            textfont: {
-                family: 'Inter, Segoe UI, Arial, sans-serif',
-                size: 13,
-                color: '#E2ECF6'
-            },
-            hovertemplate: '<b>%{text}</b><extra></extra>'
-        };
-
-        const layout = {
-            margin: { l: 0, r: 0, t: 0, b: 0 },
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            geo: {
-                projection: {
-                    type: 'orthographic',
-                    rotation: { lon: 78, lat: 12 }
-                },
-                showland: true,
-                landcolor: '#2a4f7a',
-                showocean: true,
-                oceancolor: '#0b2a56',
-                showcountries: false,
-                showcoastlines: true,
-                coastlinecolor: '#8db0d1',
-                coastlinewidth: 0.6,
-                bgcolor: 'rgba(0,0,0,0)'
-            }
-        };
-
-        const config = {
-            responsive: true,
-            displayModeBar: false,
-            scrollZoom: false
-        };
-
-        window.Plotly.newPlot(container, [routeTrace, markerTrace], layout, config);
-
-        container.on('plotly_click', (event) => {
-            const point = event && event.points && event.points[0];
-            if (!point || point.data.name !== 'destinations') return;
-
-            const page = point.customdata;
-            if (typeof page === 'string' && page.length > 0) {
-                window.location.href = page;
-            }
-        });
-
-        globeInitialized = true;
-    }
-
-    function startGlobeRotation() {
-        if (!globeInitialized || globeRotationTimerId !== null) return;
-
-        let longitude = 78;
-        globeRotationTimerId = window.setInterval(() => {
-            if (activeOption !== 'globe') return;
-            if (typeof window.Plotly === 'undefined') return;
-
-            longitude = (longitude + 0.35) % 360;
-            window.Plotly.relayout('journey-globe-map', {
-                'geo.projection.rotation.lon': longitude
-            });
-        }, 90);
-    }
-
-    function stopGlobeRotation() {
-        if (globeRotationTimerId === null) return;
-        window.clearInterval(globeRotationTimerId);
-        globeRotationTimerId = null;
     }
 
     function initializeTimeline() {
@@ -455,18 +331,10 @@
         }
     }
 
-    function resizeGlobe() {
-        if (typeof window.Plotly === 'undefined') return;
-        const globeElement = document.getElementById('journey-globe-map');
-        if (!globeElement) return;
-        window.Plotly.Plots.resize(globeElement);
-    }
-
     function activateOption(option) {
         if (activeOption === option) {
             if (option === 'real' && realMap) realMap.invalidateSize();
             if (option === 'timeline' && timelineMap) timelineMap.invalidateSize();
-            if (option === 'globe') resizeGlobe();
             return;
         }
 
@@ -503,12 +371,6 @@
             }, 50);
         }
 
-        if (option === 'globe') {
-            resizeGlobe();
-            startGlobeRotation();
-        } else {
-            stopGlobeRotation();
-        }
     }
 
     function initializeMapOptionTabs() {
@@ -527,23 +389,18 @@
 
         initializeMapOptionTabs();
         initializeRealMap();
-        initializeGlobe();
         initializeTimeline();
         activateOption('real');
 
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                stopGlobeRotation();
                 stopTimelinePlayback();
-            } else if (activeOption === 'globe') {
-                startGlobeRotation();
             }
         });
 
         window.addEventListener('resize', () => {
             if (activeOption === 'real' && realMap) realMap.invalidateSize();
             if (activeOption === 'timeline' && timelineMap) timelineMap.invalidateSize();
-            if (activeOption === 'globe') resizeGlobe();
         });
     }
 
