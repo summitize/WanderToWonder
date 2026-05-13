@@ -7,13 +7,40 @@
 (function () {
     const DESTINATIONS = [
         {
-            name: 'Dubai, UAE',
-            shortLabel: 'UAE (Dubai)',
-            lat: 25.2048,
-            lng: 55.2708,
-            when: 'March 2023',
-            page: 'dubai.html',
-            linkLabel: 'Dubai Journal'
+            name: 'Kuala Lumpur, Malaysia',
+            shortLabel: 'Malaysia (KL)',
+            lat: 3.1390,
+            lng: 101.6869,
+            when: 'May 2026',
+            page: 'malaysia.html',
+            linkLabel: 'Malaysia Journal'
+        },
+        {
+            name: 'Langkawi, Malaysia',
+            shortLabel: 'Malaysia (Langkawi)',
+            lat: 6.3520,
+            lng: 99.8331,
+            when: 'May 2026',
+            page: 'langkawi.html',
+            linkLabel: 'Langkawi Journal'
+        },
+        {
+            name: 'Singapore',
+            shortLabel: 'Singapore',
+            lat: 1.3521,
+            lng: 103.8198,
+            when: 'May 2026',
+            page: 'singapore.html',
+            linkLabel: 'Singapore Journal'
+        },
+        {
+            name: 'Sydney, Australia',
+            shortLabel: 'Australia (Sydney)',
+            lat: -33.8688,
+            lng: 151.2093,
+            when: 'May 2025',
+            page: 'australia.html',
+            linkLabel: 'Australia Journal'
         },
         {
             name: 'Sri Lanka',
@@ -25,13 +52,13 @@
             linkLabel: 'Sri Lanka Journal'
         },
         {
-            name: 'Sydney, Australia',
-            shortLabel: 'Australia (Sydney)',
-            lat: -33.8688,
-            lng: 151.2093,
-            when: 'May 2025',
-            page: 'australia.html',
-            linkLabel: 'Australia Journal'
+            name: 'Dubai, UAE',
+            shortLabel: 'UAE (Dubai)',
+            lat: 25.2048,
+            lng: 55.2708,
+            when: 'March 2023',
+            page: 'dubai.html',
+            linkLabel: 'Dubai Journal'
         },
         {
             name: 'Statue of Unity, India',
