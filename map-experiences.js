@@ -52,6 +52,15 @@
             linkLabel: 'Sri Lanka Journal'
         },
         {
+            name: 'Sikkim, India',
+            shortLabel: 'India (Sikkim)',
+            lat: 27.3314,
+            lng: 88.6138,
+            when: 'May 2024',
+            page: 'sikkim.html',
+            linkLabel: 'Sikkim Journal'
+        },
+        {
             name: 'Dubai, UAE',
             shortLabel: 'UAE (Dubai)',
             lat: 25.2048,

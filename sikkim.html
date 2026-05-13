@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sikkim Project | WanderToWonder</title>
+    <meta name="description"
+        content="A travel journal from Sikkim, India featuring Himalayan landscapes, monasteries, mountain roads, and May 2024 memories.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/sikkim.html">
+    <meta property="og:title" content="Sikkim Project | WanderToWonder">
+    <meta property="og:description" content="A travel journal from Sikkim, India featuring Himalayan landscapes, monasteries, mountain roads, and May 2024 memories.">
+    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/sikkim/hero.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Sikkim Project | WanderToWonder">
+    <meta property="twitter:description" content="A travel journal from Sikkim, India featuring Himalayan landscapes, monasteries, mountain roads, and May 2024 memories.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="page-header">
+            <h1 class="page-title">Sikkim</h1>
+            <p class="page-subtitle">Himalayan Roads, Monasteries, and Mountain Memories - May 2024</p>
+            <button class="btn btn-secondary share-page-btn" id="share-btn">
+                Share Project
+            </button>
+        </section>
+
+        <div class="content-section">
+            <div class="container">
+                <div id="sikkim-gallery"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="gallery.js"></script>
+    <script>
+        // Cloudflare Worker URL (recommended). Keep blank/placeholder to skip API mode.
+        const galleryApiBase = 'PASTE_CLOUDFLARE_WORKER_URL_HERE';
+        const normalizedGalleryApiBase = (
+            typeof galleryApiBase === 'string'
+            && galleryApiBase.trim().length > 0
+            && !galleryApiBase.includes('PASTE_')
+        ) ? galleryApiBase.replace(/\/+$/, '') : '';
+        const sikkimApiEndpoint = normalizedGalleryApiBase
+            ? `${normalizedGalleryApiBase}/photos?trip=sikkim`
+            : '';
+
+        // Replace this with your public OneDrive shared folder link for Sikkim photos.
+        const sikkimOneDriveShareLink = '';
+
+        PhotoGallery.loadWithSourceToggle({
+            containerId: 'sikkim-gallery',
+            apiEndpoint: sikkimApiEndpoint,
+            shareLink: sikkimOneDriveShareLink,
+            localJsonPath: 'data/sikkim.json',
+            destinationName: 'Sikkim',
+            defaultMode: 'auto',
+            modeStorageKey: 'gallery-mode:sikkim',
+            showModeToggle: false
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>
