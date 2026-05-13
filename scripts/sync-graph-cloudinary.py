@@ -13,6 +13,7 @@ from urllib.request import Request, urlopen
 
 DEFAULT_SCOPE = "Files.Read offline_access"
 GRAPH_BASE = "https://graph.microsoft.com/v1.0"
+HTTP_TIMEOUT_SECONDS = 45
 TIMESTAMP_FILE_RE = re.compile(
     r"^(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2})_(?P<hour>\d{2})(?P<minute>\d{2})(?P<second>\d{2})"
 )
@@ -159,7 +160,7 @@ def http_post_form_json(url: str, form: dict[str, str]) -> dict[str, Any]:
     )
 
     try:
-        with urlopen(request) as response:
+        with urlopen(request, timeout=HTTP_TIMEOUT_SECONDS) as response:
             return json.loads(response.read().decode("utf-8"))
     except HTTPError as exc:
         raw = exc.read().decode("utf-8", errors="replace")
@@ -172,7 +173,7 @@ def http_get_json(url: str, headers: dict[str, str] | None = None) -> dict[str, 
     request = Request(url=url, method="GET", headers=headers or {})
 
     try:
-        with urlopen(request) as response:
+        with urlopen(request, timeout=HTTP_TIMEOUT_SECONDS) as response:
             return json.loads(response.read().decode("utf-8"))
     except HTTPError as exc:
         raw = exc.read().decode("utf-8", errors="replace")
@@ -245,7 +246,7 @@ def fetch_binary_to_tempfile(url: str, headers: dict[str, str] | None, suffix: s
     tmp_path: Path | None = None
 
     try:
-        with urlopen(request) as response:
+        with urlopen(request, timeout=HTTP_TIMEOUT_SECONDS) as response:
             with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
                 while True:
                     chunk = response.read(1024 * 64)
@@ -1013,13 +1014,17 @@ def main() -> int:
     )
 
     try:
+        print("Requesting Microsoft Graph access token...", flush=True)
         access_token = get_access_token()
+        print("Graph access token acquired.", flush=True)
     except Exception as exc:
         print(f"ERROR obtaining Graph access token: {exc}")
         return 1
 
     try:
+        print("Expanding configured trip share targets...", flush=True)
         trip_targets = expand_trip_targets(trip_map, access_token, max_items=args.max_files)
+        print(f"Resolved {len(trip_targets)} trip target(s).", flush=True)
     except Exception as exc:
         print(f"ERROR while expanding trip targets: {exc}")
         return 1
@@ -1031,11 +1036,15 @@ def main() -> int:
         mode = target.get("mode", "share")
         trip_label = text_or_default(target.get("trip_label"), trip.replace("-", " ").title())
         folder = f"{args.folder_prefix.strip('/')}/{trip}"
-        print(f"\n=== Syncing trip: {trip} ===")
+        print(f"\n=== Syncing trip: {trip} ===", flush=True)
 
         try:
             drive_id = text_or_default(target.get("drive_id"), "")
             item_id = text_or_default(target.get("item_id"), "")
+            print(
+                f"Listing images for {trip} (mode={mode}, max={args.max_files}, max_depth={args.max_depth})...",
+                flush=True,
+            )
             items = collect_image_items(
                 mode=mode,
                 share_url=share_url,
@@ -1045,9 +1054,11 @@ def main() -> int:
                 max_items=args.max_files,
                 max_depth=max(0, args.max_depth),
             )
+            print(f"Found {len(items)} image item(s) for {trip}.", flush=True)
 
             existing_manifest_rows = load_existing_manifest(trip)
             existing_metadata_map = build_existing_metadata_map(existing_manifest_rows)
+            print(f"Uploading/reusing {len(items)} image item(s) for {trip}...", flush=True)
             photos = cloudinary_upload_from_graph_items(
                 cloudinary=cloudinary,
                 items=items,
@@ -1065,10 +1076,10 @@ def main() -> int:
                         print(
                             f"No images found for {trip}; keeping existing manifest with "
                             f"{len(existing_manifest_rows)} item(s)."
-                        )
+                        , flush=True)
                     else:
                         manifest_path = write_manifest(trip, [])
-                        print(f"No images found for {trip}; wrote empty manifest: {manifest_path}")
+                        print(f"No images found for {trip}; wrote empty manifest: {manifest_path}", flush=True)
                     continue
 
                 debug_items: list[dict[str, Any]] = []
@@ -1090,10 +1101,10 @@ def main() -> int:
                             max_items=20,
                         )
                 except Exception as debug_exc:
-                    print(f"Debug listing failed for {trip}: {debug_exc}")
+                    print(f"Debug listing failed for {trip}: {debug_exc}", flush=True)
 
                 if not debug_items:
-                    print(f"Debug listing for {trip}: no children returned.")
+                    print(f"Debug listing for {trip}: no children returned.", flush=True)
                 else:
                     folder_count = sum(1 for row in debug_items if is_folder_item(row))
                     image_count = sum(1 for row in debug_items if is_image_item(row))
@@ -1106,7 +1117,7 @@ def main() -> int:
                     print(
                         f"Debug listing for {trip}: total={len(debug_items)} "
                         f"folders={folder_count} files={file_count} image_detected={image_count}"
-                    )
+                    , flush=True)
                     for row in debug_items[:10]:
                         remote_item = row.get("remoteItem") if isinstance(row.get("remoteItem"), dict) else {}
                         name = text_or_default(row.get("name"), "") or text_or_default(remote_item.get("name"), "")
@@ -1117,14 +1128,14 @@ def main() -> int:
                         print(
                             f"- {name or '[unnamed]'} | folder={has_folder} "
                             f"image={has_image} mime={mime_type} remote_mime={remote_mime_type}"
-                        )
+                        , flush=True)
                 raise RuntimeError("No image files found in shared folder.")
 
             manifest_path = write_manifest(trip, photos)
-            print(f"Manifest updated: {manifest_path}")
+            print(f"Manifest updated: {manifest_path}", flush=True)
         except Exception as exc:
             failures.append(f"{trip}: {exc}")
-            print(f"ERROR syncing {trip}: {exc}")
+            print(f"ERROR syncing {trip}: {exc}", flush=True)
 
     if failures:
         print("\nSome trips failed:")

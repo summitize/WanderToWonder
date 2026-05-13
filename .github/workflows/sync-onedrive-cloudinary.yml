@@ -33,6 +33,7 @@ jobs:
           pip install -r scripts/requirements-cloudinary.txt
 
       - name: Sync Graph shares to Cloudinary and regenerate manifests
+        timeout-minutes: 20
         env:
           TRIP_SHARE_URLS_JSON: ${{ secrets.TRIP_SHARE_URLS_JSON }}
           MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
@@ -51,7 +52,7 @@ jobs:
             echo "Missing secret: MS_CLIENT_ID and/or MS_REFRESH_TOKEN"
             exit 1
           fi
-          python scripts/sync-graph-cloudinary.py --map-json "$TRIP_SHARE_URLS_JSON"
+          python -u scripts/sync-graph-cloudinary.py --map-json "$TRIP_SHARE_URLS_JSON"
 
       - name: Commit and push manifest updates
         run: |

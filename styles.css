@@ -787,6 +787,11 @@ a {
     padding: 1.5rem;
 }
 
+.card-img-placeholder.has-photo {
+    background-position: center;
+    background-size: cover;
+}
+
 .card-img-placeholder::after {
     content: '';
     position: absolute;
@@ -810,6 +815,21 @@ a {
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.82);
+}
+
+.card-img-placeholder:not(.has-photo) .card-kicker::after {
+    content: 'Photos coming soon';
+    display: block;
+    width: fit-content;
+    margin: 0.65rem auto 0;
+    padding: 0.32rem 0.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.88);
+    font-family: var(--font-body);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
 }
 
 .card-place {
