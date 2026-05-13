@@ -1,28 +1,20 @@
 :root {
-    /* Fresh Tropical Morning Theme */
-    --bg-color: #F8FAFC;
-    --bg-secondary: #F1F5F9;
+    --bg-color: #F7F4EF;
+    --bg-secondary: #EFE7DB;
     --bg-card: #FFFFFF;
-    --text-primary: #0F172A;
-    --text-secondary: #64748B;
+    --text-primary: #17212B;
+    --text-secondary: #5D6B78;
 
-    /* Fresh Hues */
-    --color-primary: #06B6D4;
-    /* Cyan 500 */
-    --color-secondary: #0EA5E9;
-    /* Sky 500 */
-    --color-accent: #10B981;
-    /* Emerald 500 */
-    --color-highlight: #FACC15;
-    /* Amber 400 */
-    --color-coral: #FB7185;
-    /* Rose 400 */
+    --color-primary: #0F766E;
+    --color-secondary: #2563EB;
+    --color-accent: #D97706;
+    --color-highlight: #F59E0B;
+    --color-coral: #E11D48;
 
-    /* Shared Gradients */
-    --gradient-primary: linear-gradient(135deg, #06B6D4 0%, #0EA5E9 100%);
-    --gradient-accent: linear-gradient(135deg, #10B981 0%, #34D399 100%);
-    --gradient-text: linear-gradient(90deg, #06B6D4, #0EA5E9, #10B981);
-    --gradient-card: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+    --gradient-primary: linear-gradient(135deg, #0F766E 0%, #2563EB 100%);
+    --gradient-accent: linear-gradient(135deg, #D97706 0%, #E11D48 100%);
+    --gradient-text: linear-gradient(90deg, #0F766E, #2563EB, #D97706);
+    --gradient-card: linear-gradient(135deg, rgba(15, 118, 110, 0.08) 0%, rgba(217, 119, 6, 0.08) 100%);
 
     --font-heading: 'Cinzel', serif;
     --font-body: 'Inter', sans-serif;
@@ -63,7 +55,7 @@ html {
 
 body {
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.98)),
+        linear-gradient(180deg, rgba(247, 244, 239, 0.94), rgba(247, 244, 239, 0.99)),
         url('photos/landing_page.png') center top / cover fixed;
     color: var(--text-primary);
     font-family: var(--font-body);
@@ -105,11 +97,11 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.88);
     backdrop-filter: blur(20px);
     z-index: 1000;
-    box-shadow: 0 4px 30px rgba(6, 182, 212, 0.1);
-    border-bottom: 1px solid rgba(6, 182, 212, 0.18);
+    box-shadow: 0 12px 36px rgba(23, 33, 43, 0.08);
+    border-bottom: 1px solid rgba(15, 118, 110, 0.14);
 }
 
 [data-theme="dark"] .header {
@@ -134,7 +126,7 @@ a {
 
 .nav {
     display: flex;
-    gap: 2rem;
+    gap: 1.2rem;
     align-items: center;
 }
 
@@ -144,24 +136,18 @@ a {
 
 .nav-link {
     font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-secondary);
+    font-weight: 800;
+    color: #243140;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 0.5rem 0;
+    letter-spacing: 0.08em;
+    padding: 0.65rem 0.85rem;
     position: relative;
     transition: var(--transition);
+    border-radius: 8px;
 }
 
 .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--gradient-primary);
-    transition: width 0.3s ease;
+    display: none;
 }
 
 .nav-link:hover::after,
@@ -171,8 +157,9 @@ a {
 
 .nav-link:hover,
 .nav-link.active {
-    color: var(--color-primary);
-    text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+    color: #fff;
+    background: var(--gradient-primary);
+    text-shadow: none;
 }
 
 /* Dropdown Navigation */
@@ -181,10 +168,8 @@ a {
 }
 
 .nav-item.has-dropdown>.nav-link::before {
-    content: '▼';
-    font-size: 0.6rem;
-    margin-left: 0.4rem;
-    opacity: 0.7;
+    content: none;
+    display: none;
 }
 
 .dropdown-menu {
@@ -274,8 +259,8 @@ a {
     padding: 0 10%;
     position: relative;
     background:
-        linear-gradient(100deg, rgba(4, 13, 27, 0.86) 0%, rgba(4, 13, 27, 0.64) 46%, rgba(4, 13, 27, 0.18) 100%),
-        url('photos/landing_page.png') center / cover;
+        linear-gradient(105deg, rgba(10, 20, 30, 0.88) 0%, rgba(17, 45, 60, 0.68) 48%, rgba(217, 119, 6, 0.20) 100%),
+        url('photos/hero-travel.jpg') center / cover;
     overflow: hidden;
     text-align: center;
 }
@@ -285,7 +270,7 @@ a {
     position: absolute;
     inset: auto 0 0;
     height: 42%;
-    background: linear-gradient(180deg, transparent, rgba(248, 250, 252, 0.98));
+    background: linear-gradient(180deg, transparent, rgba(247, 244, 239, 0.99));
     z-index: 0;
 }
 
@@ -293,10 +278,7 @@ a {
     content: '';
     position: absolute;
     inset: 0;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 72px 72px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.10), transparent 34%);
     z-index: 0;
     opacity: 0.45;
 }
@@ -330,6 +312,16 @@ a {
     flex: 1;
     min-width: 300px;
     color: #fff;
+    max-width: 560px;
+}
+
+.hero-eyebrow {
+    color: #FBBF24;
+    font-size: 0.84rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
 }
 
 .hero-image {
@@ -380,7 +372,7 @@ a {
 }
 
 .hero-image.img-failed::after {
-    content: '✈️';
+    content: 'âœˆï¸';
     font-size: 8rem;
     position: absolute;
     z-index: 1;
@@ -389,8 +381,8 @@ a {
 }
 
 .hero-title {
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    margin-bottom: 2rem;
+    font-size: clamp(3.1rem, 7vw, 6.4rem);
+    margin-bottom: 1.4rem;
     line-height: 1.1;
     font-weight: 900;
     letter-spacing: 0;
@@ -403,7 +395,7 @@ a {
 .hero-subtitle {
     font-size: clamp(1rem, 1.5vw, 1.25rem);
     color: rgba(255, 255, 255, 0.86);
-    margin-bottom: 3.5rem;
+    margin-bottom: 2.6rem;
     font-weight: 500;
 }
 
@@ -459,7 +451,7 @@ a {
 /* Cards & Grids */
 .section {
     padding: 6rem 10%;
-    background: rgba(248, 250, 252, 0.94);
+    background: rgba(247, 244, 239, 0.96);
 }
 
 .section-title {
@@ -541,22 +533,7 @@ a {
 }
 
 .map-tab-icon {
-    display: inline-block;
-    margin-right: 0.6rem;
-    font-size: 1.1rem;
-    vertical-align: middle;
-}
-
-.map-tab-icon-real::before {
-    content: '🗺️';
-}
-
-.map-tab-icon-globe::before {
-    content: '🌍';
-}
-
-.map-tab-icon-focus::before {
-    content: '🧭';
+    display: none;
 }
 
 .map-option-panels {
@@ -776,6 +753,10 @@ a {
     margin-top: 2rem;
 }
 
+.india-destinations {
+    margin-top: 8rem;
+}
+
 .travel-card {
     background: rgba(255, 255, 255, 0.96);
     border-radius: 8px;
@@ -794,45 +775,89 @@ a {
 
 .card-img-placeholder {
     height: 240px;
-    background:
-        linear-gradient(135deg, rgba(14, 165, 233, 0.92), rgba(16, 185, 129, 0.82)),
-        url('photos/landing_page.png') center / cover;
+    background: #17212B;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 4.5rem;
+    gap: 0.65rem;
+    color: #fff;
+    text-align: center;
     position: relative;
+    padding: 1.5rem;
 }
 
-/* Add a diagonal overlay to placeholder */
 .card-img-placeholder::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     background:
-        linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0.72) 100%),
-        linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 25%, transparent 25% 100%);
+        linear-gradient(180deg, rgba(15, 23, 42, 0.06) 0%, rgba(15, 23, 42, 0.72) 100%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 42%);
 }
 
-.travel-card:nth-child(2n) .card-img-placeholder {
-    background:
-        linear-gradient(135deg, rgba(251, 113, 133, 0.88), rgba(250, 204, 21, 0.76)),
-        url('photos/landing_page.png') center / cover;
+.card-kicker,
+.card-place {
+    position: relative;
+    z-index: 1;
 }
 
-.travel-card:nth-child(3n) .card-img-placeholder {
-    background:
-        linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(14, 165, 233, 0.78)),
-        url('photos/landing_page.png') center / cover;
+.card-kicker {
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.82);
 }
 
-.travel-card:nth-child(4n) .card-img-placeholder {
-    background:
-        linear-gradient(135deg, rgba(99, 102, 241, 0.86), rgba(6, 182, 212, 0.74)),
-        url('photos/landing_page.png') center / cover;
+.card-place {
+    font-family: var(--font-heading);
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1;
+    text-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+.destination-malaysia {
+    background: linear-gradient(135deg, #0F766E, #0EA5E9);
+}
+
+.destination-langkawi {
+    background: linear-gradient(135deg, #0284C7, #10B981);
+}
+
+.destination-singapore {
+    background: linear-gradient(135deg, #DC2626, #F97316);
+}
+
+.destination-australia {
+    background: linear-gradient(135deg, #2563EB, #0891B2);
+}
+
+.destination-srilanka {
+    background: linear-gradient(135deg, #059669, #CA8A04);
+}
+
+.destination-dubai {
+    background: linear-gradient(135deg, #92400E, #F59E0B);
+}
+
+.destination-sikkim {
+    background: linear-gradient(135deg, #14532D, #0F766E);
+}
+
+.destination-gujarat {
+    background: linear-gradient(135deg, #7C2D12, #D97706);
+}
+
+.destination-dapoli {
+    background: linear-gradient(135deg, #0369A1, #0F766E);
+}
+
+.destination-alibaug {
+    background: linear-gradient(135deg, #334155, #B45309);
 }
 
 .card-content {
@@ -884,22 +909,23 @@ a {
 .page-header {
     padding: 12rem 5% 8rem;
     text-align: center;
-    background: radial-gradient(circle at top, var(--bg-secondary) 0%, var(--bg-color) 100%);
+    background:
+        linear-gradient(105deg, rgba(10, 20, 30, 0.84), rgba(15, 118, 110, 0.58)),
+        url('photos/hero-travel.jpg') center / cover;
     position: relative;
 }
 
 .page-title {
     font-size: 4rem;
     margin-bottom: 1rem;
-    background: var(--gradient-text);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #fff;
+    background: none;
+    -webkit-text-fill-color: currentColor;
 }
 
 .page-subtitle {
     font-size: 1.3rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.86);
     max-width: 700px;
     margin: 0 auto 3rem;
 }
@@ -1680,3 +1706,4 @@ a {
     background: var(--color-highlight);
     color: var(--bg-color);
 }
+

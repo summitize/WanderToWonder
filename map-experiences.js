@@ -73,7 +73,7 @@
             shortLabel: 'India (Statue of Unity)',
             lat: 21.8380,
             lng: 73.7191,
-            when: 'India Journey',
+            when: 'December 2025',
             page: 'statue-of-unity.html',
             linkLabel: 'Statue of Unity Journal'
         },

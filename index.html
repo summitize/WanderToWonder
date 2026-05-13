@@ -6,39 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WanderToWonder | Explorer</title>
     <meta name="description"
-        content="Technical exploration and interactive mapping project. Visualizing global points of interest through modern web technologies.">
+        content="Personal travel journal sharing city skylines, island routes, mountain roads, and Indian escapes.">
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://summitize.github.io/WanderToWonder/">
     <meta property="og:title" content="WanderToWonder | Explorer">
-    <meta property="og:description"
-        content="Technical exploration and interactive mapping project. Visualizing global points of interest.">
+    <meta property="og:description" content="Personal travel journal sharing memorable destinations and stories.">
     <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/landing_page.png">
 
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://summitize.github.io/WanderToWonder/">
     <meta property="twitter:title" content="WanderToWonder | Explorer">
-    <meta property="twitter:description" content="Technical exploration and interactive mapping project.">
+    <meta property="twitter:description" content="Personal travel journal sharing memorable destinations and stories.">
     <meta property="twitter:image" content="https://summitize.github.io/WanderToWonder/photos/landing_page.png">
-
-    <!-- Structured Data (JSON-LD) - Commented for local network access
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "TravelAgency",
-      "name": "WanderToWonder",
-      "url": "https://summitize.github.io/WanderToWonder/",
-      "image": "https://summitize.github.io/WanderToWonder/photos/landing_page.png",
-      "description": "Sharing travel experiences from Australia, Sri Lanka, Dubai, and India.",
-      "brand": {
-        "@type": "Brand",
-        "name": "WanderToWonder"
-      }
-    }
-    </script>
-    -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,15 +37,16 @@
         <section class="hero">
             <div class="container hero-container">
                 <div class="hero-content">
-                    <h1 class="hero-title">Wander-ful <span class="text-highlight">Journeys!</span></h1>
-                    <p class="hero-subtitle">My personal travel diary exploring vibrant destinations around the world -
-                        from
-                        international adventures to discovering the beauty of India.</p>
+                    <p class="hero-eyebrow">Personal Travel Journal</p>
+                    <h1 class="hero-title">WanderToWonder</h1>
+                    <p class="hero-subtitle">A curated diary of city skylines, island routes, mountain roads, and
+                        quiet Indian escapes.</p>
                     <div class="hero-buttons">
                         <a href="#destinations" class="btn btn-primary">Explore Destinations</a>
                         <a href="#about" class="btn btn-secondary">About Me</a>
                     </div>
                 </div>
+
                 <div class="hero-image hero-map-shell" id="journey-map-explorer">
                     <p class="hero-map-intro">Visited Destinations Explorer</p>
 
@@ -86,7 +67,7 @@
                         <section class="map-panel is-active" id="map-panel-real" role="tabpanel"
                             aria-labelledby="map-tab-real">
                             <div class="map-canvas" id="journey-real-map"
-                                aria-label="Interactive map showing visited destinations as disconnected points"></div>
+                                aria-label="Interactive map showing visited destinations"></div>
                         </section>
 
                         <section class="map-panel" id="map-panel-timeline" role="tabpanel"
@@ -94,7 +75,7 @@
                             <div class="timeline-layout">
                                 <div class="timeline-map-wrap">
                                     <div class="map-canvas timeline-map-canvas" id="journey-timeline-map"
-                                        aria-label="Destination focus map with disconnected points"></div>
+                                        aria-label="Destination focus map"></div>
                                 </div>
                                 <aside class="timeline-side">
                                     <div class="timeline-controls">
@@ -116,122 +97,137 @@
             <div class="container">
                 <h2 class="section-title">Global <span class="text-highlight">Journeys</span></h2>
                 <div class="travel-grid">
-                    <!-- Malaysia (Kuala Lumpur) Card -->
                     <article class="travel-card">
-                        <div class="card-img-placeholder">🇲🇾</div>
+                        <div class="card-img-placeholder destination-malaysia">
+                            <span class="card-kicker">City Culture</span>
+                            <span class="card-place">Kuala Lumpur</span>
+                        </div>
                         <div class="card-content">
                             <h3 class="card-title">Malaysia (Kuala Lumpur)</h3>
                             <span class="card-date">May 2026</span>
                             <p class="card-desc">A vibrant travel journal covering culture, food, and tropical cityscapes of Malaysia's heart.</p>
-                            <a href="malaysia.html" class="card-link">Read Journal →</a>
+                            <a href="malaysia.html" class="card-link">Read Journal -></a>
                         </div>
                     </article>
 
-                    <!-- Malaysia (Langkawi) Card -->
                     <article class="travel-card">
-                        <div class="card-img-placeholder">🏝️</div>
+                        <div class="card-img-placeholder destination-langkawi">
+                            <span class="card-kicker">Island Roads</span>
+                            <span class="card-place">Langkawi</span>
+                        </div>
                         <div class="card-content">
                             <h3 class="card-title">Malaysia (Langkawi)</h3>
                             <span class="card-date">May 2026</span>
                             <p class="card-desc">Island exploration with pristine beaches, tropical adventures, and island discovery.</p>
-                            <a href="langkawi.html" class="card-link">Read Journal →</a>
+                            <a href="langkawi.html" class="card-link">Read Journal -></a>
                         </div>
                     </article>
 
-                    <!-- Singapore Card -->
                     <article class="travel-card">
-                        <div class="card-img-placeholder">🇸🇬</div>
+                        <div class="card-img-placeholder destination-singapore">
+                            <span class="card-kicker">Garden City</span>
+                            <span class="card-place">Singapore</span>
+                        </div>
                         <div class="card-content">
                             <h3 class="card-title">Singapore</h3>
                             <span class="card-date">May 2026</span>
                             <p class="card-desc">A city-story journal exploring gardens, architecture, and modern life.</p>
-                            <a href="singapore.html" class="card-link">Read Journal →</a>
+                            <a href="singapore.html" class="card-link">Read Journal -></a>
                         </div>
                     </article>
 
-                    <!-- Australia Card -->
                     <article class="travel-card">
-                        <div class="card-img-placeholder">🇦🇺</div>
+                        <div class="card-img-placeholder destination-australia">
+                            <span class="card-kicker">Coast & Reef</span>
+                            <span class="card-place">Australia</span>
+                        </div>
                         <div class="card-content">
                             <h3 class="card-title">Australia</h3>
                             <span class="card-date">May 2025</span>
                             <p class="card-desc">Great Barrier Reef, Sydney Opera House, and the rugged Outback.</p>
-                            <a href="australia.html" class="card-link">Read Journal →</a>
+                            <a href="australia.html" class="card-link">Read Journal -></a>
                         </div>
                     </article>
 
-                    <!-- Sri Lanka Card -->
                     <article class="travel-card">
-                        <div class="card-img-placeholder">🇱🇰</div>
+                        <div class="card-img-placeholder destination-srilanka">
+                            <span class="card-kicker">Tea & Temples</span>
+                            <span class="card-place">Sri Lanka</span>
+                        </div>
                         <div class="card-content">
                             <h3 class="card-title">Sri Lanka</h3>
                             <span class="card-date">January 2024</span>
                             <p class="card-desc">Emerald tea plantations, pristine beaches, and ancient temples.</p>
-                            <a href="srilanka.html" class="card-link">Read Journal →</a>
+                            <a href="srilanka.html" class="card-link">Read Journal -></a>
                         </div>
                     </article>
 
-                    <!-- Dubai Card -->
                     <article class="travel-card">
-                        <div class="card-img-placeholder">🇦🇪</div>
+                        <div class="card-img-placeholder destination-dubai">
+                            <span class="card-kicker">Desert Skyline</span>
+                            <span class="card-place">Dubai</span>
+                        </div>
                         <div class="card-content">
                             <h3 class="card-title">Dubai</h3>
                             <span class="card-date">March 2023</span>
-                            <p class="card-desc">Luxury, skyscrapers, and desert safaris. A city where the future meets
-                                tradition.</p>
-                            <a href="dubai.html" class="card-link">Read Journal →</a>
+                            <p class="card-desc">Luxury, skyscrapers, and desert safaris. A city where the future meets tradition.</p>
+                            <a href="dubai.html" class="card-link">Read Journal -></a>
                         </div>
                     </article>
-
                 </div>
 
-                <div style="margin-top: 8rem;">
+                <div class="india-destinations">
                     <h2 class="section-title">Incredible <span class="text-highlight">India</span></h2>
                     <div class="travel-grid">
-                        <!-- Sikkim Card -->
                         <article class="travel-card">
-                            <div class="card-img-placeholder">🏔️</div>
+                            <div class="card-img-placeholder destination-sikkim">
+                                <span class="card-kicker">Himalayan Roads</span>
+                                <span class="card-place">Sikkim</span>
+                            </div>
                             <div class="card-content">
                                 <h3 class="card-title">Sikkim</h3>
                                 <span class="card-date">May 2024</span>
                                 <p class="card-desc">Himalayan landscapes, monasteries, mountain roads, and serene North East India memories.</p>
-                                <a href="sikkim.html" class="card-link">Read Journal →</a>
+                                <a href="sikkim.html" class="card-link">Read Journal -></a>
                             </div>
                         </article>
 
-                        <!-- Statue of Unity Card -->
                         <article class="travel-card">
-                            <div class="card-img-placeholder">🇮🇳</div>
+                            <div class="card-img-placeholder destination-gujarat">
+                                <span class="card-kicker">Gujarat</span>
+                                <span class="card-place">Statue of Unity</span>
+                            </div>
                             <div class="card-content">
                                 <h3 class="card-title">Statue of Unity</h3>
-                                <span class="card-date">Gujarat</span>
-                                <p class="card-desc">World's tallest statue - a marvel of engineering and tribute to
-                                    Sardar Patel.</p>
-                                <a href="statue-of-unity.html" class="card-link">Read Journal →</a>
+                                <span class="card-date">December 2025</span>
+                                <p class="card-desc">World's tallest statue - a marvel of engineering and tribute to Sardar Patel.</p>
+                                <a href="statue-of-unity.html" class="card-link">Read Journal -></a>
                             </div>
                         </article>
 
-                        <!-- Dapoli Card -->
                         <article class="travel-card">
-                            <div class="card-img-placeholder">🏖️</div>
+                            <div class="card-img-placeholder destination-dapoli">
+                                <span class="card-kicker">Konkan Coast</span>
+                                <span class="card-place">Dapoli</span>
+                            </div>
                             <div class="card-content">
                                 <h3 class="card-title">Dapoli</h3>
                                 <span class="card-date">Konkan</span>
-                                <p class="card-desc">Pristine beaches, coconut groves, and the serene beauty of Konkan
-                                    coast.</p>
-                                <a href="dapoli.html" class="card-link">Read Journal →</a>
+                                <p class="card-desc">Pristine beaches, coconut groves, and the serene beauty of Konkan coast.</p>
+                                <a href="dapoli.html" class="card-link">Read Journal -></a>
                             </div>
                         </article>
 
-                        <!-- Alibaug Card -->
                         <article class="travel-card">
-                            <div class="card-img-placeholder">🏰</div>
+                            <div class="card-img-placeholder destination-alibaug">
+                                <span class="card-kicker">Forts & Beaches</span>
+                                <span class="card-place">Alibaug</span>
+                            </div>
                             <div class="card-content">
                                 <h3 class="card-title">Alibaug</h3>
                                 <span class="card-date">Konkan</span>
-                                <p class="card-desc">Historic forts, beautiful beaches, and the perfect weekend getaway.
-                                </p>
-                                <a href="alibaug.html" class="card-link">Read Journal →</a>
+                                <p class="card-desc">Historic forts, beautiful beaches, and the perfect weekend getaway.</p>
+                                <a href="alibaug.html" class="card-link">Read Journal -></a>
                             </div>
                         </article>
                     </div>
