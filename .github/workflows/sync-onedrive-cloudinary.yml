@@ -105,6 +105,22 @@ jobs:
             exit 0
           fi
           git commit -m "Automated Graph -> Cloudinary gallery sync for ${MATRIX_TRIP}"
-          git pull --rebase origin main
-          git push
+
+          MAX_ATTEMPTS=4
+          ATTEMPT=1
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            echo "Attempt $ATTEMPT of $MAX_ATTEMPTS to push changes..."
+            if git push; then
+              echo "Push succeeded"
+              exit 0
+            fi
+            if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+              echo "Push failed after $MAX_ATTEMPTS attempts."
+              exit 1
+            fi
+            echo "Push failed; fetching latest origin and rebasing..."
+            git fetch origin main
+            git rebase origin/main
+            ATTEMPT=$((ATTEMPT + 1))
+          done
 
