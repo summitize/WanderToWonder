@@ -10,12 +10,36 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  parse-trips:
+    runs-on: ubuntu-latest
+    outputs:
+      trips: ${{ steps.parse.outputs.trips }}
+    steps:
+      - name: Parse trip list
+        id: parse
+        env:
+          TRIP_SHARE_URLS_JSON: ${{ secrets.TRIP_SHARE_URLS_JSON || vars.TRIP_SHARE_URLS_JSON }}
+        run: |
+          if [ -z "$TRIP_SHARE_URLS_JSON" ]; then
+            echo "Missing TRIP_SHARE_URLS_JSON"
+            exit 1
+          fi
+          python3 -c "
+          import json, os
+          trips = json.loads(os.environ['TRIP_SHARE_URLS_JSON'])
+          print(f'trips={json.dumps(list(trips.keys()))}')
+          " >> $GITHUB_OUTPUT
+
   sync:
     runs-on: ubuntu-latest
+    needs: parse-trips
     permissions:
       contents: write
       pages: write
-
+    strategy:
+      matrix:
+        trip: ${{ fromJson(needs.parse-trips.outputs.trips) }}
+      fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,7 +57,7 @@ jobs:
           pip install -r scripts/requirements-cloudinary.txt
 
       - name: Sync Graph shares to Cloudinary and regenerate manifests
-        timeout-minutes: 20
+        timeout-minutes: 30
         env:
           TRIP_SHARE_URLS_JSON: ${{ secrets.TRIP_SHARE_URLS_JSON || vars.TRIP_SHARE_URLS_JSON }}
           MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID || vars.MS_CLIENT_ID }}
@@ -43,22 +67,26 @@ jobs:
           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME || vars.CLOUDINARY_CLOUD_NAME }}
           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY || vars.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET || vars.CLOUDINARY_API_SECRET }}
+          MATRIX_TRIP: ${{ matrix.trip }}
         run: |
-          if [ -z "$TRIP_SHARE_URLS_JSON" ]; then
-            echo "Missing TRIP_SHARE_URLS_JSON environment variable"
-            exit 1
-          fi
           if [ -z "$MS_CLIENT_ID" ] || [ -z "$MS_REFRESH_TOKEN" ]; then
             echo "Missing MS_CLIENT_ID and/or MS_REFRESH_TOKEN"
             exit 1
           fi
-          echo "Using TRIP_SHARE_URLS_JSON length: ${#TRIP_SHARE_URLS_JSON}"
-          python -u scripts/sync-graph-cloudinary.py --map-json "$TRIP_SHARE_URLS_JSON"
+          python3 -c "
+          import json, os
+          all_trips = json.loads(os.environ['TRIP_SHARE_URLS_JSON'])
+          trip = os.environ['MATRIX_TRIP']
+          single = {trip: all_trips[trip]}
+          print(json.dumps(single))
+          " > single_trip.json
+          echo "Processing trip: $MATRIX_TRIP"
+          python -u scripts/sync-graph-cloudinary.py --map-json "$(cat single_trip.json)" --max-files 100
 
       - name: Commit and push manifest updates
         run: |
           if [ -z "$(git status --porcelain -- data)" ]; then
-            echo "No manifest changes."
+            echo "No manifest changes for $MATRIX_TRIP."
             exit 0
           fi
 
@@ -66,15 +94,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/
           if git diff --cached --quiet; then
-            echo "No staged manifest changes."
+            echo "No staged manifest changes for $MATRIX_TRIP."
             exit 0
           fi
-          git commit -m "Automated Graph -> Cloudinary gallery sync"
+          git commit -m "Automated Graph -> Cloudinary gallery sync for ${MATRIX_TRIP}"
           git push
 
-      - name: Trigger GitHub Pages rebuild
-        run: |
-          curl -fsSL -X POST \
-            -H "Authorization: Bearer ${{ github.token }}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pages/builds"
