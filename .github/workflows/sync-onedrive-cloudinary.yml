@@ -81,7 +81,7 @@ jobs:
           print(json.dumps(single))
           " > single_trip.json
           echo "Processing trip: $MATRIX_TRIP"
-          python -u scripts/sync-graph-cloudinary.py --map-json "$(cat single_trip.json)" --max-files 100
+          python -u scripts/sync-graph-cloudinary.py --map-json "$(cat single_trip.json)" --max 100
 
       - name: Commit and push manifest updates
         run: |
