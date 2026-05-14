@@ -35,23 +35,24 @@ jobs:
       - name: Sync Graph shares to Cloudinary and regenerate manifests
         timeout-minutes: 20
         env:
-          TRIP_SHARE_URLS_JSON: ${{ secrets.TRIP_SHARE_URLS_JSON }}
-          MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
-          MS_REFRESH_TOKEN: ${{ secrets.MS_REFRESH_TOKEN }}
-          MS_TENANT: ${{ secrets.MS_TENANT }}
-          MS_SCOPE: ${{ secrets.MS_SCOPE }}
-          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          TRIP_SHARE_URLS_JSON: ${{ secrets.TRIP_SHARE_URLS_JSON || vars.TRIP_SHARE_URLS_JSON }}
+          MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID || vars.MS_CLIENT_ID }}
+          MS_REFRESH_TOKEN: ${{ secrets.MS_REFRESH_TOKEN || vars.MS_REFRESH_TOKEN }}
+          MS_TENANT: ${{ secrets.MS_TENANT || vars.MS_TENANT }}
+          MS_SCOPE: ${{ secrets.MS_SCOPE || vars.MS_SCOPE }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME || vars.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY || vars.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET || vars.CLOUDINARY_API_SECRET }}
         run: |
           if [ -z "$TRIP_SHARE_URLS_JSON" ]; then
-            echo "Missing secret: TRIP_SHARE_URLS_JSON"
+            echo "Missing TRIP_SHARE_URLS_JSON environment variable"
             exit 1
           fi
           if [ -z "$MS_CLIENT_ID" ] || [ -z "$MS_REFRESH_TOKEN" ]; then
-            echo "Missing secret: MS_CLIENT_ID and/or MS_REFRESH_TOKEN"
+            echo "Missing MS_CLIENT_ID and/or MS_REFRESH_TOKEN"
             exit 1
           fi
+          echo "Using TRIP_SHARE_URLS_JSON length: ${#TRIP_SHARE_URLS_JSON}"
           python -u scripts/sync-graph-cloudinary.py --map-json "$TRIP_SHARE_URLS_JSON"
 
       - name: Commit and push manifest updates
