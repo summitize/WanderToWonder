@@ -105,5 +105,6 @@ jobs:
             exit 0
           fi
           git commit -m "Automated Graph -> Cloudinary gallery sync for ${MATRIX_TRIP}"
+          git pull --rebase origin main
           git push
 
