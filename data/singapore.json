@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "src": "https://res.cloudinary.com/example/image/upload/v1234567890/singapore/photo1.jpg",
+    "title": "Marina Bay Sands",
+    "description": "Iconic skyline view from Marina Bay Sands."
+  },
+  {
+    "src": "https://res.cloudinary.com/example/image/upload/v1234567890/singapore/photo2.jpg",
+    "title": "Gardens by the Bay",
+    "description": "Futuristic Supertree Grove at Gardens by the Bay."
+  },
+  {
+    "src": "https://res.cloudinary.com/example/image/upload/v1234567890/singapore/photo3.jpg",
+    "title": "Singapore Flyer",
+    "description": "Panoramic city views from the Singapore Flyer."
+  }
+]
