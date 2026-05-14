@@ -46,6 +46,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Fetch and rebase to latest main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git rebase origin/main
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -97,7 +104,6 @@ jobs:
             echo "No staged manifest changes for $MATRIX_TRIP."
             exit 0
           fi
-          git pull --rebase origin main
           git commit -m "Automated Graph -> Cloudinary gallery sync for ${MATRIX_TRIP}"
           git push
 
