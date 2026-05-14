@@ -3,7 +3,7 @@ name: Sync Graph to Cloudinary
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 2 * * *"
 
 concurrency:
   group: graph-cloudinary-sync
