@@ -97,6 +97,7 @@ jobs:
             echo "No staged manifest changes for $MATRIX_TRIP."
             exit 0
           fi
+          git pull --rebase origin main
           git commit -m "Automated Graph -> Cloudinary gallery sync for ${MATRIX_TRIP}"
           git push
 
