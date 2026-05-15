@@ -153,7 +153,7 @@
                 radius: 8,
                 color: '#ffffff',
                 weight: 2,
-                fillColor: '#f97316',
+                fillColor: '#C19664',
                 fillOpacity: 0.92
             }).addTo(realMap).bindPopup(buildPopup(destination));
 
@@ -166,7 +166,7 @@
         });
 
         window.L.polyline(routeCoordinates, {
-            color: '#22d3ee',
+            color: '#60A5FA',
             weight: 2.6,
             opacity: 0.75,
             dashArray: '7 8'
@@ -282,7 +282,7 @@
                 radius: isCurrent ? 9 : 7,
                 color: '#ffffff',
                 weight: 2,
-                fillColor: isCurrent ? '#10b981' : '#f97316',
+                fillColor: isCurrent ? '#60A5FA' : '#C19664',
                 fillOpacity: 0.95
             }).bindPopup(buildPopup(destination)).addTo(timelineMarkersLayer);
         });
@@ -293,7 +293,7 @@
 
         if (routeCoordinates.length > 1) {
             timelineRouteLayer = window.L.polyline(routeCoordinates, {
-                color: '#10b981',
+                color: '#60A5FA',
                 weight: 3,
                 opacity: 0.88
             }).addTo(timelineMap);
