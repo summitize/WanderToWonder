@@ -67,9 +67,24 @@ function initializeNavigation() {
     const nav = document.querySelector('.nav');
 
     if (hamburger && nav) {
+        const closeMobileNav = () => {
+            nav.classList.remove('active');
+            hamburger.classList.remove('active');
+            document.body.classList.remove('nav-open');
+        };
+
         hamburger.addEventListener('click', () => {
-            nav.classList.toggle('active');
-            hamburger.classList.toggle('active');
+            const isOpen = nav.classList.toggle('active');
+            hamburger.classList.toggle('active', isOpen);
+            document.body.classList.toggle('nav-open', isOpen);
+        });
+
+        nav.querySelectorAll('a.nav-link, .dropdown-item').forEach((link) => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    closeMobileNav();
+                }
+            });
         });
     }
 
@@ -78,7 +93,7 @@ function initializeNavigation() {
     dropdowns.forEach(dropdown => {
         const link = dropdown.querySelector('.nav-link');
         link.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= 1024) {
                 e.preventDefault();
                 dropdown.classList.toggle('open');
             }
