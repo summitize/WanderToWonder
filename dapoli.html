@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dapoli Project | WanderToWonder</title>
+    <meta name="description"
+        content="Coastal survey and environmental documentation for the Dapoli project. Visual mapping of regional ecosystems.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/dapoli.html">
+    <meta property="og:title" content="Dapoli Project | WanderToWonder">
+    <meta property="og:description" content="Coastal survey and environmental documentation for the Dapoli project.">
+    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/dapoli/hero.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Dapoli Project | WanderToWonder">
+    <meta property="twitter:description"
+        content="Coastal survey and environmental documentation for the Dapoli project.">
+
+    <!-- Structured Data - Commented for local network access
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Dapoli Journey",
+      "image": "https://summitize.github.io/WanderToWonder/photos/dapoli/hero.jpg",
+      "author": {
+        "@type": "Person",
+        "name": "Sumeet Boob"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WanderToWonder"
+      },
+      "url": "https://summitize.github.io/WanderToWonder/dapoli.html"
+    }
+    </script>
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="page-header">
+            <h1 class="page-title">Dapoli</h1>
+            <p class="page-subtitle">Coastal Survey and Regional Ecosystem Mapping</p>
+        </section>
+
+        <div class="content-section">
+            <div class="container">
+                <div id="dapoli-gallery"></div>
+            </div>
+        </div>
+
+        <!-- Comments Section - Commented for local network access
+        <section class="section comments-section">
+            <div class="container">
+                <h2 class="section-title">Project <span class="text-highlight">Discussions</span></h2>
+                <div class="giscus-wrapper">
+                    <script src="https://giscus.app/client.js" data-repo="summitize/WanderToWonder"
+                        data-repo-id="R_kgDONSz64w" data-category="Announcements"
+                        data-category-id="DIC_kwDONSz6484CklO3" data-mapping="pathname" data-strict="0"
+                        data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom"
+                        data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async>
+                        </script>
+                </div>
+            </div>
+        </section>
+        -->
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="assets/js/gallery.js"></script>
+    <script>
+        // Cloudflare Worker URL (recommended). Keep blank/placeholder to skip API mode.
+        const galleryApiBase = 'PASTE_CLOUDFLARE_WORKER_URL_HERE';
+        const normalizedGalleryApiBase = (
+            typeof galleryApiBase === 'string'
+            && galleryApiBase.trim().length > 0
+            && !galleryApiBase.includes('PASTE_')
+        ) ? galleryApiBase.replace(/\/+$/, '') : '';
+        const dapoliApiEndpoint = normalizedGalleryApiBase
+            ? `${normalizedGalleryApiBase}/photos?trip=dapoli`
+            : '';
+
+        // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
+        const dapoliOneDriveShareLink = 'PASTE_DAPOLI_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
+
+        PhotoGallery.loadWithSourceToggle({
+            containerId: 'dapoli-gallery',
+            apiEndpoint: dapoliApiEndpoint,
+            shareLink: dapoliOneDriveShareLink,
+            localJsonPath: 'data/dapoli.json',
+            destinationName: 'Dapoli',
+            defaultMode: 'auto',
+            modeStorageKey: 'gallery-mode:dapoli',
+            showModeToggle: false
+        });
+    </script>
+    <script src="assets/js/script.js"></script>
+</body>
+
+</html>

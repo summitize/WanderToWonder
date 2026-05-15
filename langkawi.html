@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia (Langkawi) Project | WanderToWonder</title>
+    <meta name="description"
+        content="A travel journal from Langkawi, Malaysia featuring pristine beaches, island adventures, and tropical island exploration.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/langkawi.html">
+    <meta property="og:title" content="Malaysia (Langkawi) Project | WanderToWonder">
+    <meta property="og:description" content="A travel journal from Langkawi, Malaysia featuring pristine beaches, island adventures, and tropical island exploration.">
+    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/langkawi/hero.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Malaysia (Langkawi) Project | WanderToWonder">
+    <meta property="twitter:description" content="A travel journal from Langkawi, Malaysia featuring pristine beaches, island adventures, and tropical island exploration.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="page-header">
+            <h1 class="page-title">Malaysia (Langkawi)</h1>
+            <p class="page-subtitle">Island Exploration and Tropical Paradise</p>
+        </section>
+
+        <div class="content-section">
+            <div class="container">
+                <div id="langkawi-gallery"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="assets/js/gallery.js"></script>
+    <script>
+        // Cloudflare Worker URL (recommended). Keep blank/placeholder to skip API mode.
+        const galleryApiBase = 'PASTE_CLOUDFLARE_WORKER_URL_HERE';
+        const normalizedGalleryApiBase = (
+            typeof galleryApiBase === 'string'
+            && galleryApiBase.trim().length > 0
+            && !galleryApiBase.includes('PASTE_')
+        ) ? galleryApiBase.replace(/\/+$/, '') : '';
+        const langkawiApiEndpoint = normalizedGalleryApiBase
+            ? `${normalizedGalleryApiBase}/photos?trip=langkawi`
+            : '';
+
+        // Replace this with your public OneDrive shared folder link for Langkawi photos.
+        const langkawiOneDriveShareLink = 'https://1drv.ms/f/c/97c5e937e7e76f1c/IgDdSFXwe-5cTbOTQ6ZtimQuARydeIyhJTUL9gJJ_v921oY?e=VJeIsm';
+
+        PhotoGallery.loadWithSourceToggle({
+            containerId: 'langkawi-gallery',
+            apiEndpoint: langkawiApiEndpoint,
+            shareLink: langkawiOneDriveShareLink,
+            localJsonPath: 'data/langkawi.json',
+            destinationName: 'Langkawi',
+            defaultMode: 'auto',
+            modeStorageKey: 'gallery-mode:langkawi',
+            showModeToggle: false
+        });
+    </script>
+    <script src="assets/js/script.js"></script>
+</body>
+
+</html>

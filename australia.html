@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Australia Project | WanderToWonder</title>
+    <meta name="description"
+        content="Technical analysis and visual mapping for the Australia regional project. Explore geospatial data and site visuals.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/australia.html">
+    <meta property="og:title" content="Australia Project | WanderToWonder">
+    <meta property="og:description" content="Technical analysis and visual mapping for the Australia regional project.">
+    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/australia/hero.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Australia Project | WanderToWonder">
+    <meta property="twitter:description"
+        content="Technical analysis and visual mapping for the Australia regional project.">
+
+    <!-- Structured Data - Commented for local network access
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Australia Journey",
+      "image": "https://summitize.github.io/WanderToWonder/photos/australia/hero.jpg",
+      "author": {
+        "@type": "Person",
+        "name": "Sumeet Boob"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WanderToWonder"
+      },
+      "url": "https://summitize.github.io/WanderToWonder/australia.html"
+    }
+    </script>
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="page-header">
+            <h1 class="page-title">Australia</h1>
+            <p class="page-subtitle">Regional Exploration and Technical Mapping</p>
+        </section>
+
+        <div class="content-section">
+            <div class="container">
+                <div id="australia-gallery"></div>
+            </div>
+        </div>
+
+        <!-- Comments Section - Commented for local network access
+        <section class="section comments-section">
+            <div class="container">
+                <h2 class="section-title">Project <span class="text-highlight">Discussions</span></h2>
+                <div class="giscus-wrapper">
+                    <script src="https://giscus.app/client.js" data-repo="summitize/WanderToWonder"
+                        data-repo-id="R_kgDONSz64w" data-category="Announcements"
+                        data-category-id="DIC_kwDONSz6484CklO3" data-mapping="pathname" data-strict="0"
+                        data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom"
+                        data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async>
+                        </script>
+                </div>
+            </div>
+        </section>
+        -->
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="assets/js/gallery.js"></script>
+    <script>
+        // Cloudflare Worker URL (recommended). Keep blank/placeholder to skip API mode.
+        const galleryApiBase = 'PASTE_CLOUDFLARE_WORKER_URL_HERE';
+        const normalizedGalleryApiBase = (
+            typeof galleryApiBase === 'string'
+            && galleryApiBase.trim().length > 0
+            && !galleryApiBase.includes('PASTE_')
+        ) ? galleryApiBase.replace(/\/+$/, '') : '';
+        const australiaApiEndpoint = normalizedGalleryApiBase
+            ? `${normalizedGalleryApiBase}/photos?trip=australia`
+            : '';
+
+        // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
+        const australiaOneDriveShareLink = 'https://1drv.ms/f/c/97c5e937e7e76f1c/IgAuiJr8Frc_R6pSvEhbhj1wATRFY3lnLV0D7b9Z4SYr-tM?e=DxaBFn';
+
+        PhotoGallery.loadWithSourceToggle({
+            containerId: 'australia-gallery',
+            apiEndpoint: australiaApiEndpoint,
+            shareLink: australiaOneDriveShareLink,
+            localJsonPath: 'data/australia.json',
+            destinationName: 'Australia',
+            defaultMode: 'auto',
+            modeStorageKey: 'gallery-mode:australia',
+            showModeToggle: false
+        });
+    </script>
+    <script src="assets/js/script.js"></script>
+</body>
+
+</html>
