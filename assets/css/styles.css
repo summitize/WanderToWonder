@@ -30,7 +30,7 @@
     --bg-secondary: #15233F;
     --bg-card: #162C4D;
     --text-primary: #F8FAFC;
-    --text-secondary: #A2B0C1;
+    --text-secondary: #CBD5E1;
 
     /* More vibrant hues for dark mode */
     --color-primary: #60A5FA;
@@ -57,6 +57,7 @@ body {
     background: linear-gradient(180deg, #E8F7FF 0%, #F9ECD7 45%, #FFF8EF 100%);
     color: var(--text-primary);
     font-family: var(--font-body);
+    font-weight: 400;
     line-height: 1.6;
     overflow-x: hidden;
 }
@@ -1096,14 +1097,14 @@ a {
 .page-title {
     font-size: 4rem;
     margin-bottom: 1rem;
-    color: #fff;
+    color: var(--text-primary);
     background: none;
     -webkit-text-fill-color: currentColor;
 }
 
 .page-subtitle {
     font-size: 1.3rem;
-    color: rgba(255, 255, 255, 0.86);
+    color: var(--text-secondary);
     max-width: 700px;
     margin: 0 auto 3rem;
 }
@@ -1884,4 +1885,3 @@ a {
     background: var(--color-highlight);
     color: var(--bg-color);
 }
-

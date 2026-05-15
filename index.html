@@ -31,25 +31,28 @@
     <style>
         /* Enhanced contrast for improved readability on renewed background colors */
         body {
-            color: #334155; /* Slate 700 */
+            color: var(--text-secondary);
         }
         .section-title, .card-title, .journey-flare-card strong, .hero-title {
-            color: #0f172a; /* Slate 900 */
+            color: var(--text-primary);
         }
         .hero-eyebrow, .hero-map-intro {
-            color: #64748b; /* Slate 500 */
+            color: var(--color-secondary);
         }
         .hero-subtitle, .map-explorer-subtitle, .card-desc, .journey-flare-card p {
-            color: #475569; /* Slate 600 */
+            color: var(--text-secondary);
         }
         .card-kicker, .card-place {
             color: #ffffff; /* Keep white for overlay text on images */
             text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
-        /* Standardize hero text for the light renewed background */
-        .hero .hero-title { color: #0f172a; }
-        .hero .hero-subtitle { color: #475569; }
-        .hero .hero-eyebrow { color: #64748b; }
+        /* Standardize hero text using theme variables */
+        .hero .hero-title { color: var(--text-primary); }
+        .hero .hero-subtitle { color: var(--text-secondary); }
+        .hero .hero-eyebrow { color: var(--color-coral); font-weight: 800; }
+
+        /* Specific tweak for Dark Mode Hero visibility */
+        [data-theme="dark"] .hero .hero-eyebrow { color: var(--color-highlight); }
     </style>
 </head>
 
