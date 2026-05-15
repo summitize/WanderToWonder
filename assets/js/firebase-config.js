@@ -5,12 +5,13 @@
  * Add authorized domains: wandertowonder.in, www.wandertowonder.in, summitize.github.io
  */
 window.WTW_FIREBASE_CONFIG = {
-    apiKey: 'YOUR_API_KEY',
-    authDomain: 'YOUR_PROJECT.firebaseapp.com',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_PROJECT.appspot.com',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    appId: 'YOUR_APP_ID'
+    apiKey: "AIzaSyD6MroetOcs4RNma7aT8gVSZA6orvJijEQ",
+  authDomain: "wandertowonder-abf95.firebaseapp.com",
+  projectId: "wandertowonder-abf95",
+  storageBucket: "wandertowonder-abf95.firebasestorage.app",
+  messagingSenderId: "817906144283",
+  appId: "1:817906144283:web:6954cf4f2532825158d4be",
+  measurementId: "G-R7W5MTKNL0"
 };
 
 window.WTW_FIREBASE_ENABLED = (() => {
