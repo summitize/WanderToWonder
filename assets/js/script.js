@@ -41,6 +41,11 @@ async function loadComponent(id, file) {
         if (id === 'header-placeholder') {
             initializeNavigation();
         }
+        if (id === 'auth-modal-placeholder') {
+            if (window.WTWAuthLikes?.refreshAllLikeButtons) {
+                window.WTWAuthLikes.refreshAllLikeButtons();
+            }
+        }
         if (id === 'footer-placeholder') {
             initializeTheme();
         }
@@ -101,10 +106,34 @@ function initializeNavigation() {
     });
 }
 
+function resolveAssetBase() {
+    return isNestedPage() ? '../assets/' : 'assets/';
+}
+
+function loadAuthStack() {
+    const base = resolveAssetBase();
+    const configScript = document.createElement('script');
+    configScript.src = `${base}js/firebase-config.js`;
+    configScript.onload = () => {
+        const authScript = document.createElement('script');
+        authScript.src = `${base}js/wtw-auth-likes.js`;
+        document.body.appendChild(authScript);
+    };
+    document.body.appendChild(configScript);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Load components
     loadComponent('header-placeholder', resolveComponentBase() + 'header.html');
     loadComponent('footer-placeholder', resolveComponentBase() + 'footer.html');
+
+    if (!document.getElementById('auth-modal-placeholder')) {
+        const authHost = document.createElement('div');
+        authHost.id = 'auth-modal-placeholder';
+        document.body.appendChild(authHost);
+    }
+    loadComponent('auth-modal-placeholder', resolveComponentBase() + 'auth-modal.html');
+    loadAuthStack();
 
     // Smooth scrolling for navigation links (using event delegation for dynamic links)
     document.addEventListener('click', (e) => {
@@ -144,32 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
-    // Native Web Share API
-    const shareBtn = document.getElementById('share-btn');
-    if (shareBtn) {
-        shareBtn.addEventListener('click', async () => {
-            try {
-                await navigator.share({
-                    title: document.title,
-                    text: 'Check out this travel journal from WanderToWonder!',
-                    url: window.location.href,
-                });
-            } catch (err) {
-                // Fallback for browsers that don't support Web Share API
-                console.log('Share failed:', err);
-                const dummy = document.createElement('input');
-                document.body.appendChild(dummy);
-                dummy.value = window.location.href;
-                dummy.select();
-                document.execCommand('copy');
-                document.body.removeChild(dummy);
-
-                const originalText = shareBtn.innerHTML;
-                shareBtn.innerHTML = '✅ Link Copied!';
-                setTimeout(() => { shareBtn.innerHTML = originalText; }, 2000);
-            }
-        });
-    }
 });
 
 function initializeTheme() {

@@ -1214,12 +1214,207 @@ a {
     margin: 0 auto 3rem;
 }
 
-.share-page-btn {
-    margin-top: 1rem;
-    padding: 0.8rem 2rem !important;
-    gap: 0.8rem;
+/* Header auth */
+.header-auth {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.auth-sign-in-btn {
+    padding: 0.55rem 1rem !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+.auth-user-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.auth-user-menu[hidden] {
+    display: none !important;
+}
+
+.auth-user-photo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(96, 165, 250, 0.35);
+}
+
+.auth-user-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.auth-sign-out-btn {
+    border: 1px solid rgba(96, 165, 250, 0.35);
+    background: transparent;
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.auth-sign-out-btn:hover {
+    background: rgba(96, 165, 250, 0.12);
+}
+
+/* Page engagement / likes */
+.page-engagement {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.hero-content .page-engagement {
+    justify-content: flex-start;
+    margin-top: 1.25rem;
+}
+
+.like-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.4rem !important;
     font-size: 0.85rem !important;
-    border-radius: 12px !important;
+    border-radius: 999px !important;
+}
+
+.like-btn.is-liked {
+    background: rgba(245, 178, 79, 0.2) !important;
+    border-color: var(--color-accent) !important;
+    color: var(--text-primary) !important;
+}
+
+.like-btn .like-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.like-count {
+    min-width: 1.25rem;
+    font-weight: 800;
+}
+
+/* Auth modal */
+.auth-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+}
+
+.auth-modal[hidden] {
+    display: none !important;
+}
+
+body.auth-modal-open {
+    overflow: hidden;
+}
+
+.auth-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(4px);
+}
+
+.auth-modal-panel {
+    position: relative;
+    width: min(420px, 100%);
+    background: var(--bg-card);
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    border-radius: 20px;
+    padding: 2rem 1.75rem 1.5rem;
+    box-shadow: var(--shadow-hover);
+}
+
+.auth-modal-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.85rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.auth-modal-title {
+    font-size: 1.35rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.auth-modal-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+}
+
+.auth-provider-buttons {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.auth-provider-btn {
+    width: 100%;
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--bg-color);
+    color: var(--text-primary);
+}
+
+.auth-provider-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+}
+
+.auth-provider-google {
+    border-color: rgba(96, 165, 250, 0.45);
+}
+
+.auth-provider-facebook {
+    border-color: rgba(24, 119, 242, 0.35);
+}
+
+.auth-provider-apple {
+    border-color: rgba(148, 163, 184, 0.45);
+}
+
+.auth-modal-note {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    min-height: 1.25rem;
+}
+
+.auth-modal-note.is-error {
+    color: #dc2626;
 }
 
 /* Content Sections */
@@ -1456,6 +1651,15 @@ a {
     .nav .nav-link {
         width: 100%;
         text-align: left;
+    }
+
+    .header-auth {
+        margin-left: auto;
+        margin-right: 0.5rem;
+    }
+
+    .auth-user-name {
+        display: none;
     }
 
     .hamburger {
