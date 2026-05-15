@@ -4,29 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sri Lanka Project | WanderToWonder</title>
+    <title>Dubai Project | WanderToWonder</title>
     <meta name="description"
-        content="Ecosystem analysis and regional mapping for the Sri Lanka project. Environmental survey and geospatial visuals.">
+        content="Technical survey and urban mapping for the Dubai regional project. Structural visualization and regional data analysis.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/srilanka.html">
-    <meta property="og:title" content="Sri Lanka Project | WanderToWonder">
-    <meta property="og:description" content="Ecosystem analysis and regional mapping for the Sri Lanka project.">
-    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/srilanka/hero.jpg">
+    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/dubai.html">
+    <meta property="og:title" content="Dubai Project | WanderToWonder">
+    <meta property="og:description" content="Technical survey and urban mapping for the Dubai regional project.">
+    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/dubai/hero.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Sri Lanka Project | WanderToWonder">
-    <meta property="twitter:description" content="Ecosystem analysis and regional mapping for the Sri Lanka project.">
+    <meta property="twitter:title" content="Dubai Project | WanderToWonder">
+    <meta property="twitter:description" content="Technical survey and urban mapping for the Dubai regional project.">
 
     <!-- Structured Data - Commented for local network access
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-      "headline": "Sri Lanka Journey",
-      "image": "https://summitize.github.io/WanderToWonder/photos/srilanka/hero.jpg",
+      "headline": "Dubai Journey",
+      "image": "https://summitize.github.io/WanderToWonder/photos/dubai/hero.jpg",
       "author": {
         "@type": "Person",
         "name": "Sumeet Boob"
@@ -35,14 +35,14 @@
         "@type": "Organization",
         "name": "WanderToWonder"
       },
-      "url": "https://summitize.github.io/WanderToWonder/srilanka.html"
+      "url": "https://summitize.github.io/WanderToWonder/dubai.html"
     }
     </script>
     -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="..\/assets\/css\/styles.css">
 </head>
 
 <body>
@@ -50,8 +50,8 @@
 
     <main>
         <section class="page-header">
-            <h1 class="page-title">Sri Lanka</h1>
-            <p class="page-subtitle">Environmental Survey and Geospatial Visuals</p>
+            <h1 class="page-title">Dubai</h1>
+            <p class="page-subtitle">Urban Mapping and Structural Visualization</p>
             <button class="btn btn-secondary share-page-btn" id="share-btn">
                 Share Project
             </button>
@@ -59,7 +59,7 @@
 
         <div class="content-section">
             <div class="container">
-                <div id="srilanka-gallery"></div>
+                <div id="dubai-gallery"></div>
             </div>
         </div>
 
@@ -82,7 +82,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="gallery.js"></script>
+    <script src="..\/assets\/js\/gallery.js"></script>
     <script>
         // Cloudflare Worker URL (recommended). Keep blank/placeholder to skip API mode.
         const galleryApiBase = 'PASTE_CLOUDFLARE_WORKER_URL_HERE';
@@ -91,25 +91,26 @@
             && galleryApiBase.trim().length > 0
             && !galleryApiBase.includes('PASTE_')
         ) ? galleryApiBase.replace(/\/+$/, '') : '';
-        const srilankaApiEndpoint = normalizedGalleryApiBase
-            ? `${normalizedGalleryApiBase}/photos?trip=srilanka`
+        const dubaiApiEndpoint = normalizedGalleryApiBase
+            ? `${normalizedGalleryApiBase}/photos?trip=dubai`
             : '';
 
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
-        const srilankaOneDriveShareLink = 'https://1drv.ms/f/c/97c5e937e7e76f1c/IgC4UToTesbPQppGfDfIVdp8Afp62M9qJqIoWcLW38QyheQ?e=eAeRrr';
-
+        const dubaiOneDriveShareLink = 'https://1drv.ms/f/c/97c5e937e7e76f1c/IgCiXVxfueiaQo1EzIMvEaXzAcifmSV0qtipnqfB7fsRTOg?e=ZltGbW';
         PhotoGallery.loadWithSourceToggle({
-            containerId: 'srilanka-gallery',
-            apiEndpoint: srilankaApiEndpoint,
-            shareLink: srilankaOneDriveShareLink,
-            localJsonPath: 'data/srilanka.json',
-            destinationName: 'Sri Lanka',
+            containerId: 'dubai-gallery',
+            apiEndpoint: dubaiApiEndpoint,
+            shareLink: dubaiOneDriveShareLink,
+            localJsonPath: '..\/data/dubai.json',
+            destinationName: 'Dubai',
             defaultMode: 'auto',
-            modeStorageKey: 'gallery-mode:srilanka',
+            modeStorageKey: 'gallery-mode:dubai',
             showModeToggle: false
         });
     </script>
-    <script src="script.js"></script>
+    <script src="..\/assets\/js\/script.js"></script>
 </body>
 
 </html>
+
+

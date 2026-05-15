@@ -4,31 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statue of Unity Project | WanderToWonder</title>
+    <title>Sri Lanka Project | WanderToWonder</title>
     <meta name="description"
-        content="Structural analysis and regional documentation for the Statue of Unity project. Visual documentation of engineering marvels.">
+        content="Ecosystem analysis and regional mapping for the Sri Lanka project. Environmental survey and geospatial visuals.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/statue-of-unity.html">
-    <meta property="og:title" content="Statue of Unity Project | WanderToWonder">
-    <meta property="og:description"
-        content="Structural analysis and regional documentation for the Statue of Unity project.">
-    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/statue-of-unity/hero.jpg">
+    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/srilanka.html">
+    <meta property="og:title" content="Sri Lanka Project | WanderToWonder">
+    <meta property="og:description" content="Ecosystem analysis and regional mapping for the Sri Lanka project.">
+    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/srilanka/hero.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Statue of Unity Project | WanderToWonder">
-    <meta property="twitter:description"
-        content="Structural analysis and regional documentation for the Statue of Unity project.">
+    <meta property="twitter:title" content="Sri Lanka Project | WanderToWonder">
+    <meta property="twitter:description" content="Ecosystem analysis and regional mapping for the Sri Lanka project.">
 
     <!-- Structured Data - Commented for local network access
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-      "headline": "Statue of Unity Journey",
-      "image": "https://summitize.github.io/WanderToWonder/photos/statue-of-unity/hero.jpg",
+      "headline": "Sri Lanka Journey",
+      "image": "https://summitize.github.io/WanderToWonder/photos/srilanka/hero.jpg",
       "author": {
         "@type": "Person",
         "name": "Sumeet Boob"
@@ -37,14 +35,14 @@
         "@type": "Organization",
         "name": "WanderToWonder"
       },
-      "url": "https://summitize.github.io/WanderToWonder/statue-of-unity.html"
+      "url": "https://summitize.github.io/WanderToWonder/srilanka.html"
     }
     </script>
     -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="..\/assets\/css\/styles.css">
 </head>
 
 <body>
@@ -52,8 +50,8 @@
 
     <main>
         <section class="page-header">
-            <h1 class="page-title">Statue of Unity</h1>
-            <p class="page-subtitle">Gujarat Journey - December 2025</p>
+            <h1 class="page-title">Sri Lanka</h1>
+            <p class="page-subtitle">Environmental Survey and Geospatial Visuals</p>
             <button class="btn btn-secondary share-page-btn" id="share-btn">
                 Share Project
             </button>
@@ -61,7 +59,7 @@
 
         <div class="content-section">
             <div class="container">
-                <div id="statue-gallery"></div>
+                <div id="srilanka-gallery"></div>
             </div>
         </div>
 
@@ -84,7 +82,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="gallery.js"></script>
+    <script src="..\/assets\/js\/gallery.js"></script>
     <script>
         // Cloudflare Worker URL (recommended). Keep blank/placeholder to skip API mode.
         const galleryApiBase = 'PASTE_CLOUDFLARE_WORKER_URL_HERE';
@@ -93,26 +91,27 @@
             && galleryApiBase.trim().length > 0
             && !galleryApiBase.includes('PASTE_')
         ) ? galleryApiBase.replace(/\/+$/, '') : '';
-        const statueApiEndpoint = normalizedGalleryApiBase
-            ? `${normalizedGalleryApiBase}/photos?trip=statue-of-unity`
+        const srilankaApiEndpoint = normalizedGalleryApiBase
+            ? `${normalizedGalleryApiBase}/photos?trip=srilanka`
             : '';
 
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
-        const statueOneDriveShareLink = 'PASTE_STATUE_OF_UNITY_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
+        const srilankaOneDriveShareLink = 'https://1drv.ms/f/c/97c5e937e7e76f1c/IgC4UToTesbPQppGfDfIVdp8Afp62M9qJqIoWcLW38QyheQ?e=eAeRrr';
 
         PhotoGallery.loadWithSourceToggle({
-            containerId: 'statue-gallery',
-            apiEndpoint: statueApiEndpoint,
-            shareLink: statueOneDriveShareLink,
-            localJsonPath: 'data/statue-of-unity.json',
-            destinationName: 'Statue of Unity',
+            containerId: 'srilanka-gallery',
+            apiEndpoint: srilankaApiEndpoint,
+            shareLink: srilankaOneDriveShareLink,
+            localJsonPath: '..\/data/srilanka.json',
+            destinationName: 'Sri Lanka',
             defaultMode: 'auto',
-            modeStorageKey: 'gallery-mode:statue-of-unity',
+            modeStorageKey: 'gallery-mode:srilanka',
             showModeToggle: false
         });
     </script>
-    <script src="script.js"></script>
+    <script src="..\/assets\/js\/script.js"></script>
 </body>
 
 </html>
+
 

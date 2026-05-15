@@ -1,3 +1,33 @@
+function isNestedPage() {
+    return window.location.pathname.includes('/pages/');
+}
+
+function resolveComponentBase() {
+    return isNestedPage() ? '../components/' : 'components/';
+}
+
+function adjustRelativePaths(rootElement) {
+    if (!isNestedPage() || !rootElement) return;
+
+    rootElement.querySelectorAll('[href], [src]').forEach((element) => {
+        const attr = element.hasAttribute('href') ? 'href' : 'src';
+        const value = element.getAttribute(attr);
+        if (!value || /^(?:data:|https?:|mailto:|tel:|#|\/|\.\.)/.test(value)) return;
+
+        if (value.startsWith('pages/')) {
+            element.setAttribute(attr, value.replace(/^pages\//, ''));
+            return;
+        }
+
+        if (value === 'index.html') {
+            element.setAttribute(attr, '../index.html');
+            return;
+        }
+
+        element.setAttribute(attr, `../${value}`);
+    });
+}
+
 async function loadComponent(id, file) {
     const element = document.getElementById(id);
     if (!element) return;
@@ -6,6 +36,7 @@ async function loadComponent(id, file) {
         const response = await fetch(file);
         const html = await response.text();
         element.innerHTML = html;
+        adjustRelativePaths(element);
 
         if (id === 'header-placeholder') {
             initializeNavigation();
@@ -57,8 +88,8 @@ function initializeNavigation() {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Load components
-    loadComponent('header-placeholder', 'components/header.html');
-    loadComponent('footer-placeholder', 'components/footer.html');
+    loadComponent('header-placeholder', resolveComponentBase() + 'header.html');
+    loadComponent('footer-placeholder', resolveComponentBase() + 'footer.html');
 
     // Smooth scrolling for navigation links (using event delegation for dynamic links)
     document.addEventListener('click', (e) => {

@@ -4,30 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alibaug Project | WanderToWonder</title>
+    <title>Australia Project | WanderToWonder</title>
     <meta name="description"
-        content="Structural survey and coastal analysis for the Alibaug regional project. Visual mapping of infrastructure and site data.">
+        content="Technical analysis and visual mapping for the Australia regional project. Explore geospatial data and site visuals.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/alibaug.html">
-    <meta property="og:title" content="Alibaug Project | WanderToWonder">
-    <meta property="og:description" content="Structural survey and coastal analysis for the Alibaug regional project.">
-    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/alibaug/hero.jpg">
+    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/australia.html">
+    <meta property="og:title" content="Australia Project | WanderToWonder">
+    <meta property="og:description" content="Technical analysis and visual mapping for the Australia regional project.">
+    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/australia/hero.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Alibaug Project | WanderToWonder">
+    <meta property="twitter:title" content="Australia Project | WanderToWonder">
     <meta property="twitter:description"
-        content="Structural survey and coastal analysis for the Alibaug regional project.">
+        content="Technical analysis and visual mapping for the Australia regional project.">
 
     <!-- Structured Data - Commented for local network access
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-      "headline": "Alibaug Journey",
-      "image": "https://summitize.github.io/WanderToWonder/photos/alibaug/hero.jpg",
+      "headline": "Australia Journey",
+      "image": "https://summitize.github.io/WanderToWonder/photos/australia/hero.jpg",
       "author": {
         "@type": "Person",
         "name": "Sumeet Boob"
@@ -36,14 +36,14 @@
         "@type": "Organization",
         "name": "WanderToWonder"
       },
-      "url": "https://summitize.github.io/WanderToWonder/alibaug.html"
+      "url": "https://summitize.github.io/WanderToWonder/australia.html"
     }
     </script>
     -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="..\/assets\/css\/styles.css">
 </head>
 
 <body>
@@ -51,8 +51,8 @@
 
     <main>
         <section class="page-header">
-            <h1 class="page-title">Alibaug</h1>
-            <p class="page-subtitle">Structural Survey and Regional Analysis</p>
+            <h1 class="page-title">Australia</h1>
+            <p class="page-subtitle">Regional Exploration and Technical Mapping</p>
             <button class="btn btn-secondary share-page-btn" id="share-btn">
                 Share Project
             </button>
@@ -60,7 +60,7 @@
 
         <div class="content-section">
             <div class="container">
-                <div id="alibaug-gallery"></div>
+                <div id="australia-gallery"></div>
             </div>
         </div>
 
@@ -83,7 +83,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="gallery.js"></script>
+    <script src="..\/assets\/js\/gallery.js"></script>
     <script>
         // Cloudflare Worker URL (recommended). Keep blank/placeholder to skip API mode.
         const galleryApiBase = 'PASTE_CLOUDFLARE_WORKER_URL_HERE';
@@ -92,25 +92,27 @@
             && galleryApiBase.trim().length > 0
             && !galleryApiBase.includes('PASTE_')
         ) ? galleryApiBase.replace(/\/+$/, '') : '';
-        const alibaugApiEndpoint = normalizedGalleryApiBase
-            ? `${normalizedGalleryApiBase}/photos?trip=alibaug`
+        const australiaApiEndpoint = normalizedGalleryApiBase
+            ? `${normalizedGalleryApiBase}/photos?trip=australia`
             : '';
 
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
-        const alibaugOneDriveShareLink = 'PASTE_ALIBAUG_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
+        const australiaOneDriveShareLink = 'https://1drv.ms/f/c/97c5e937e7e76f1c/IgAuiJr8Frc_R6pSvEhbhj1wATRFY3lnLV0D7b9Z4SYr-tM?e=DxaBFn';
 
         PhotoGallery.loadWithSourceToggle({
-            containerId: 'alibaug-gallery',
-            apiEndpoint: alibaugApiEndpoint,
-            shareLink: alibaugOneDriveShareLink,
-            localJsonPath: 'data/alibaug.json',
-            destinationName: 'Alibaug',
+            containerId: 'australia-gallery',
+            apiEndpoint: australiaApiEndpoint,
+            shareLink: australiaOneDriveShareLink,
+            localJsonPath: '..\/data/australia.json',
+            destinationName: 'Australia',
             defaultMode: 'auto',
-            modeStorageKey: 'gallery-mode:alibaug',
+            modeStorageKey: 'gallery-mode:australia',
             showModeToggle: false
         });
     </script>
-    <script src="script.js"></script>
+    <script src="..\/assets\/js\/script.js"></script>
 </body>
 
 </html>
+
+

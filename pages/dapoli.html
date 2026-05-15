@@ -4,29 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dubai Project | WanderToWonder</title>
+    <title>Dapoli Project | WanderToWonder</title>
     <meta name="description"
-        content="Technical survey and urban mapping for the Dubai regional project. Structural visualization and regional data analysis.">
+        content="Coastal survey and environmental documentation for the Dapoli project. Visual mapping of regional ecosystems.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/dubai.html">
-    <meta property="og:title" content="Dubai Project | WanderToWonder">
-    <meta property="og:description" content="Technical survey and urban mapping for the Dubai regional project.">
-    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/dubai/hero.jpg">
+    <meta property="og:url" content="https://summitize.github.io/WanderToWonder/dapoli.html">
+    <meta property="og:title" content="Dapoli Project | WanderToWonder">
+    <meta property="og:description" content="Coastal survey and environmental documentation for the Dapoli project.">
+    <meta property="og:image" content="https://summitize.github.io/WanderToWonder/photos/dapoli/hero.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Dubai Project | WanderToWonder">
-    <meta property="twitter:description" content="Technical survey and urban mapping for the Dubai regional project.">
+    <meta property="twitter:title" content="Dapoli Project | WanderToWonder">
+    <meta property="twitter:description"
+        content="Coastal survey and environmental documentation for the Dapoli project.">
 
     <!-- Structured Data - Commented for local network access
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-      "headline": "Dubai Journey",
-      "image": "https://summitize.github.io/WanderToWonder/photos/dubai/hero.jpg",
+      "headline": "Dapoli Journey",
+      "image": "https://summitize.github.io/WanderToWonder/photos/dapoli/hero.jpg",
       "author": {
         "@type": "Person",
         "name": "Sumeet Boob"
@@ -35,14 +36,14 @@
         "@type": "Organization",
         "name": "WanderToWonder"
       },
-      "url": "https://summitize.github.io/WanderToWonder/dubai.html"
+      "url": "https://summitize.github.io/WanderToWonder/dapoli.html"
     }
     </script>
     -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="..\/assets\/css\/styles.css">
 </head>
 
 <body>
@@ -50,8 +51,8 @@
 
     <main>
         <section class="page-header">
-            <h1 class="page-title">Dubai</h1>
-            <p class="page-subtitle">Urban Mapping and Structural Visualization</p>
+            <h1 class="page-title">Dapoli</h1>
+            <p class="page-subtitle">Coastal Survey and Regional Ecosystem Mapping</p>
             <button class="btn btn-secondary share-page-btn" id="share-btn">
                 Share Project
             </button>
@@ -59,7 +60,7 @@
 
         <div class="content-section">
             <div class="container">
-                <div id="dubai-gallery"></div>
+                <div id="dapoli-gallery"></div>
             </div>
         </div>
 
@@ -82,7 +83,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="gallery.js"></script>
+    <script src="..\/assets\/js\/gallery.js"></script>
     <script>
         // Cloudflare Worker URL (recommended). Keep blank/placeholder to skip API mode.
         const galleryApiBase = 'PASTE_CLOUDFLARE_WORKER_URL_HERE';
@@ -91,24 +92,27 @@
             && galleryApiBase.trim().length > 0
             && !galleryApiBase.includes('PASTE_')
         ) ? galleryApiBase.replace(/\/+$/, '') : '';
-        const dubaiApiEndpoint = normalizedGalleryApiBase
-            ? `${normalizedGalleryApiBase}/photos?trip=dubai`
+        const dapoliApiEndpoint = normalizedGalleryApiBase
+            ? `${normalizedGalleryApiBase}/photos?trip=dapoli`
             : '';
 
         // OneDrive shared album/folder link. Keep it public ("Anyone with the link can view").
-        const dubaiOneDriveShareLink = 'https://1drv.ms/f/c/97c5e937e7e76f1c/IgCiXVxfueiaQo1EzIMvEaXzAcifmSV0qtipnqfB7fsRTOg?e=ZltGbW';
+        const dapoliOneDriveShareLink = 'PASTE_DAPOLI_ONEDRIVE_SHARED_ALBUM_LINK_HERE';
+
         PhotoGallery.loadWithSourceToggle({
-            containerId: 'dubai-gallery',
-            apiEndpoint: dubaiApiEndpoint,
-            shareLink: dubaiOneDriveShareLink,
-            localJsonPath: 'data/dubai.json',
-            destinationName: 'Dubai',
+            containerId: 'dapoli-gallery',
+            apiEndpoint: dapoliApiEndpoint,
+            shareLink: dapoliOneDriveShareLink,
+            localJsonPath: '..\/data/dapoli.json',
+            destinationName: 'Dapoli',
             defaultMode: 'auto',
-            modeStorageKey: 'gallery-mode:dubai',
+            modeStorageKey: 'gallery-mode:dapoli',
             showModeToggle: false
         });
     </script>
-    <script src="script.js"></script>
+    <script src="..\/assets\/js\/script.js"></script>
 </body>
 
 </html>
+
+

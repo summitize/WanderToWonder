@@ -468,7 +468,69 @@ a {
 
 /* Journey Map Explorer */
 .map-explorer-section {
-    padding-top: 0;
+    padding: 6rem 10%;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.05), rgba(247, 244, 239, 1));
+}
+
+.map-explorer-top {
+    max-width: 860px;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+}
+
+.map-explorer-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin: 0.8rem auto 0;
+    max-width: 780px;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.journey-flare-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.journey-flare-card {
+    flex: 1 1 240px;
+    min-width: 220px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 22px;
+    padding: 1.4rem 1.3rem;
+    box-shadow: 0 20px 60px rgba(6, 182, 212, 0.14);
+    color: #ffffff;
+    backdrop-filter: blur(18px);
+}
+
+.journey-flare-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.85rem;
+    border-radius: 50%;
+    background: rgba(14, 165, 233, 0.16);
+    color: #a5f3fc;
+    font-size: 1.45rem;
+}
+
+.journey-flare-card strong {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 1.05rem;
+    color: #eff6ff;
+}
+
+.journey-flare-card p {
+    margin: 0;
+    color: rgba(226, 240, 254, 0.85);
+    line-height: 1.7;
 }
 
 .hero-map-shell {
@@ -478,10 +540,11 @@ a {
     align-items: stretch !important;
     background: rgba(255, 255, 255, 0.16) !important;
     backdrop-filter: blur(18px);
+    margin-top: 1.5rem;
 }
 
 .hero-map-intro {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: #ecfeff;
     margin-bottom: 1.2rem;
     text-align: center;

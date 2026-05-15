@@ -113,6 +113,38 @@ class PhotoGallery {
         return { items: [], nextLink: null };
     }
 
+    static normalizeCloudinaryUrl(rawUrl) {
+        const url = PhotoGallery.textOrDefault(rawUrl, '');
+        if (!url.includes('res.cloudinary.com')) return url;
+
+        const match = url.match(/^(https?:\/\/[^/]+\/image\/upload\/)([^/]+)\/(.+)$/i);
+        if (!match) return url;
+
+        const [, prefix, transform, path] = match;
+        const parts = transform.split(',').map((part) => part.trim()).filter(Boolean);
+        const normalized = [];
+        const hasWidth = parts.some((part) => /^w_\d+$/i.test(part));
+        const hasQuality = parts.some((part) => /^q_/i.test(part));
+        const hasDpr = parts.some((part) => /^dpr_/i.test(part));
+
+        if (!hasDpr) normalized.push('dpr_auto');
+        if (!hasWidth) normalized.push('w_2400');
+
+        for (const part of parts) {
+            if (/^q_/i.test(part)) {
+                normalized.push('q_auto:best');
+            } else {
+                normalized.push(part);
+            }
+        }
+
+        if (!hasQuality) {
+            normalized.push('q_auto:best');
+        }
+
+        return `${prefix}${normalized.join(',')}/${path}`;
+    }
+
     static async collectPagedItems(firstPage) {
         const allItems = [];
         let currentPage = firstPage;
@@ -423,7 +455,9 @@ class PhotoGallery {
                     PhotoGallery.derivePhotoTitle(row.name, index + 1)
                 );
                 return {
-                    src: PhotoGallery.textOrDefault(row.src, ''),
+                    src: PhotoGallery.normalizeCloudinaryUrl(
+                        PhotoGallery.textOrDefault(row.src, '')
+                    ),
                     title,
                     description: PhotoGallery.textOrDefault(
                         row.description,
@@ -442,7 +476,7 @@ class PhotoGallery {
         return rows
             .filter((row) => row && typeof row === 'object')
             .map((row, index) => {
-                const src = PhotoGallery.textOrDefault(
+                const rawSrc = PhotoGallery.textOrDefault(
                     row.src,
                     PhotoGallery.textOrDefault(
                         row.thumbnail,
@@ -455,7 +489,7 @@ class PhotoGallery {
                     PhotoGallery.derivePhotoTitle(row.name, index + 1)
                 );
                 return {
-                    src,
+                    src: PhotoGallery.normalizeCloudinaryUrl(rawSrc),
                     title,
                     description: PhotoGallery.textOrDefault(
                         row.description,
