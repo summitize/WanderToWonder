@@ -143,10 +143,16 @@
                 return;
             }
             setAuthNote('Signing in...');
+            console.log('Attempting popup sign-in with provider:', providerName);
             await auth.signInWithPopup(provider);
             closeAuthModal();
         } catch (error) {
-            console.warn('Sign-in failed', error);
+            console.error('Sign-in failed - Full error details:', {
+                code: error.code,
+                message: error.message,
+                customData: error.customData,
+                fullError: error
+            });
             setAuthNote(error.message || 'Sign-in failed. Please try again.', true);
         }
     }
