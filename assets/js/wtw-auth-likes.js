@@ -290,6 +290,289 @@
         });
     }
 
+    function makePhotoId(pageId, photoSrc) {
+        const rawKey = `${pageId || 'page'}|${String(photoSrc || '').trim()}`;
+        let bytes = [];
+
+        if (typeof TextEncoder !== 'undefined') {
+            bytes = new TextEncoder().encode(rawKey);
+        } else {
+            bytes = unescape(encodeURIComponent(rawKey)).split('').map((char) => char.charCodeAt(0));
+        }
+
+        let binary = '';
+        for (const byte of bytes) {
+            binary += String.fromCharCode(byte);
+        }
+
+        const base64 = btoa(binary)
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+
+        return `photo-${base64}`;
+    }
+
+    function getPhotoDocRef(photoId) {
+        return db.collection('photoEngagement').doc(photoId);
+    }
+
+    function getPhotoUserDocRef(photoId, userId) {
+        return getPhotoDocRef(photoId).collection('users').doc(userId);
+    }
+
+    function getPhotoCommentsCollection(photoId) {
+        return getPhotoDocRef(photoId).collection('comments');
+    }
+
+    async function fetchPhotoState(photoId, userId) {
+        if (!db) return null;
+
+        try {
+            const photoRef = getPhotoDocRef(photoId);
+            const [photoSnap, userSnap] = await Promise.all([
+                photoRef.get(),
+                userId ? getPhotoUserDocRef(photoId, userId).get() : Promise.resolve(null)
+            ]);
+
+            const photoData = photoSnap.exists ? photoSnap.data() : {};
+            const userData = userSnap?.exists ? userSnap.data() : {};
+
+            return {
+                likes: Number(photoData.likes || 0),
+                dislikes: Number(photoData.dislikes || 0),
+                commentCount: Number(photoData.commentCount || 0),
+                liked: Boolean(userData.liked),
+                disliked: Boolean(userData.disliked)
+            };
+        } catch (error) {
+            console.warn('Failed to fetch photo state', error);
+            return null;
+        }
+    }
+
+    function updatePhotoEngagementUi(card, state) {
+        if (!card || !state) return;
+
+        const likeButton = card.querySelector('[data-photo-action="like"]');
+        const dislikeButton = card.querySelector('[data-photo-action="dislike"]');
+        const commentButton = card.querySelector('[data-photo-action="comment"]');
+        const likeCount = card.querySelector('[data-photo-like-count]');
+        const dislikeCount = card.querySelector('[data-photo-dislike-count]');
+        const commentCount = card.querySelector('[data-photo-comment-count]');
+
+        if (likeCount) likeCount.textContent = String(state.likes);
+        if (dislikeCount) dislikeCount.textContent = String(state.dislikes);
+        if (commentCount) commentCount.textContent = String(state.commentCount);
+
+        if (likeButton) {
+            likeButton.classList.toggle('is-selected', state.liked);
+            likeButton.setAttribute('aria-pressed', state.liked ? 'true' : 'false');
+        }
+
+        if (dislikeButton) {
+            dislikeButton.classList.toggle('is-selected', state.disliked);
+            dislikeButton.setAttribute('aria-pressed', state.disliked ? 'true' : 'false');
+        }
+    }
+
+    async function refreshAllPhotoButtons() {
+        const cards = document.querySelectorAll('[data-photo-id]');
+        const photoIds = Array.from(cards).map((card) => card.dataset.photoId).filter(Boolean);
+        if (!photoIds.length) return;
+
+        const userId = currentUser?.uid || null;
+        await Promise.all(photoIds.map(async (photoId) => {
+            const state = await fetchPhotoState(photoId, userId);
+            const card = document.querySelector(`[data-photo-id="${photoId}"]`);
+            if (card) {
+                updatePhotoEngagementUi(card, state || {
+                    likes: 0,
+                    dislikes: 0,
+                    commentCount: 0,
+                    liked: false,
+                    disliked: false
+                });
+            }
+        }));
+    }
+
+    async function ensureUserAuth() {
+        if (currentUser) return true;
+        openAuthModal();
+        setAuthNote('Please sign in to engage with photos.', true);
+        return false;
+    }
+
+    async function togglePhotoLike(photoId) {
+        if (!firebaseReady || !db) {
+            setAuthNote('Sign-in is not available. Configure Firebase first.', true);
+            return;
+        }
+        if (!(await ensureUserAuth())) return;
+
+        const photoRef = getPhotoDocRef(photoId);
+        const userRef = getPhotoUserDocRef(photoId, currentUser.uid);
+
+        try {
+            await db.runTransaction(async (transaction) => {
+                const [photoSnap, userSnap] = await Promise.all([
+                    transaction.get(photoRef),
+                    transaction.get(userRef)
+                ]);
+
+                const photoData = photoSnap.exists ? photoSnap.data() : {};
+                const userData = userSnap.exists ? userSnap.data() : {};
+
+                const likes = Number(photoData.likes || 0);
+                const dislikes = Number(photoData.dislikes || 0);
+                const currentlyLiked = Boolean(userData.liked);
+                const currentlyDisliked = Boolean(userData.disliked);
+                const newLiked = !currentlyLiked;
+                const newDisliked = currentlyDisliked && newLiked ? false : currentlyDisliked;
+
+                let newLikes = likes;
+                let newDislikes = dislikes;
+
+                if (newLiked && !currentlyLiked) {
+                    newLikes += 1;
+                } else if (!newLiked && currentlyLiked) {
+                    newLikes = Math.max(0, newLikes - 1);
+                }
+
+                if (currentlyDisliked && newLiked) {
+                    newDislikes = Math.max(0, newDislikes - 1);
+                }
+
+                transaction.set(photoRef, {
+                    likes: newLikes,
+                    dislikes: newDislikes,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                transaction.set(userRef, {
+                    liked: newLiked,
+                    disliked: newDisliked,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            });
+
+            await refreshAllPhotoButtons();
+        } catch (error) {
+            console.warn('Failed to toggle photo like', error);
+            setAuthNote('Unable to update like. Please try again.', true);
+        }
+    }
+
+    async function togglePhotoDislike(photoId) {
+        if (!firebaseReady || !db) {
+            setAuthNote('Sign-in is not available. Configure Firebase first.', true);
+            return;
+        }
+        if (!(await ensureUserAuth())) return;
+
+        const photoRef = getPhotoDocRef(photoId);
+        const userRef = getPhotoUserDocRef(photoId, currentUser.uid);
+
+        try {
+            await db.runTransaction(async (transaction) => {
+                const [photoSnap, userSnap] = await Promise.all([
+                    transaction.get(photoRef),
+                    transaction.get(userRef)
+                ]);
+
+                const photoData = photoSnap.exists ? photoSnap.data() : {};
+                const userData = userSnap.exists ? userSnap.data() : {};
+
+                const likes = Number(photoData.likes || 0);
+                const dislikes = Number(photoData.dislikes || 0);
+                const currentlyLiked = Boolean(userData.liked);
+                const currentlyDisliked = Boolean(userData.disliked);
+                const newDisliked = !currentlyDisliked;
+                const newLiked = currentlyLiked && newDisliked ? false : currentlyLiked;
+
+                let newLikes = likes;
+                let newDislikes = dislikes;
+
+                if (newDisliked && !currentlyDisliked) {
+                    newDislikes += 1;
+                } else if (!newDisliked && currentlyDisliked) {
+                    newDislikes = Math.max(0, newDislikes - 1);
+                }
+
+                if (currentlyLiked && newDisliked) {
+                    newLikes = Math.max(0, newLikes - 1);
+                }
+
+                transaction.set(photoRef, {
+                    likes: newLikes,
+                    dislikes: newDislikes,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                transaction.set(userRef, {
+                    liked: newLiked,
+                    disliked: newDisliked,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            });
+
+            await refreshAllPhotoButtons();
+        } catch (error) {
+            console.warn('Failed to toggle photo dislike', error);
+            setAuthNote('Unable to update dislike. Please try again.', true);
+        }
+    }
+
+    async function addPhotoComment(photoId, commentText) {
+        if (!firebaseReady || !db) {
+            setAuthNote('Sign-in is not available. Configure Firebase first.', true);
+            return;
+        }
+        if (!(await ensureUserAuth())) return;
+
+        const trimmed = String(commentText || '').trim();
+        if (!trimmed) return;
+
+        try {
+            const photoRef = getPhotoDocRef(photoId);
+            const commentsCollection = getPhotoCommentsCollection(photoId);
+
+            await commentsCollection.add({
+                text: trimmed,
+                userUid: currentUser.uid,
+                userName: currentUser.displayName || currentUser.email || 'Traveler',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            await photoRef.set({
+                commentCount: firebase.firestore.FieldValue.increment(1),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+
+            setAuthNote('Comment submitted.');
+            await refreshAllPhotoButtons();
+        } catch (error) {
+            console.warn('Failed to add photo comment', error);
+            setAuthNote('Unable to submit comment. Please try again.', true);
+        }
+    }
+
+    function openCommentPrompt(photoId) {
+        const comment = window.prompt('Add a comment for this photo:');
+        if (comment !== null && String(comment).trim().length > 0) {
+            void addPhotoComment(photoId, comment);
+        }
+    }
+
+    window.WTWPhotoEngagement = {
+        makePhotoId,
+        refreshAllPhotoButtons,
+        togglePhotoLike,
+        togglePhotoDislike,
+        openCommentPrompt
+    };
+
     async function start() {
         bindAuthUi();
         bindLikeButtons();
@@ -300,14 +583,20 @@
                 currentUser = user;
                 updateHeaderAuth(user);
                 refreshAllLikeButtons();
+                refreshAllPhotoButtons();
             });
         } else {
             updateHeaderAuth(null);
             refreshAllLikeButtons();
+            refreshAllPhotoButtons();
         }
     }
 
-    window.WTWAuthLikes = { openAuthModal, refreshAllLikeButtons };
+    window.WTWAuthLikes = {
+        openAuthModal,
+        refreshAllLikeButtons,
+        refreshAllPhotoButtons
+    };
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', start);

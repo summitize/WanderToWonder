@@ -347,6 +347,38 @@ class PhotoGallery {
             .replace(/'/g, '&#39;');
     }
 
+    static getPageId() {
+        const engagement = document.querySelector('[data-page-id]');
+        if (engagement?.dataset.pageId) {
+            return engagement.dataset.pageId;
+        }
+        const path = window.location.pathname.split('/').pop() || 'index.html';
+        return path.replace(/\.html$/, '') || 'home';
+    }
+
+    static makePhotoId(pageId, photoSrc) {
+        const rawKey = `${pageId || 'page'}|${String(photoSrc || '').trim()}`;
+        let bytes;
+
+        if (typeof TextEncoder !== 'undefined') {
+            bytes = new TextEncoder().encode(rawKey);
+        } else {
+            bytes = unescape(encodeURIComponent(rawKey)).split('').map((char) => char.charCodeAt(0));
+        }
+
+        let binary = '';
+        for (const byte of bytes) {
+            binary += String.fromCharCode(byte);
+        }
+
+        const base64 = btoa(binary)
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+
+        return `photo-${base64}`;
+    }
+
     static normalizeExternalUrl(rawUrl) {
         const trimmed = PhotoGallery.textOrDefault(rawUrl, '');
         if (!trimmed) return '';
@@ -1004,14 +1036,22 @@ class PhotoGallery {
         this.photos.forEach((photo, index) => {
             this.galleryContainer.appendChild(this.createPhotoCard(photo, index));
         });
+
+        if (window.WTWPhotoEngagement && typeof window.WTWPhotoEngagement.refreshAllPhotoButtons === 'function') {
+            window.WTWPhotoEngagement.refreshAllPhotoButtons();
+        }
     }
 
     createPhotoCard(photo, index) {
+        const pageId = PhotoGallery.getPageId();
+        const photoId = PhotoGallery.makePhotoId(pageId, photo.src);
+
         const card = document.createElement('div');
         card.className = 'photo-card';
         card.tabIndex = 0;
         card.setAttribute('role', 'button');
         card.setAttribute('aria-label', `Open ${photo.title} in fullscreen`);
+        card.dataset.photoId = photoId;
 
         const wrapper = document.createElement('div');
         wrapper.className = 'photo-wrapper';
@@ -1030,12 +1070,73 @@ class PhotoGallery {
         fullButton.className = 'fullscreen-btn';
         fullButton.dataset.index = `${index}`;
         fullButton.textContent = 'View Fullscreen';
-        fullButton.addEventListener('click', () => this.openFullscreen(index));
+        fullButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            this.openFullscreen(index);
+        });
 
         overlay.appendChild(fullButton);
         wrapper.appendChild(image);
         wrapper.appendChild(overlay);
         card.appendChild(wrapper);
+
+        const actions = document.createElement('div');
+        actions.className = 'photo-engagement';
+
+        const likeButton = document.createElement('button');
+        likeButton.type = 'button';
+        likeButton.className = 'btn btn-secondary photo-action-btn';
+        likeButton.dataset.photoAction = 'like';
+        likeButton.setAttribute('aria-pressed', 'false');
+        likeButton.innerHTML = '<span class="photo-action-label">&#9825; Like <span class="photo-stat" data-photo-like-count>0</span></span>';
+        likeButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            if (window.WTWPhotoEngagement && typeof window.WTWPhotoEngagement.togglePhotoLike === 'function') {
+                window.WTWPhotoEngagement.togglePhotoLike(photoId);
+            } else if (window.WTWAuthLikes?.openAuthModal) {
+                window.WTWAuthLikes.openAuthModal();
+            } else {
+                window.alert('Please sign in to engage with photos.');
+            }
+        });
+
+        const dislikeButton = document.createElement('button');
+        dislikeButton.type = 'button';
+        dislikeButton.className = 'btn btn-secondary photo-action-btn';
+        dislikeButton.dataset.photoAction = 'dislike';
+        dislikeButton.setAttribute('aria-pressed', 'false');
+        dislikeButton.innerHTML = '<span class="photo-action-label">&#128078; Dislike <span class="photo-stat" data-photo-dislike-count>0</span></span>';
+        dislikeButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            if (window.WTWPhotoEngagement && typeof window.WTWPhotoEngagement.togglePhotoDislike === 'function') {
+                window.WTWPhotoEngagement.togglePhotoDislike(photoId);
+            } else if (window.WTWAuthLikes?.openAuthModal) {
+                window.WTWAuthLikes.openAuthModal();
+            } else {
+                window.alert('Please sign in to engage with photos.');
+            }
+        });
+
+        const commentButton = document.createElement('button');
+        commentButton.type = 'button';
+        commentButton.className = 'btn btn-secondary photo-action-btn';
+        commentButton.dataset.photoAction = 'comment';
+        commentButton.innerHTML = '<span class="photo-action-label">&#9993; Comment <span class="photo-stat" data-photo-comment-count>0</span></span>';
+        commentButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            if (window.WTWPhotoEngagement && typeof window.WTWPhotoEngagement.openCommentPrompt === 'function') {
+                window.WTWPhotoEngagement.openCommentPrompt(photoId);
+            } else if (window.WTWAuthLikes?.openAuthModal) {
+                window.WTWAuthLikes.openAuthModal();
+            } else {
+                window.alert('Please sign in to engage with photos.');
+            }
+        });
+
+        actions.appendChild(likeButton);
+        actions.appendChild(dislikeButton);
+        actions.appendChild(commentButton);
+        card.appendChild(actions);
 
         if (this.currentView === 'list') {
             const info = document.createElement('div');
