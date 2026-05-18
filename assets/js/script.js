@@ -169,27 +169,46 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 
-    // Initial theme check
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themePreference = localStorage.getItem('theme') || 'system';
+    applyThemePreference(themePreference);
 
 });
 
+function resolveThemeFromPreference(pref) {
+    if (pref === 'dark' || pref === 'light') {
+        return pref;
+    }
+    const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return darkMode ? 'dark' : 'light';
+}
+
+function applyThemePreference(pref) {
+    const theme = resolveThemeFromPreference(pref);
+    document.documentElement.setAttribute('data-theme', theme);
+    const select = document.getElementById('theme-select');
+    if (select) {
+        select.value = pref;
+    }
+}
+
 function initializeTheme() {
-    const themeToggle = document.getElementById('theme-toggle');
-    if (!themeToggle) return;
+    const themeSelect = document.getElementById('theme-select');
+    if (!themeSelect) return;
 
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const systemMedia = window.matchMedia('(prefers-color-scheme: dark)');
 
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+    const updateSystemTheme = () => {
+        const savedTheme = localStorage.getItem('theme') || 'system';
+        if (savedTheme === 'system') {
+            applyThemePreference('system');
+        }
+    };
 
-        // Add a small rotation effect on click
-        themeToggle.style.transform = 'scale(0.8) rotate(180deg)';
-        setTimeout(() => {
-            themeToggle.style.transform = '';
-        }, 300);
+    systemMedia.addEventListener?.('change', updateSystemTheme);
+
+    themeSelect.addEventListener('change', () => {
+        const selected = themeSelect.value;
+        localStorage.setItem('theme', selected);
+        applyThemePreference(selected);
     });
 }
