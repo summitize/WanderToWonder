@@ -1890,9 +1890,129 @@ body.auth-modal-open {
     transition: opacity 0.3s ease;
 }
 
-..photo-card:hover .photo-overlay {
+.photo-card:hover .photo-overlay {
     opacity: 1;
     pointer-events: auto;
+}
+
+.photo-comment-panel {
+    padding: 1rem 1.25rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.photo-comment-list {
+    display: grid;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.photo-comment-item {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 0.95rem 1rem;
+}
+
+.photo-comment-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.photo-comment-author {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.photo-comment-text {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.photo-comment-empty {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.photo-comment-form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.photo-comment-label {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.photo-comment-input {
+    width: 100%;
+    min-height: 108px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    padding: 1rem;
+    resize: vertical;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.photo-comment-input:focus {
+    outline: none;
+    border-color: rgba(0, 180, 216, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.photo-comment-submit {
+    justify-self: flex-end;
+    padding: 0.85rem 1.25rem;
+    border-radius: 999px;
+}
+
+.photo-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 999px;
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+}
+
+.photo-action-btn:hover {
+    background: rgba(0, 180, 216, 0.12);
+    border-color: rgba(0, 180, 216, 0.25);
+}
+
+.photo-action-btn.is-selected {
+    background: rgba(245, 178, 79, 0.2);
+    border-color: rgba(245, 178, 79, 0.45);
+}
+
+.photo-stat {
+    font-weight: 700;
+    min-width: 1.2rem;
+    display: inline-flex;
+    justify-content: center;
+}
+
+.photo-comment-submit {
+    font-weight: 700;
+}
+
+.photo-comment-panel[hidden] {
+    display: none;
 }
 
 .photo-engagement {

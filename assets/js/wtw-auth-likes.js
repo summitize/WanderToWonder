@@ -397,6 +397,51 @@
         }));
     }
 
+    async function fetchPhotoComments(photoId, limit = 5) {
+        try {
+            const commentsQuery = await getPhotoCommentsCollection(photoId)
+                .orderBy('createdAt', 'desc')
+                .limit(limit)
+                .get();
+
+            return commentsQuery.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        } catch (error) {
+            console.warn('Failed to load photo comments', error);
+            return [];
+        }
+    }
+
+    async function refreshPhotoComments(photoId) {
+        const comments = await fetchPhotoComments(photoId);
+        const card = document.querySelector(`[data-photo-id="${photoId}"]`);
+        if (!card) return;
+
+        const commentList = card.querySelector('.photo-comment-list');
+        if (!commentList) return;
+
+        if (!comments.length) {
+            commentList.innerHTML = '<div class="photo-comment-empty">No comments yet. Be the first to share.</div>';
+            return;
+        }
+
+        commentList.innerHTML = comments
+            .map((comment) => {
+                const timestamp = comment.createdAt?.toDate
+                    ? comment.createdAt.toDate().toLocaleString()
+                    : '';
+                return `
+                    <div class="photo-comment-item">
+                        <div class="photo-comment-meta">
+                            <span class="photo-comment-author">${comment.userName || 'Traveler'}</span>
+                            ${timestamp ? `<span class="photo-comment-time">${timestamp}</span>` : ''}
+                        </div>
+                        <p class="photo-comment-text">${String(comment.text || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+                    </div>
+                `;
+            })
+            .join('');
+    }
+
     async function ensureUserAuth() {
         if (currentUser) return true;
         openAuthModal();
@@ -568,8 +613,10 @@
     window.WTWPhotoEngagement = {
         makePhotoId,
         refreshAllPhotoButtons,
+        refreshPhotoComments,
         togglePhotoLike,
         togglePhotoDislike,
+        addPhotoComment,
         openCommentPrompt
     };
 

@@ -1122,14 +1122,61 @@ class PhotoGallery {
         commentButton.className = 'btn btn-secondary photo-action-btn';
         commentButton.dataset.photoAction = 'comment';
         commentButton.innerHTML = '<span class="photo-action-label">&#9993; Comment <span class="photo-stat" data-photo-comment-count>0</span></span>';
-        commentButton.addEventListener('click', (event) => {
+
+        const commentPanel = document.createElement('div');
+        commentPanel.className = 'photo-comment-panel';
+        commentPanel.hidden = true;
+
+        const commentList = document.createElement('div');
+        commentList.className = 'photo-comment-list';
+        commentList.innerHTML = '<div class="photo-comment-empty">No comments yet. Be the first to share.</div>';
+
+        const commentForm = document.createElement('form');
+        commentForm.className = 'photo-comment-form';
+        commentForm.innerHTML = `
+            <label class="photo-comment-label" for="comment-${photoId}">Share a thought</label>
+            <textarea id="comment-${photoId}" class="photo-comment-input" rows="3" placeholder="Write your comment..."></textarea>
+            <button type="submit" class="btn btn-primary photo-comment-submit">Post comment</button>
+        `;
+
+        commentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
             event.stopPropagation();
-            if (window.WTWPhotoEngagement && typeof window.WTWPhotoEngagement.openCommentPrompt === 'function') {
-                window.WTWPhotoEngagement.openCommentPrompt(photoId);
+            const textarea = commentForm.querySelector('textarea');
+            const commentText = textarea ? textarea.value.trim() : '';
+            if (!commentText) {
+                return;
+            }
+
+            const submitButton = commentForm.querySelector('button[type="submit"]');
+            if (submitButton) submitButton.disabled = true;
+
+            if (window.WTWPhotoEngagement && typeof window.WTWPhotoEngagement.addPhotoComment === 'function') {
+                await window.WTWPhotoEngagement.addPhotoComment(photoId, commentText);
+                textarea.value = '';
+                if (window.WTWPhotoEngagement.refreshPhotoComments) {
+                    window.WTWPhotoEngagement.refreshPhotoComments(photoId);
+                }
+                if (window.WTWPhotoEngagement.refreshAllPhotoButtons) {
+                    window.WTWPhotoEngagement.refreshAllPhotoButtons();
+                }
             } else if (window.WTWAuthLikes?.openAuthModal) {
                 window.WTWAuthLikes.openAuthModal();
             } else {
                 window.alert('Please sign in to engage with photos.');
+            }
+
+            if (submitButton) submitButton.disabled = false;
+        });
+
+        commentPanel.appendChild(commentList);
+        commentPanel.appendChild(commentForm);
+
+        commentButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            commentPanel.hidden = !commentPanel.hidden;
+            if (!commentPanel.hidden && window.WTWPhotoEngagement?.refreshPhotoComments) {
+                window.WTWPhotoEngagement.refreshPhotoComments(photoId);
             }
         });
 
@@ -1137,6 +1184,7 @@ class PhotoGallery {
         actions.appendChild(dislikeButton);
         actions.appendChild(commentButton);
         card.appendChild(actions);
+        card.appendChild(commentPanel);
 
         if (this.currentView === 'list') {
             const info = document.createElement('div');
